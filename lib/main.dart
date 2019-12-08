@@ -1,4 +1,12 @@
 import "package:flutter/material.dart";
+//Tutorial: https://medium.com/flutterdevs/using-sharedpreferences-in-flutter-251755f07127
+//shared_preferences ist das Äquivalent zu NSUserDefaults in iOS/xcode
+//es speichert kleine Variablen über den Lebenszyklus der App hinaus
+//wir benutzen es, um 
+//-herauszufinden, ob der User registriert/angemeldet ist
+//-herauszufinden, ob der User Fehlermelder oder -beheber ist
+//-die Daten des Users zu speichern (Username, Passwort)
+import "package:shared_preferences/shared_preferences.dart";
 
 import "./Widgets/Fehlermeldungsvorlage/Fehlermeldungsvorlage.dart";
 import "./Widgets/Fehlermeldungsvorlage/FABforFehlermeldungsvorlage.dart";
@@ -33,6 +41,7 @@ class FixIt extends StatelessWidget {
 
 //muss stateful sein, da wir Content updaten (da wir ein BottomSheet benutzen)
 class FixItHomePage extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() {
     return _FixItHomePageState();
@@ -41,6 +50,21 @@ class FixItHomePage extends StatefulWidget {
 
 
 class _FixItHomePageState extends State<FixItHomePage> {
+  //system_preferences:
+  //system_preferences Value, die checkt, ob der User registriert ist
+  // addBoolToSF() async {
+  //   SharedPreferences isRegistered = await SharedPreferences.getInstance();
+  //   isRegistered.setBool('boolValue', false);
+  // }
+
+//   function isRegistered = getBoolValuesSF() async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   //Return bool
+//   bool boolValue = prefs.getBool('boolValue');
+// }
+
+
+
   //wahrscheinlich überflüssig
   // //lässt ein Eingabefeld über der Tastatur erscheinen;
   // //wird ausgeführt, wenn der Floating Action Button gedrückt wird
@@ -68,7 +92,8 @@ class _FixItHomePageState extends State<FixItHomePage> {
       //der FloatingActionButton (kurz: FAB) wird in einem anderen File definiert
       floatingActionButton: FABforFehlermeldungsvorlage(),
       //hier soll später eine Liste mit den Meldungen des Users hin
-      body: Center(
+      body: 
+      Center(
         child: Text("Fix It"),
       ),
     );

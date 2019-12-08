@@ -28,47 +28,48 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.8,
-          padding: EdgeInsets.all(0),
-          alignment: Alignment.bottomCenter,
-          decoration: BoxDecoration(color: Colors.red,),
-          constraints: BoxConstraints(minHeight: double.infinity),
-          child: Column(
-            children: [
-              //Textfeld mit dem Text "Raum"
-              Container(
-                child: Text(
-                  _ueberschrift,
-                  style: Theme.of(context).textTheme.title,
+            height: MediaQuery.of(context).size.height * 0.8,
+            padding: EdgeInsets.all(0),
+            //stehengeblieben 4.12. beim Versuch die SingleChildScrollView bei der Eingabe mit der Tastatur übers ganze Display anzeigen zu lassen
+            child: Column(
+              children: [
+                //Textfeld mit dem Text "Raum"
+                Container(
+                  child: Text(
+                    _ueberschrift,
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                  height: MediaQuery.of(context).size.height / 10,
                 ),
-                height: MediaQuery.of(context).size.height / 10,
-              ),
-              //Eingabefeld, in das man die Raumnummer eingibt
-              Container(
-                child: TextField(
-                  //der TextEditingController speichert den getippten Text als String
-                  controller: _raumController,
-                  //macht die Tastatur zum Zahlenfeld
-                  keyboardType: TextInputType.text,
-                  //zeigt den Text "Raum" als Platzhalter an
-                  decoration: InputDecoration(labelText: "Raum"),
-                  //die Methode, die ausgeführt wird, wenn die Eingabe beendet wurde
-                  onSubmitted: (_) => _updateText(_raumController.text),
+                //Eingabefeld, in das man die Raumnummer eingibt
+                Container(
+                  child: TextField(
+                    //der TextEditingController speichert den getippten Text als String
+                    controller: _raumController,
+                    //macht die Tastatur zum Zahlenfeld
+                    keyboardType: TextInputType.text,
+                    //zeigt den Text "Raum" als Platzhalter an
+                    decoration: InputDecoration(labelText: "Raum"),
+                    //die Methode, die ausgeführt wird, wenn die Eingabe beendet wurde
+                    onSubmitted: (_) => _updateText(_raumController.text),
+                  ),
                 ),
-              ),
-              Container(
-                child: TextField(
-                  //der TextEditingController speichert den getippten Text als String
-                  controller: _fehlerBeschreibungController,
-                  //zeigt den Text "Fehlerbeschreibung" als Platzhalter an
-                  decoration: InputDecoration(labelText: "Fehlerbeschreibung"),
+                Container(
+                  child: TextField(
+                    //der TextEditingController speichert den getippten Text als String
+                    controller: _fehlerBeschreibungController,
+                    //zeigt den Text "Fehlerbeschreibung" als Platzhalter an
+                    decoration:
+                        InputDecoration(labelText: "Fehlerbeschreibung"),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+
       ),
     );
   }
