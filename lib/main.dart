@@ -1,15 +1,19 @@
+import 'package:bottom_bar/Widgets/Anmeldung%20&%20Registrierung/RegistrierungsButton.dart';
 import "package:flutter/material.dart";
 //Tutorial: https://medium.com/flutterdevs/using-sharedpreferences-in-flutter-251755f07127
 //shared_preferences ist das Äquivalent zu NSUserDefaults in iOS/xcode
-//es speichert kleine Variablen über den Lebenszyklus der App hinaus
-//wir benutzen es, um 
+//es speichert kleine Variablen (insgesamt Speicher nicht größer als 1 MB) über den Lebenszyklus der App hinaus
+//wir benutzen es, um
 //-herauszufinden, ob der User registriert/angemeldet ist
 //-herauszufinden, ob der User Fehlermelder oder -beheber ist
 //-die Daten des Users zu speichern (Username, Passwort)
 import "package:shared_preferences/shared_preferences.dart";
 
-import "./Widgets/Fehlermeldungsvorlage/Fehlermeldungsvorlage.dart";
+//unsere Files
+//für die Fehlermeldung
 import "./Widgets/Fehlermeldungsvorlage/FABforFehlermeldungsvorlage.dart";
+//für die Registrierung
+import "./Widgets/Anmeldung & Registrierung/RegistrierungsButton.dart";
 
 void main() => runApp(FixIt());
 
@@ -20,7 +24,7 @@ class FixIt extends StatelessWidget {
     print("built");
     return MaterialApp(
       home: FixItHomePage(),
-      //!!!funktioniert irgendwie bei mir nicht; Error: Color not a subtype of MaterialColor!!!
+      // !!!funktioniert irgendwie bei mir nicht; Error: Color not a subtype of MaterialColor!!!
       // das Theme ist eine Klasse, auf die man im ganzen Projekt zugreifen kann
       // hier kann man z.B. einen Standard für alle Titel oder Buttons festlegen
       // man erreicht den hier vorgegebenen Stil mit Theme.of(context).?
@@ -34,6 +38,7 @@ class FixIt extends StatelessWidget {
       //       button: TextStyle(
       //         color: Theme.of(context).accentColor,
       //       )),
+      //   buttonColor: Colors.red,
       // ),
     );
   }
@@ -41,63 +46,97 @@ class FixIt extends StatelessWidget {
 
 //muss stateful sein, da wir Content updaten (da wir ein BottomSheet benutzen)
 class FixItHomePage extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
     return _FixItHomePageState();
   }
 }
 
-
 class _FixItHomePageState extends State<FixItHomePage> {
-  //system_preferences:
-  //system_preferences Value, die checkt, ob der User registriert ist
-  // addBoolToSF() async {
-  //   SharedPreferences isRegistered = await SharedPreferences.getInstance();
-  //   isRegistered.setBool('boolValue', false);
-  // }
 
-//   function isRegistered = getBoolValuesSF() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   //Return bool
-//   bool boolValue = prefs.getBool('boolValue');
-// }
+  //hier kommen Funktionen wie initState(), didUpdateWidget() und dispose() hin
+  
 
 
+  //shared_preferences:
+  //wird am Anfang von istBenutzerRegistriert() überschrieben
+  bool istRegistriert;
+  //wird am Anfang von istBenutzerRegistriert() überschrieben
+  String benutzername = "";
 
-  //wahrscheinlich überflüssig
-  // //lässt ein Eingabefeld über der Tastatur erscheinen;
-  // //wird ausgeführt, wenn der Floating Action Button gedrückt wird
-  // void _neueFehlermeldung(BuildContext ctx) {
-  //   showBottomSheet(
-  //       context: ctx,
-  //       builder: (_) {
-  //         return GestureDetector(
-  //           child: Fehlermeldungsvorlage(),
-  //           behavior: HitTestBehavior.opaque,
-  //           onTap: () {},
-  //         );
-  //       });
-  // }
+  //checkt, ob der User registriert ist, setzt istRegistriert auf true bzw. false
+  //und speichert den Benutzernamen in benutzername ab
+  istBenutzerRegistriert() async {
+    SharedPreferences sharedPreferencesInstance =
+        await SharedPreferences.getInstance();
+    setState(() {
+      this.istRegistriert = sharedPreferencesInstance.getBool('istRegistriert') ?? false;
+      this.benutzername = sharedPreferencesInstance.getString("benutzername");
+    });
+  }
+  //setzt die Registrierung zurück
+  registrierungZuruecksetzen() async {
+    SharedPreferences sharedPreferencesInstance = await SharedPreferences.getInstance();
+    sharedPreferencesInstance.setBool('istRegistriert', false);
+  }
 
+  //build() mit Widget Tree
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "FixIt",
-          style: Theme.of(context).textTheme.title,
-        ),
-      ),
-      //der FloatingActionButton (kurz: FAB) wird in einem anderen File definiert
-      floatingActionButton: FABforFehlermeldungsvorlage(),
-      //hier soll später eine Liste mit den Meldungen des Users hin
-      body: 
-      Center(
-        child: Text("Fix It"),
-      ),
-    );
+
+    //updated istRegistriert und benutzername
+    istBenutzerRegistriert();
+
+
+    //checkt, ob der Benutzer registriert ist (ist Registriert entweder true oder false)
+    return istRegistriert
+    //wird ausgeführt, wenn istRegistriert true ist
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text(
+                "FixIt",
+                style: Theme.of(context).textTheme.title,
+              ),
+            ),
+            //der FloatingActionButton (kurz: FAB) wird in einem anderen File definiert
+            floatingActionButton: FABforFehlermeldungsvorlage(),
+            //hier soll später eine Liste mit den Meldungen des Users hin
+            body: Column(
+              children: <Widget>[
+                Center(
+                  child: Text("Fix It"),
+                ),
+                Center(
+                  child: Text(benutzername),
+                ),
+                RaisedButton(
+                  child: Text("Registrierung zurücksetzen"),
+                  color: Colors.red,
+                  onPressed: () {registrierungZuruecksetzen();} ,
+                )
+              ],
+            ),
+          )
+        //wird ausgeführt, wenn istRegistriert false ist
+        : Scaffold(
+            appBar: AppBar(
+              title: Text(
+                "FixIt",
+                style: Theme.of(context).textTheme.title,
+              ),
+            ),
+            body: Column(
+              children: <Widget>[
+                Center(
+                  child: Text(
+                    "Sie sind nicht registriert",
+                    style: TextStyle(
+                        fontSize: Theme.of(context).textTheme.title.fontSize),
+                  ),
+                ),
+                RegistrierungsButton(),
+              ],
+            ),
+          );
   }
 }
-
-

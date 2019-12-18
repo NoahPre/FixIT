@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "./Fehlermeldungsvorlage.dart";
 
 
-//dieser FloatinActionButton ist dafür verantwortlich, dass ein BottomSheet gemacht wird
+//dieser Floating Action Button bewirkt, dass ein Bottom Sheet mit der Fehlermeldungsvorlage angezeigt wird
 //dieses BottomSheet beinhaltet dann die Fehlermeldungsvorlage
 class FABforFehlermeldungsvorlage extends StatefulWidget {
   @override

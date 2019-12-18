@@ -2,6 +2,8 @@ import "package:flutter/material.dart";
 //für die iOS Widgets
 import "package:flutter/cupertino.dart";
 
+
+//Tutorial gefunden unter: https://blog.usejournal.com/keyboard-done-button-ux-in-flutter-ios-app-3b29ad46bacc
 //der "Fertig" Knopf, den man in Fehlermeldungsvorlage über jedem Keyboard auftauchen lässt
 //schließt das Keyboard
 class FertigButton extends StatelessWidget {

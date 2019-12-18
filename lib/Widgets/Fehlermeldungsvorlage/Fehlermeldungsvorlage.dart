@@ -15,16 +15,17 @@ class Fehlermeldungsvorlage extends StatefulWidget {
   }
 }
 
+
 class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
-  //Controller für das Textfeld, in das man die Raumnummer eingibt
   //der TextEditingController speichert den getippten Text als String
+  //Controller für das Textfeld, in das man die Raumnummer eingibt
   final _raumController = TextEditingController();
 
   final _fehlerartController = TextEditingController();
 
   final _fehlerBeschreibungController = TextEditingController();
 
-  //keine Ahnung wofür der hier ist
+  //speichert den Text der Überschrift
   String _ueberschrift = "Fehler in Raum";
 
   //overlayEntry property für die "Fertig" Button Widget Logik
@@ -33,7 +34,7 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
   //Funktion, die den Text unter dem Textfeld updated
   void _updateText(String textInTextfield) {
     setState(() {
-      _ueberschrift = "Fehler in Raum " + textInTextfield;
+      _ueberschrift = "Fehler in Raum     " + textInTextfield;
     });
   }
 
@@ -78,89 +79,97 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
 
   @override
   Widget build(BuildContext context) {
-
     //die Größe des Gerätes als double
     var deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      //bewirkt, dass das gesamte Scaffold auf dem Screen zu sehen ist
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height * 0.8,
           padding: EdgeInsets.all(0),
-          child: Column(
-            children: [
-              //Textfeld mit dem Text "Raum"
-              Container(
-                child: Text(
-                  _ueberschrift,
-                  style: Theme.of(context).textTheme.title,
-                ),
-                height: MediaQuery.of(context).size.height / 10,
-              ),
-              //Eingabefeld, in das man die Raumnummer eingibt
-              Container(
-                child: TextField(
-                  //der TextEditingController speichert den getippten Text als String
-                  controller: _raumController,
-                  //macht die Tastatur zum Zahlenfeld
-                  keyboardType: TextInputType.number,
-                  //zeigt den Text "Raum" als Platzhalter an
-                  decoration: InputDecoration(labelText: "Raum"),
-                  //die Methode, die ausgeführt wird, wenn die Eingabe beendet wurde
-                  onSubmitted: (_) => _updateText(_raumController.text),
-                ),
-              ),
-
-              //Container, der die Textfelder voneinander trennt
-              Container(height: deviceHeight * 0.02,),
-
-              //Eingabefeld, in das man die Fehlerart eingibt
-              //wird evtl. noch zu Picker oder Dropdown Menü
-              Container(
-                child: TextField(
-                  //der TextEditingController speichert den getippten Text als String
-                  controller: _fehlerartController,
-                  //zeigt den Text "Fehlerbeschreibung" als Platzhalter an
-                  decoration: InputDecoration(
-                    labelText: "Fehlerart",
-                    //wenn man einen Rand um das Textfeld haben will ...
-                    // border: OutlineInputBorder(
-                    //   borderRadius: BorderRadius.all(
-                    //     Radius.circular(4.0),
-                    //   ),
-                    // ),
+          child: Padding(
+            child: Column(
+              children: [
+                //Textfeld mit dem Text "Raum"
+                Container(
+                  child: Text(
+                    _ueberschrift,
+                    style: Theme.of(context).textTheme.title,
                   ),
-                  keyboardType: TextInputType.text,
+                  height: MediaQuery.of(context).size.height / 10,
                 ),
-              ),
-
-              //Container, der die Textfelder voneinander trennt
-              Container(height: deviceHeight * 0.02,),
-
-              //Eingabefeld, in das man die Fehlerbeschreibung eingibt
-              Container(
-                child: TextField(
-                  //der TextEditingController speichert den getippten Text als String
-                  controller: _fehlerBeschreibungController,
-                  //zeigt den Text "Fehlerbeschreibung" als Platzhalter an
-                  decoration: InputDecoration(
-                    labelText: "Fehlerbeschreibung",
-                    //wenn man einen Rand um das Textfeld haben will ...
-                    // border: OutlineInputBorder(
-                    //   borderRadius: BorderRadius.all(
-                    //     Radius.circular(4.0),
-                    //   ),
-                    // ),
+                //Eingabefeld, in das man die Raumnummer eingibt
+                Container(
+                  child: TextField(
+                    //der TextEditingController speichert den getippten Text als String
+                    controller: _raumController,
+                    //macht die Tastatur zum Zahlenfeld
+                    keyboardType: TextInputType.number,
+                    //zeigt den Text "Raum" als Platzhalter an
+                    decoration: InputDecoration(labelText: "Raum"),
+                    //die Methode, die ausgeführt wird, wenn die Eingabe beendet wurde
+                    onSubmitted: (_) => _updateText(_raumController.text),
                   ),
-                  keyboardType: TextInputType.multiline,
-                  //setzt die maximale Anzahl an Zeilen auf 10
-                  maxLines: 10,
-                  //setzt die minimale Anzahl an Zeilen auf 1
-                  minLines: 1,
                 ),
-              ),
-            ],
+
+                //Container, der die Textfelder voneinander trennt
+                Container(
+                  height: deviceHeight * 0.02,
+                ),
+
+                //Eingabefeld, in das man die Fehlerart eingibt
+                //wird evtl. noch zu Picker oder Dropdown Menü
+                Container(
+                  child: TextField(
+                    //der TextEditingController speichert den getippten Text als String
+                    controller: _fehlerartController,
+                    //zeigt den Text "Fehlerbeschreibung" als Platzhalter an
+                    decoration: InputDecoration(
+                      labelText: "Fehlerart",
+                      //wenn man einen Rand um das Textfeld haben will ...
+                      // border: OutlineInputBorder(
+                      //   borderRadius: BorderRadius.all(
+                      //     Radius.circular(4.0),
+                      //   ),
+                      // ),
+                    ),
+                    keyboardType: TextInputType.text,
+                  ),
+                ),
+
+                //Container, der die Textfelder voneinander trennt
+                Container(
+                  height: deviceHeight * 0.02,
+                ),
+
+                //Eingabefeld, in das man die Fehlerbeschreibung eingibt
+                Container(
+                  child: TextField(
+                    //der TextEditingController speichert den getippten Text als String
+                    controller: _fehlerBeschreibungController,
+                    //zeigt den Text "Fehlerbeschreibung" als Platzhalter an
+                    decoration: InputDecoration(
+                      labelText: "Fehlerbeschreibung",
+                      //wenn man einen Rand um das Textfeld haben will ...
+                      // border: OutlineInputBorder(
+                      //   borderRadius: BorderRadius.all(
+                      //     Radius.circular(4.0),
+                      //   ),
+                      // ),
+                    ),
+                    keyboardType: TextInputType.multiline,
+                    //setzt die maximale Anzahl an Zeilen auf 10
+                    maxLines: 10,
+                    //setzt die minimale Anzahl an Zeilen auf 1
+                    minLines: 1,
+                  ),
+                ),
+              ],
+
+            ),
+            padding: EdgeInsets.all(10),
           ),
         ),
       ),
