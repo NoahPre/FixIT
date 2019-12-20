@@ -1,6 +1,7 @@
 //flutter packages
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+
 //3rd party packages
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 
@@ -14,7 +15,6 @@ class Fehlermeldungsvorlage extends StatefulWidget {
     return _FehlermeldungsvorlageState();
   }
 }
-
 
 class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
   //der TextEditingController speichert den getippten Text als String
@@ -32,7 +32,7 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
   OverlayEntry overlayEntry;
 
   //Funktion, die den Text unter dem Textfeld updated
- /* void _updateText(String textInTextfield) {
+  /* void _updateText(String textInTextfield) {
     setState(() {
       _ueberschrift = "Fehler in Raum     " + textInTextfield;
     });
@@ -101,24 +101,54 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
                   ),
                   height: MediaQuery.of(context).size.height / 10,
                 ),
-           /* TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Raum:',
-              ),
-            ),*/
-          new DropdownButton<String>(
-            items: <String>['K21', '110', '120', '120','130','K21', '110', '120', '120','130','K21', '110', '120', '120','130','K21', '110', '120', '120','130','K21', '110', '120', '120','130'].map((String value) {
-              return new DropdownMenuItem<String>(
-                value: value,
-                child: new Text(value),
-              );
-            }).toList(),
-            onChanged: (_) {},
-          ),
+                Text(
+                  'Raum:',
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Container(
+
+                 child: new DropdownButton<String>(
+                    items: <String>[
+                      'K21',
+                      '110',
+                      '120',
+                      '120',
+                      '130',
+                      'K21',
+                      '110',
+                      '120',
+                      '120',
+                      '130',
+                      'K21',
+                      '110',
+                      '120',
+                      '120',
+                      '130',
+                      'K21',
+                      '110',
+                      '120',
+                      '120',
+                      '130',
+                      'K21',
+                      '110',
+                      '120',
+                      '120',
+                      '130'
+                    ].map((String value) {
+                      return new DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (_) {},
+                  ),
+                  alignment: Alignment.topRight,
+                ),
+
                 //Eingabefeld, in das man die Raumnummer eingibt
-               /* Container(
+                /* Container(
                   child: TextField(
                     //der TextEditingController speichert den getippten Text als String
                     controller: _raumController,
@@ -183,9 +213,7 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
                     minLines: 1,
                   ),
                 ),
-
               ],
-
             ),
             padding: EdgeInsets.all(10),
           ),
