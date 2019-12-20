@@ -19,7 +19,7 @@ class Fehlermeldungsvorlage extends StatefulWidget {
 class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
   //der TextEditingController speichert den getippten Text als String
   //Controller für das Textfeld, in das man die Raumnummer eingibt
-  final _raumController = TextEditingController();
+  //final _raumController = TextEditingController();
 
   final _fehlerartController = TextEditingController();
 
@@ -32,11 +32,11 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
   OverlayEntry overlayEntry;
 
   //Funktion, die den Text unter dem Textfeld updated
-  void _updateText(String textInTextfield) {
+ /* void _updateText(String textInTextfield) {
     setState(() {
       _ueberschrift = "Fehler in Raum     " + textInTextfield;
     });
-  }
+  }*/
 
   //helfen, den "Fertig" Button über dem Zahlenfeld anzuzeigen
   void showOverlay(BuildContext context) {
@@ -93,6 +93,7 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
             child: Column(
               children: [
                 //Textfeld mit dem Text "Raum"
+
                 Container(
                   child: Text(
                     _ueberschrift,
@@ -100,8 +101,24 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
                   ),
                   height: MediaQuery.of(context).size.height / 10,
                 ),
+           /* TextField(
+              obscureText: true,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Raum:',
+              ),
+            ),*/
+          new DropdownButton<String>(
+            items: <String>['K21', '110', '120', '120','130','K21', '110', '120', '120','130','K21', '110', '120', '120','130','K21', '110', '120', '120','130','K21', '110', '120', '120','130'].map((String value) {
+              return new DropdownMenuItem<String>(
+                value: value,
+                child: new Text(value),
+              );
+            }).toList(),
+            onChanged: (_) {},
+          ),
                 //Eingabefeld, in das man die Raumnummer eingibt
-                Container(
+               /* Container(
                   child: TextField(
                     //der TextEditingController speichert den getippten Text als String
                     controller: _raumController,
@@ -112,7 +129,7 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
                     //die Methode, die ausgeführt wird, wenn die Eingabe beendet wurde
                     onSubmitted: (_) => _updateText(_raumController.text),
                   ),
-                ),
+                ), */
 
                 //Container, der die Textfelder voneinander trennt
                 Container(
@@ -166,6 +183,7 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
                     minLines: 1,
                   ),
                 ),
+
               ],
 
             ),
