@@ -1,4 +1,3 @@
-import 'package:bottom_bar/Widgets/Anmeldung%20&%20Registrierung/RegistrierungsButton.dart';
 import "package:flutter/material.dart";
 //Tutorial: https://medium.com/flutterdevs/using-sharedpreferences-in-flutter-251755f07127
 //shared_preferences ist das Äquivalent zu NSUserDefaults in iOS/xcode
@@ -13,7 +12,7 @@ import "package:shared_preferences/shared_preferences.dart";
 //für die Fehlermeldung
 import "./Widgets/Fehlermeldungsvorlage/FABforFehlermeldungsvorlage.dart";
 //für die Registrierung
-import "./Widgets/Anmeldung & Registrierung/RegistrierungsButton.dart";
+import "./Widgets/RegistrierungUndAnmeldung/RegistrierungsButton.dart";
 
 void main() => runApp(FixIt());
 
@@ -21,25 +20,41 @@ void main() => runApp(FixIt());
 class FixIt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Color primaryColor = Colors.blue;
+    Color accentColor = Colors.black;
+
     print("built");
     return MaterialApp(
       home: FixItHomePage(),
-      // !!!funktioniert irgendwie bei mir nicht; Error: Color not a subtype of MaterialColor!!!
       // das Theme ist eine Klasse, auf die man im ganzen Projekt zugreifen kann
       // hier kann man z.B. einen Standard für alle Titel oder Buttons festlegen
       // man erreicht den hier vorgegebenen Stil mit Theme.of(context).?
-      // theme: ThemeData(
-      //   primarySwatch: Colors.black,
-      //   accentColor: Colors.red,
-      //   textTheme: TextTheme(
-      //       title: TextStyle(
-      //         fontWeight: FontWeight.bold,
-      //       ),
-      //       button: TextStyle(
-      //         color: Theme.of(context).accentColor,
-      //       )),
-      //   buttonColor: Colors.red,
-      // ),
+      theme: ThemeData(
+        primaryColor: primaryColor,
+        accentColor: accentColor,
+        textTheme: TextTheme(
+          title: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+          button: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        buttonTheme: ButtonThemeData(
+          buttonColor: accentColor,
+          textTheme: ButtonTextTheme.normal,
+        ),
+        appBarTheme: AppBarTheme(
+          color: primaryColor,
+          textTheme: TextTheme(
+            title: TextStyle(
+              color: Colors.white,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -53,10 +68,7 @@ class FixItHomePage extends StatefulWidget {
 }
 
 class _FixItHomePageState extends State<FixItHomePage> {
-
   //hier kommen Funktionen wie initState(), didUpdateWidget() und dispose() hin
-  
-
 
   //shared_preferences:
   //wird am Anfang von istBenutzerRegistriert() überschrieben
@@ -70,13 +82,16 @@ class _FixItHomePageState extends State<FixItHomePage> {
     SharedPreferences sharedPreferencesInstance =
         await SharedPreferences.getInstance();
     setState(() {
-      this.istRegistriert = sharedPreferencesInstance.getBool('istRegistriert') ?? false;
+      this.istRegistriert =
+          sharedPreferencesInstance.getBool('istRegistriert') ?? false;
       this.benutzername = sharedPreferencesInstance.getString("benutzername");
     });
   }
+
   //setzt die Registrierung zurück
   registrierungZuruecksetzen() async {
-    SharedPreferences sharedPreferencesInstance = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferencesInstance =
+        await SharedPreferences.getInstance();
     sharedPreferencesInstance.setBool('istRegistriert', false);
   }
 
@@ -84,18 +99,18 @@ class _FixItHomePageState extends State<FixItHomePage> {
   @override
   Widget build(BuildContext context) {
 
+    var theme = Theme.of(context);
     //updated istRegistriert und benutzername
     istBenutzerRegistriert();
 
-
     //checkt, ob der Benutzer registriert ist (ist Registriert entweder true oder false)
     return istRegistriert
-    //wird ausgeführt, wenn istRegistriert true ist
+        //wird ausgeführt, wenn istRegistriert true ist
         ? Scaffold(
             appBar: AppBar(
               title: Text(
                 "FixIt",
-                style: Theme.of(context).textTheme.title,
+                style: theme.appBarTheme.textTheme.title,
               ),
             ),
             //der FloatingActionButton (kurz: FAB) wird in einem anderen File definiert
@@ -112,7 +127,9 @@ class _FixItHomePageState extends State<FixItHomePage> {
                 RaisedButton(
                   child: Text("Registrierung zurücksetzen"),
                   color: Colors.red,
-                  onPressed: () {registrierungZuruecksetzen();} ,
+                  onPressed: () {
+                    registrierungZuruecksetzen();
+                  },
                 )
               ],
             ),
