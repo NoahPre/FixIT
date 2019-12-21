@@ -15,8 +15,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  keyboard_visibility: any
-  shared_preferences: 
+  keyboard_visibility: 0.5.6
+  shared_preferences: 0.5.6
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
