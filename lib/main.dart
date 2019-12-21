@@ -104,6 +104,7 @@ class _FixItHomePageState extends State<FixItHomePage> {
     istBenutzerRegistriert();
 
     //checkt, ob der Benutzer registriert ist (ist Registriert entweder true oder false)
+    var Unbenannt;
     return istRegistriert
         //wird ausgeführt, wenn istRegistriert true ist
         ? Scaffold(
@@ -124,13 +125,15 @@ class _FixItHomePageState extends State<FixItHomePage> {
                 Center(
                   child: Text(benutzername),
                 ),
+                Image.asset('assets/MeldeAblauf.jpg',height: 420,),
                 RaisedButton(
                   child: Text("Registrierung zurücksetzen"),
                   color: Colors.red,
                   onPressed: () {
                     registrierungZuruecksetzen();
                   },
-                )
+                ),
+
               ],
             ),
           )
