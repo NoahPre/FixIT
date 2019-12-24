@@ -5,7 +5,7 @@ class Raumnummerneingabe extends StatefulWidget {
 
   final updateText;
 
-  Raumnummerneingabe(this.updateText);
+  Raumnummerneingabe(this.updateText,);
 
   @override
   State<StatefulWidget> createState() {
@@ -18,10 +18,6 @@ class _RaumnummerneingabeState extends State<Raumnummerneingabe> {
   //Controller für das Textfeld, in das man die Raumnummer eingibt
   final _raumController = TextEditingController();
 
-  //speichert den Text der Überschrift
-  String _ueberschrift = "Fehler in Raum";
-
-  //speichert den Text des Dropdown Buttons
   String _dropdownButtonText = "";
 
 
@@ -59,6 +55,9 @@ class _RaumnummerneingabeState extends State<Raumnummerneingabe> {
                           textInTextfield: _raumController.text,
                           textInDropDownButton: value,
                         );
+                        setState(() {
+                          _dropdownButtonText = value;
+                        });
                       },
                     ),
                   ),

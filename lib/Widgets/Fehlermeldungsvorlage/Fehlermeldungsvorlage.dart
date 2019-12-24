@@ -114,6 +114,7 @@ class _FehlermeldungsvorlageState extends State<Fehlermeldungsvorlage> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               
+              //DropDownButton und Textfeld für die Raumnummern
               Raumnummerneingabe(_updateText),
 
               //Container, der die Textfelder voneinander trennt

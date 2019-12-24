@@ -4,52 +4,51 @@ import "package:shared_preferences/shared_preferences.dart";
 //unsere files
 import "./MitteilungsFunktionen.dart";
 
-class Registrierungsvorlage extends StatefulWidget {
-
+class Anmeldungsvorlage extends StatefulWidget {
   final masterpasswort;
 
-  Registrierungsvorlage({this.masterpasswort});
+  Anmeldungsvorlage({this.masterpasswort});
 
   @override
   State<StatefulWidget> createState() {
-    return _RegistrierungsvorlageState();
+    return _AnmeldungsvorlageState();
   }
 }
 
-class _RegistrierungsvorlageState extends State<Registrierungsvorlage> {
-  //Textfieldcontroller für das Benutzername Textfeld
+class _AnmeldungsvorlageState extends State<Anmeldungsvorlage> {
+  //Textfieldcontroller für das username Textfeld
   final _benutzernameController = TextEditingController();
 
   final _passwortController = TextEditingController();
 
-  final _passwortWiederholenController = TextEditingController();
-
   final _masterpasswortController = TextEditingController();
 
-  benutzerHatSichRegistriert() async {
+  benutzerHatSichAngemeldet() async {
     SharedPreferences sharedPreferencesInstance =
         await SharedPreferences.getInstance();
+    String benutzername = sharedPreferencesInstance.getString("benutzername");
+    String passwort = sharedPreferencesInstance.getString("passwort");
     bool istRegistriert = sharedPreferencesInstance.getBool("istRegistriert");
-    //kontrolliert, ob der User nicht schon registriert ist
-    //muss später abgeändert werden
+
+    //überprüft, ob der User sich überhaupt schonmal registriert hat
+    //nur nötig, wenn wir die Daten lokal auf dem Gerät speichern, also nur vorübergehend
     if (istRegistriert != true) {
-      schonRegistriertMitteilung(context);
+      benutzerIstNichtRegistriertMitteilung(context);
       return;
     }
 
-    //kontrolliert, ob alle Passwörter übereinstimmen bzw. richtig sind
-    if (_passwortController.text != _passwortWiederholenController.text || _masterpasswortController.text != widget.masterpasswort) {
+    //überprüft, ob die eingetippten Daten mit den gespeicherten übereinstimmen
+    //im Moment werden die Daten noch lokal auf dem Gerät gespeichert, später auf dem Server
+    if (benutzername != _benutzernameController.text ||
+        passwort != _passwortController.text ||
+        widget.masterpasswort != _masterpasswortController.text) {
       falscheEingabeMitteilung(context);
       return;
     }
+
     sharedPreferencesInstance.setBool('istAngemeldet', true);
-    sharedPreferencesInstance.setBool("istRegistriert", true);
-    sharedPreferencesInstance.setString(
-      "benutzername",
-      _benutzernameController.text,
-    );
-    sharedPreferencesInstance.setString("passwort", _passwortController.text);
-    print("benutzerHatSichRegistriert");
+
+    print("benutzerHatSichAngemeldet");
 
     setState(() {
       this.benutzernameAufScreen =
@@ -77,24 +76,15 @@ class _RegistrierungsvorlageState extends State<Registrierungsvorlage> {
             keyboardType: TextInputType.text,
           ),
           TextField(
-            controller: _passwortWiederholenController,
-            decoration: InputDecoration(labelText: "Passwort Wiederholen"),
-            keyboardType: TextInputType.text,
-          ),
-          TextField(
             controller: _masterpasswortController,
             decoration: InputDecoration(labelText: "Masterpasswort"),
             keyboardType: TextInputType.text,
           ),
-          //ist später nicht mehr zu sehen
-          Center(
-            child: Text("Das Masterpasswort ist fixit"),
-          ),
           RaisedButton(
-              child: Text("Registrierung abschließen"),
+              child: Text("Anmeldung abschließen"),
               color: Theme.of(context).buttonColor,
               onPressed: () {
-                benutzerHatSichRegistriert();
+                benutzerHatSichAngemeldet();
               }),
           Center(
             child: Text(benutzernameAufScreen),

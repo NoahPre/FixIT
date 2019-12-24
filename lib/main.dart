@@ -13,6 +13,8 @@ import "package:shared_preferences/shared_preferences.dart";
 import "./Widgets/Fehlermeldungsvorlage/FABforFehlermeldungsvorlage.dart";
 //für die Registrierung
 import "./Widgets/RegistrierungUndAnmeldung/RegistrierungsButton.dart";
+//für die Anmeldung
+import "./Widgets/RegistrierungUndAnmeldung/Anmeldungsbutton.dart";
 
 void main() => runApp(FixIt());
 
@@ -70,29 +72,32 @@ class FixItHomePage extends StatefulWidget {
 class _FixItHomePageState extends State<FixItHomePage> {
   //hier kommen Funktionen wie initState(), didUpdateWidget() und dispose() hin
 
+
+  //masterpasswort für die App
+  String masterpasswort = "fixit";
   //shared_preferences:
-  //wird am Anfang von istBenutzerRegistriert() überschrieben
-  bool istRegistriert;
-  //wird am Anfang von istBenutzerRegistriert() überschrieben
+  //wird am Anfang von istBenutzerAngemeldet() überschrieben
+  bool istAngemeldet;
+  //wird am Anfang von istBenutzerAngemeldet() überschrieben
   String benutzername = "";
 
-  //checkt, ob der User registriert ist, setzt istRegistriert auf true bzw. false
+  //checkt, ob der User angemeldet ist, setzt istAngemeldet auf true bzw. false
   //und speichert den Benutzernamen in benutzername ab
-  istBenutzerRegistriert() async {
+  istBenutzerAngemeldet() async {
     SharedPreferences sharedPreferencesInstance =
         await SharedPreferences.getInstance();
     setState(() {
-      this.istRegistriert =
-          sharedPreferencesInstance.getBool('istRegistriert') ?? false;
+      this.istAngemeldet =
+          sharedPreferencesInstance.getBool('istAngemeldet') ?? false;
       this.benutzername = sharedPreferencesInstance.getString("benutzername");
     });
   }
 
   //setzt die Registrierung zurück
-  registrierungZuruecksetzen() async {
+  abmelden() async {
     SharedPreferences sharedPreferencesInstance =
         await SharedPreferences.getInstance();
-    sharedPreferencesInstance.setBool('istRegistriert', false);
+    sharedPreferencesInstance.setBool('istAngemeldet', false);
   }
 
   //build() mit Widget Tree
@@ -100,13 +105,12 @@ class _FixItHomePageState extends State<FixItHomePage> {
   Widget build(BuildContext context) {
 
     var theme = Theme.of(context);
-    //updated istRegistriert und benutzername
-    istBenutzerRegistriert();
+    //updated istAngemeldet und benutzername
+    istBenutzerAngemeldet();
 
-    //checkt, ob der Benutzer registriert ist (ist Registriert entweder true oder false)
-    var Unbenannt;
-    return istRegistriert
-        //wird ausgeführt, wenn istRegistriert true ist
+    //checkt, ob der Benutzer angemeldet ist (istAngemeldet entweder true oder false)
+    return istAngemeldet
+        //wird ausgeführt, wenn der Benutzer angemeldet ist
         ? Scaffold(
             appBar: AppBar(
               title: Text(
@@ -127,34 +131,35 @@ class _FixItHomePageState extends State<FixItHomePage> {
                 ),
                 Image.asset('assets/MeldeAblauf.jpg',height: 420,),
                 RaisedButton(
-                  child: Text("Registrierung zurücksetzen"),
-                  color: Colors.red,
+                  child: Text("Abmelden"),
+                  color: Theme.of(context).buttonColor,
                   onPressed: () {
-                    registrierungZuruecksetzen();
+                    abmelden();
                   },
                 ),
 
               ],
             ),
           )
-        //wird ausgeführt, wenn istRegistriert false ist
+        //wird ausgeführt, wenn der Benutzer nicht angemeldet ist
         : Scaffold(
             appBar: AppBar(
               title: Text(
                 "FixIt",
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).appBarTheme.textTheme.title
               ),
             ),
             body: Column(
               children: <Widget>[
                 Center(
                   child: Text(
-                    "Sie sind nicht registriert",
+                    "Sie sind nicht angemeldet",
                     style: TextStyle(
                         fontSize: Theme.of(context).textTheme.title.fontSize),
                   ),
                 ),
-                RegistrierungsButton(),
+                AnmeldungsButton(masterpasswort: masterpasswort),
+                RegistrierungsButton(masterpasswort: masterpasswort,),
               ],
             ),
           );
