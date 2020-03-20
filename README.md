@@ -1,16 +1,58 @@
 # fixit
 
-FixIT App
+FixIt ist ein Schulprojekt. Die fertige App soll helfen, technische Fehler und andere Defekte zu melden und eine schnelle Beseitigung dieser zu gewährleisten.
 
-## Getting Started
+## Zur Orientierung
 
-This project is a starting point for a Flutter application.
+Dieses Projekt ist ein Flutter Projekt. Für mehr Informationen siehe: https://flutter.dev/
 
-A few resources to get you started if this is your first Flutter project:
+### Ordnerstruktur:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+in /lib/:
+- main.dart: Startpunkt der App
+- klassen: Definitionen von Klassen
+- netzwerk: Netzwerk und co
+- seiten: alle Seiten der App
+- sonstiges: sontiges
+- widgets: Widgets, die zu groß/komplex sind
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+sonstige Ordner:
+- assets: Bilder und andere Daten
+
+Ordnerstruktur nach dem Vorbild von https://www.oreilly.com/library/view/beginning-flutter/9781119550822/ Kapitel 4 "CREATING AND ORGANIZING FOLDERS AND FILES"
+alternativ: https://medium.com/flutter-community/flutter-code-organization-revised-b09ad5cef7f6
+
+### Aufbau von Dokumenten
+#### Klassen
+Innerhalb der Klassendefinition haben wir uns auf folgende Reihenfolge der Klassenbestandteile geeinigt:
+1. Constructor
+2. Variablen
+3. Methoden
+ - initState(), dispose()
+ - eigene Methoden
+ - build()
+4. am Ende kann man eventuell unwichtiges Zeug ablagern
+
+#### Importe
+- 1
+
+ 1st party packages
+- 2
+
+ unsere Dokumente
+- 3
+
+ 3rd party packages
+
+
+## Schreibweisen
+
+Dateinamen und Ordnernamen werden auf Deutsch geschrieben.
+
+Kommentare werden auf Deutsch, Variablen und Funktionen in camelCase und auch auf Deutsch geschrieben (damit wir ein bisschen einheitlich sind).
+
+## Aufbau der App
+
+
+
+
