@@ -1,9 +1,10 @@
 // fehlerliste.dart
 // 1
-import 'package:flutter/gestures.dart';
 import "package:flutter/material.dart";
+import "package:shared_preferences/shared_preferences.dart";
 // 2
 import "../klassen/fehler.dart";
+import "../seiten/fehlerDetailansicht.dart";
 
 class Fehlerliste extends StatefulWidget {
   Fehlerliste({this.fehlerliste, this.fehlerGeloescht});
@@ -18,6 +19,8 @@ class Fehlerliste extends StatefulWidget {
 class _FehlerlisteState extends State<Fehlerliste> {
   List<Fehler> _fehlerliste;
 
+  
+
   @override
   void initState() {
     super.initState();
@@ -30,12 +33,11 @@ class _FehlerlisteState extends State<Fehlerliste> {
 
     return _fehlerliste.length == 0
         ? Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Noch keine Fehler gemeldet"),
-              Image(
-                image: AssetImage("assets/MeldeAblauf.jpg"),
-              )
+              Center(
+                child: Text("Noch keine Fehler gemeldet"),
+              ),
             ],
           )
         : ListView(
@@ -56,16 +58,33 @@ class _FehlerlisteState extends State<Fehlerliste> {
                     );
                   },
                   child: Card(
-                    child: Row(
-                      children: <Widget>[
-                        CircleAvatar(
-                          child: Text(fehler.raum),
-                        ),
-                        SizedBox(
-                          width: _size.width * 0.03,
-                        ),
-                        Text(fehler.beschreibung),
-                      ],
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              fullscreenDialog: false,
+                              builder: (context) {
+                                return FehlerDetailansicht(
+                                  fehler: fehler,
+                                );
+                              }),
+                        );
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Hero(
+                            tag: "CircleAvatarMitRaumnummer",
+                            child: CircleAvatar(
+                              child: Text(fehler.raum),
+                            ),
+                          ),
+                          SizedBox(
+                            width: _size.width * 0.03,
+                          ),
+                          Text(fehler.beschreibung),
+                        ],
+                      ),
                     ),
                   ),
                   key: Key(

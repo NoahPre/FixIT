@@ -3,7 +3,6 @@
 import "package:flutter/material.dart";
 // 2
 import "../seiten/fehlermeldung.dart";
-import "../klassen/fehler.dart";
 
 class FABHome extends StatelessWidget {
   FABHome({this.fehlerGemeldet});
@@ -18,7 +17,7 @@ class FABHome extends StatelessWidget {
       ),
       tooltip: "Fehler melden",
       onPressed: () {
-        Future<Fehler> fehler = Navigator.push(
+        Navigator.push(
           context,
           MaterialPageRoute(
             fullscreenDialog: true,

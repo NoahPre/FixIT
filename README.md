@@ -28,9 +28,9 @@ Innerhalb der Klassendefinition haben wir uns auf folgende Reihenfolge der Klass
 1. Constructor
 2. Variablen
 3. Methoden
- - initState(), dispose()
+ - initState(), dispose(), etc.
  - eigene Methoden
- - build()
+ - build() (bei Widgets)
 4. am Ende kann man eventuell unwichtiges Zeug ablagern
 
 #### Importe
@@ -45,13 +45,19 @@ Innerhalb der Klassendefinition haben wir uns auf folgende Reihenfolge der Klass
  3rd party packages
 
 
-## Schreibweisen
+### Schreibweisen
 
 Dateinamen und Ordnernamen werden auf Deutsch geschrieben.
 
 Kommentare werden auf Deutsch, Variablen und Funktionen in camelCase und auch auf Deutsch geschrieben (damit wir ein bisschen einheitlich sind).
 
-## Aufbau der App
+### Aufbau der App
+
+
+### Sonstiges
+Das Masterpasswort kann im Dokument registrierung.dart in Registrierung._validateMasterpasswortTextfeld geändert werden.
+
+
 
 
 

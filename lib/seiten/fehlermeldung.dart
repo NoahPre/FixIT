@@ -12,6 +12,7 @@ class Fehlermeldung extends StatefulWidget {
 
   Fehlermeldung({this.fehlerGemeldet});
 
+  // Funktion, die neuen Fehler in die fehlerliste einträgt
   final fehlerGemeldet;
 
   @override
@@ -55,7 +56,6 @@ class _FehlermeldungState extends State<Fehlermeldung> {
 
   @override
   Widget build(BuildContext context) {
-    Size _size = MediaQuery.of(context).size;
     print("built");
     return Scaffold(
       appBar: AppBar(
