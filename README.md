@@ -56,7 +56,15 @@ Kommentare werden auf Deutsch, Variablen und Funktionen in camelCase und auch au
 
 ### Sonstiges
 Das Masterpasswort kann im Dokument registrierung.dart in Registrierung._validateMasterpasswortTextfeld geändert werden.
+Die Url des Servers muss in anmeldungProvider.dart geändert werden.
 
+#### Provider Erklärung
+Wir benutzen Provider für unser State Management. Da jeder **ChangeNotifier** nur für ein oder zwei **Listeners** ausgelegt ist, haben wir uns auf die folgenden Provider geeinigt.
+
+Folgende Provider:
+- anmeldungProvider: wird von den Widgets Registrierung und Seitenmenue verwendet
+- benutzerInfoProvider: wird von FehlermeldungVorlage verwendet
+- fehlerlisteProvider: wird von den Widgets Fehlerliste und FehlermeldungVorlage verwendet
 
 
 

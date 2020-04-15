@@ -5,22 +5,20 @@ import 'package:flutter/material.dart';
 import "../widgets/raumnummerEingabe.dart";
 import "../widgets/allgemein/FertigButton.dart";
 import "../klassen/fehler.dart";
+import "../klassen/provider/fehlerlisteProvider.dart";
 // 3
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import "package:provider/provider.dart";
+import "package:intl/intl.dart";
 
 class Fehlermeldung extends StatefulWidget {
-
-  Fehlermeldung({this.fehlerGemeldet});
-
-  // Funktion, die neuen Fehler in die fehlerliste einträgt
-  final fehlerGemeldet;
 
   @override
   State<StatefulWidget> createState() {
     return _FehlermeldungState();
   }
 }
-
+ 
 class _FehlermeldungState extends State<Fehlermeldung> {
   // dynamische Überschrift
   String _ueberschrift = "Fehler in Raum ";
@@ -29,7 +27,13 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   FocusNode _beschreibungNode = FocusNode();
 
   // Fehler, der auf dieser Seite gemeldet wird
-  Fehler fehler = Fehler(id: DateTime.now().millisecondsSinceEpoch);
+  Fehler fehler = Fehler(
+    id: DateTime.now().millisecondsSinceEpoch,
+    datum: DateFormat("yyyyMMdd").format(DateTime.now()).toString(),
+    //das muss man noch updaten
+    melder: "Martin",
+    gefixt: "0",
+  );
 
   @override
   void initState() {
@@ -56,7 +60,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
 
   @override
   Widget build(BuildContext context) {
-    print("built");
+    final FehlerlisteProvider fehlerlisteProvider = Provider.of<FehlerlisteProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(_ueberschrift),
@@ -67,7 +71,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
               setState(() {
                 fehler.beschreibung = _beschreibungController.text;
               });
-              widget.fehlerGemeldet(fehler: fehler);
+              fehlerlisteProvider.fehlerGemeldet(fehler: fehler);
               Navigator.pop(context);
             },
           ),

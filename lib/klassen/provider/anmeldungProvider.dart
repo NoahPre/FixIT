@@ -3,6 +3,7 @@
 import "package:flutter/material.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
+// für eine Erklärung der Provider siehe README.md
 class AnmeldungProvider with ChangeNotifier {
   AnmeldungProvider() {
     holeUserInformation();

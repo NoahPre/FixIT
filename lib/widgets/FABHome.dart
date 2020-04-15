@@ -5,10 +5,6 @@ import "package:flutter/material.dart";
 import "../seiten/fehlermeldung.dart";
 
 class FABHome extends StatelessWidget {
-  FABHome({this.fehlerGemeldet});
-
-  final fehlerGemeldet;
-
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -22,9 +18,7 @@ class FABHome extends StatelessWidget {
           MaterialPageRoute(
             fullscreenDialog: true,
             builder: (BuildContext context) {
-              return Fehlermeldung(
-                fehlerGemeldet: fehlerGemeldet,
-              );
+              return Fehlermeldung();
             },
           ),
         );

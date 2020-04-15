@@ -6,6 +6,7 @@ import "./seiten/home.dart";
 import "./klassen/thema.dart";
 // Provider:
 import "./klassen/provider/anmeldungProvider.dart";
+import "./klassen/provider/fehlerlisteProvider.dart";
 // 3
 import "package:provider/provider.dart";
 
@@ -18,13 +19,16 @@ class FixIt extends StatelessWidget {
     // für mehr Informationen siehe: https://pub.dev/packages/provider
     return MultiProvider(
       providers: [
-        // Provider für die Anmeldung / Registrierung 
+        // Provider für die Anmeldung / Registrierung
         ChangeNotifierProvider<AnmeldungProvider>.value(
           value: AnmeldungProvider(),
         ),
+        ChangeNotifierProvider<FehlerlisteProvider>.value(
+          value: FehlerlisteProvider(),
+        ),
       ],
       child: MaterialApp(
-        // Startseite der App 
+        // Startseite der App
         home: Home(),
         // wird in /klassen/thema.dart definiert
         theme: thema,

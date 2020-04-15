@@ -6,12 +6,9 @@ import "dart:async";
 // 2
 import "../widgets/fehlerliste.dart";
 import "../widgets/FABHome.dart";
-import "../klassen/fehler.dart";
 import "../widgets/seitenmenue.dart";
 import "./registrierung.dart";
-import "../klassen/provider/anmeldungProvider.dart";
-// 3
-import "package:provider/provider.dart";
+
 
 class Home extends StatefulWidget {
   @override
@@ -19,26 +16,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // Liste der Fehler
-  List<Fehler> fehlerliste = [];
   // Variablen mit wichtigsten Eigenschaften, werden am Anfang aus SharedPreferences überschrieben
   bool istAngemeldet = false;
   String benutzername = "";
   String passwort;
   bool istFehlermelder = true;
-
-  void fehlerGemeldet({Fehler fehler}) {
-    // fügt den in Fehlermeldung gemeldeten Fehler zur fehlerListe hinzu
-    setState(() {
-      fehlerliste.add(fehler);
-    });
-  }
-
-  void fehlerGeloescht({int index}) {
-    setState(() {
-      fehlerliste.removeAt(index);
-    });
-  }
 
   @override
   void initState() {
@@ -52,9 +34,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final AnmeldungProvider anmeldungProvider =
-        Provider.of<AnmeldungProvider>(context);
-
     return FutureBuilder(
       initialData: false,
       future: istUserAngemeldet(),
@@ -72,15 +51,10 @@ class _HomeState extends State<Home> {
                       child: Padding(
                         padding: EdgeInsets.all(16.0),
                         // Liste mit gemeldeten Fehlern
-                        child: Fehlerliste(
-                          fehlerliste: fehlerliste,
-                          fehlerGeloescht: fehlerGeloescht,
-                        ),
+                        child: Fehlerliste(),
                       ),
                     ),
-                    floatingActionButton: FABHome(
-                      fehlerGemeldet: fehlerGemeldet,
-                    ),
+                    floatingActionButton: FABHome(),
                   )
                 :
                 // wird angezeigt, wenn der User nicht angemeldet ist, also wenn istAngemeldet in SharedPreferences false ist

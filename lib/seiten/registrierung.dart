@@ -1,7 +1,6 @@
 // registrierung.dart
 // 1
 import "package:flutter/material.dart";
-import "package:shared_preferences/shared_preferences.dart";
 // 2
 import "../klassen/provider/anmeldungProvider.dart";
 // 3
