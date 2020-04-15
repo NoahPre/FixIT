@@ -20,7 +20,6 @@ class FehlerlisteProvider with ChangeNotifier {
   List<Fehler> fehlerliste;
   // um einen neuen Fehler zu schreiben muss man nur diese Funktion aufrufen
   void fehlerGemeldet({Fehler fehler}) {
-    fehlerliste.add(fehler);
     schreibeFehler(
       id: fehler.id,
       datum: fehler.datum,
@@ -29,13 +28,13 @@ class FehlerlisteProvider with ChangeNotifier {
       beschreibung: fehler.beschreibung,
       gefixt: fehler.gefixt,
     );
+    fehlerliste.add(fehler);
     notifyListeners();
   }
 
   // um einen alten Fehler zu löschen muss man nur diese Funktion aufrufen
-  void fehlerGeloescht({int index}) {
-    fehlerliste.removeAt(index);
-    // hier muss noch entferneFehler() aufgerufen werden
+  void fehlerGeloescht({Fehler fehler}) {    entferneFehler(id: fehler.id);
+    fehlerliste.remove(fehler);
     notifyListeners();
   }
 
@@ -76,5 +75,10 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   // löscht einen Fehler mit entferneFehler.php
-  Future<void> entferneFehler() async {}
+  Future<void> entferneFehler({int id}) async {
+    var url = "http://fixapp.ddns.net/entferneFehler.php?id=$id";
+    http.Response response = await http.get(url);
+    print(url);
+    print("entferneFehler: " + response.body);
+  }
 }

@@ -23,7 +23,6 @@ class _FehlerlisteState extends State<Fehlerliste> {
   }
 
   Future<List<Fehler>> holeFehler() async {
-    print("holeFehler");
     var url = 'http://fixapp.ddns.net/gibAlleFehler.php';
     http.Response response = await http.get(url);
     var jsonObjekt = jsonDecode(response.body);
@@ -90,9 +89,9 @@ class _FehlerlisteState extends State<Fehlerliste> {
                             color: Colors.red,
                           ),
                           onDismissed: (DismissDirection direction) {
+                            print(fehler.id.toString());
                             fehlerlisteProvider.fehlerGeloescht(
-                              index: fehlerlisteProvider.fehlerliste
-                                  .indexOf(fehler),
+                              fehler: fehler,
                             );
                           },
                           child: Card(
