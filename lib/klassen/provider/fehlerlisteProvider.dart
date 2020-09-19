@@ -1,11 +1,8 @@
 // fehlerlisteProvider.dart
 // 1
-import "package:flutter/material.dart";
+import "../../imports.dart";
 import "package:http/http.dart" as http;
-import "dart:convert";
 import "dart:async";
-// 2
-import "../fehler.dart";
 
 // Dieser Provider enthält die Fehlerliste, die dem Benutzer angezeigt wird.
 // Außerdem enthält er Funktionalität, mit der man
@@ -23,7 +20,6 @@ class FehlerlisteProvider with ChangeNotifier {
     schreibeFehler(
       id: fehler.id,
       datum: fehler.datum,
-      melder: fehler.melder,
       raum: fehler.raum,
       beschreibung: fehler.beschreibung,
       gefixt: fehler.gefixt,
@@ -32,29 +28,75 @@ class FehlerlisteProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void fehlerGefixt({int indexInFehlerliste}) {}
+
   // um einen alten Fehler zu löschen muss man nur diese Funktion aufrufen
-  void fehlerGeloescht({Fehler fehler}) {    entferneFehler(id: fehler.id);
+  void fehlerGeloescht({Fehler fehler}) {
+    entferneFehler(id: fehler.id);
     fehlerliste.remove(fehler);
     notifyListeners();
   }
 
   Future<String> holeFehler() async {
-    var url = 'http://fixapp.ddns.net/gibAlleFehler.php';
-    http.Response response = await http.get(url);
-    var jsonObjekt = jsonDecode(response.body);
+    // var url = 'http://fixapp.ddns.net/gibAlleFehler.php';
+    // http.Response response = await http.get(url);
+    // var jsonObjekt = jsonDecode(response.body);
     // überschreibt fehlerliste mit den Werten aus der Datenbank
-    this.fehlerliste = List.generate(jsonObjekt.length, (int index) {
-      // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
-      return Fehler(
-        id: int.parse(jsonObjekt[index]["id"]),
-        datum: jsonObjekt[index]["datum"],
-        melder: jsonObjekt[index]["melder"],
-        raum: jsonObjekt[index]["raum"],
-        beschreibung: jsonObjekt[index]["beschreibung"],
-        gefixt: jsonObjekt[index]["gefixt"],
-      );
-    });
-    return response.body;
+    // this.fehlerliste = List.generate(jsonObjekt.length, (int index) {
+    //   // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
+    //   return Fehler(
+    //     id: int.parse(jsonObjekt[index]["id"]),
+    //     datum: jsonObjekt[index]["datum"],
+    //     melder: jsonObjekt[index]["melder"],
+    //     raum: jsonObjekt[index]["raum"],
+    //     beschreibung: jsonObjekt[index]["beschreibung"],
+    //     gefixt: jsonObjekt[index]["gefixt"],
+    //   );
+    // });
+    fehlerliste = [
+      Fehler(
+        id: 0,
+        datum: "2020/01/01",
+        beschreibung: "Erster Fehler",
+        fixer: "Martin",
+        gefixt: "1",
+        gefixtDatum: "2020/01/03",
+        kommentar: "kein Kommentar",
+        raum: "K21",
+      ),
+      Fehler(
+        id: 1,
+        datum: "2020/01/03",
+        beschreibung: "Zweiter Fehler",
+        fixer: "Noah",
+        gefixt: "1",
+        gefixtDatum: "2020/01/07",
+        kommentar: "kein Kommentar",
+        raum: "N41",
+      ),
+      Fehler(
+        id: 2,
+        datum: "2020/01/02",
+        beschreibung: "Dritter Fehler",
+        fixer: "",
+        gefixt: "0",
+        gefixtDatum: "",
+        kommentar: "",
+        raum: "K21",
+      ),
+      Fehler(
+        id: 3,
+        datum: "2020/01/05",
+        beschreibung: "Vierter Fehler",
+        fixer: "Martin",
+        gefixt: "0",
+        gefixtDatum: "",
+        kommentar: "",
+        raum: "K21",
+      ),
+    ];
+    return "";
+    // return response.body;
   }
 
   // fügt einen Fehler mit schreibeFehler.php hinzu

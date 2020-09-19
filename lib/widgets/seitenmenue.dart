@@ -1,117 +1,152 @@
 // seitenmenue.dart
-// 1
-import "package:flutter/material.dart";
-// 2
-import "../seiten/statistiken.dart";
-import "../seiten/tutorial.dart";
-import "../seiten/ueberUns.dart";
-import "../seiten/soforthilfe.dart";
-import "../klassen/provider/anmeldungProvider.dart";
-// 3
-import "package:provider/provider.dart";
+import "../imports.dart";
 
 class Seitenmenue extends StatelessWidget {
+  final String aktuelleSeite;
+
+  Seitenmenue({this.aktuelleSeite});
 
   @override
   Widget build(BuildContext context) {
+    ThemeData thema = Theme.of(context);
 
-    final AnmeldungProvider anmeldungProvider = Provider.of<AnmeldungProvider>(context);
+    final BenutzerInfoProvider benutzerInfoProvider =
+        Provider.of<BenutzerInfoProvider>(context);
+
+    Size deviceSize = MediaQuery.of(context).size;
 
     return Drawer(
+      
       child: ListView(
         children: <Widget>[
           DrawerHeader(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     CircleAvatar(
                       child: Icon(Icons.person),
+                      backgroundColor: thema.primaryColor,
+                      foregroundColor: Colors.white,
+                      minRadius: deviceSize.width * 0.07,
                     ),
-                    Divider(),
-                    Text(anmeldungProvider.benutzername ?? ""),
+                    SizedBox(
+                      width: deviceSize.width * 0.025,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        benutzerInfoProvider.istFehlermelder
+                            ? Text("Fehlermelder")
+                            : Text("Fehlerbeheber"),
+                      ],
+                    ),
                   ],
                 ),
-                Text("Passwort ${anmeldungProvider.passwort}"),
-                anmeldungProvider.istFehlermelder ? Text("Fehlermelder") : Text("Fehlerbeheber"),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                // TODO: richtigen gefixte Fehler Zähler erstellen
+                Flexible(
+                  child: benutzerInfoProvider.istFehlermelder
+                      ? Text("Anzahl an gemeldeten Fehlern: 27")
+                      : Text("Anzahl an gefixten Fehlern: 27"),
+                ),
               ],
             ),
           ),
+          // TODO: hier komischen Abstand wegmachen 
           ListTile(
             title: Text("Gemeldete Fehler"),
             onTap: () {
-              // lässt das Seitenmenü einklappen
-              Navigator.pop(context);
+              if (this.aktuelleSeite == "/gemeldeteFehler") {
+                // lässt das Seitenmenü einklappen
+                Navigator.pop(context);
+              } else {
+                // lässt das Seitenmenü einklappen
+                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, "/gemeldeteFehler");
+              }
             },
           ),
+          Divider(),
           ListTile(
             title: Text("Soforthilfe"),
             onTap: () {
-              // lässt das Seitenmenü einklappen
-              Navigator.pop(context);
-              // zeigt die Soforthilfe Seite
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    fullscreenDialog: false,
-                    builder: (context) {
-                      return Soforthilfe();
-                    }),
-              );
+              if (this.aktuelleSeite == "/soforthilfe") {
+                // lässt das Seitenmenü einklappen
+                Navigator.pop(context);
+              } else {
+                // lässt das Seitenmenü einklappen
+                Navigator.pop(context);
+                // zeigt die Soforthilfe Seite
+                Navigator.pushReplacementNamed(context, "/soforthilfe");
+              }
             },
           ),
+          Divider(),
           ListTile(
             // alternativer Titel: Tutorial
             title: Text("Wie funktioniert's"),
             onTap: () {
-              // lässt das Seitenmenü einklappen
-              Navigator.pop(context);
-              // bringt die Tutorial Seite in den Vordergrund
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    fullscreenDialog: false,
-                    builder: (context) {
-                      return Tutorial();
-                    }),
-              );
+              if (this.aktuelleSeite == "/tutorial") {
+                // lässt das Seitenmenü einklappen
+                Navigator.pop(context);
+              } else {
+                // lässt das Seitenmenü einklappen
+                Navigator.pop(context);
+                // zeigt die Soforthilfe Seite
+                Navigator.pushReplacementNamed(context, "/tutorial");
+              }
             },
           ),
+          Divider(),
           ListTile(
             title: Text("Statistiken"),
             onTap: () {
-              // lässt das Seitenmenü einklappen
-              Navigator.pop(context);
-              // bringt die Statistiken Seite in den Vordergrund
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) {
-                  return Statistiken();
-                }),
-              );
+              if (this.aktuelleSeite == "/statistiken") {
+                // lässt das Seitenmenü einklappen
+                Navigator.pop(context);
+              } else {
+                // lässt das Seitenmenü einklappen
+                Navigator.pop(context);
+                // zeigt die Soforthilfe Seite
+                Navigator.pushReplacementNamed(context, "/statistiken");
+              }
             },
           ),
+          Divider(),
+          ListTile(
+              title: Text("Einstellungen"),
+              onTap: () {
+                if (aktuelleSeite == "/einstellungen") {
+                  Navigator.pop(context);
+                } else {
+                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, "/einstellungen");
+                }
+              }),
+          Divider(),
           ListTile(
             title: Text("Über uns"),
             onTap: () {
-              // lässt das Seitenmenü einklappen
-              Navigator.pop(context);
-              // bringt die ÜberUns Seite in den Vordergrund
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) {
-                  return UeberUns();
-                }),
-              );
-            },
-          ),
-          ListTile(
-            title: Text("Abmelden"),
-            onTap: () {
-              Navigator.pop(context);
-              // meldet User ab, indem istAngemeldet in AnmeldungProvider überschrieben wird
-              anmeldungProvider.istAngemeldet = false;
-              anmeldungProvider.ueberschreibeUserInformation();
+              if (this.aktuelleSeite == "/ueberUns") {
+                // lässt das Seitenmenü einklappen
+                Navigator.pop(context);
+              } else {
+                // lässt das Seitenmenü einklappen
+                Navigator.pop(context);
+                // zeigt die Soforthilfe Seite
+                Navigator.pushReplacementNamed(context, "/ueberUns");
+              }
             },
           ),
         ],

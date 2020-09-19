@@ -49,8 +49,7 @@ class _RaumnummerEingabeState extends State<RaumnummerEingabe> {
         SizedBox(
           width: _size.width * 0.04,
         ),
-        Container(
-          width: _size.width * 0.3,
+        Flexible(
           child: TextField(
             controller: _raumController,
             decoration: InputDecoration(

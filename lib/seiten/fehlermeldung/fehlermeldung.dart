@@ -1,24 +1,14 @@
 // fehlermeldungVorlage.dart
-// 1
-import 'package:flutter/material.dart';
-// 2
-import "../widgets/raumnummerEingabe.dart";
-import "../widgets/allgemein/FertigButton.dart";
-import "../klassen/fehler.dart";
-import "../klassen/provider/fehlerlisteProvider.dart";
-// 3
-import 'package:keyboard_visibility/keyboard_visibility.dart';
-import "package:provider/provider.dart";
+import "../../imports.dart";
 import "package:intl/intl.dart";
 
 class Fehlermeldung extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
     return _FehlermeldungState();
   }
 }
- 
+
 class _FehlermeldungState extends State<Fehlermeldung> {
   // dynamische Überschrift
   String _ueberschrift = "Fehler in Raum ";
@@ -31,7 +21,6 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     id: DateTime.now().millisecondsSinceEpoch,
     datum: DateFormat("yyyyMMdd").format(DateTime.now()).toString(),
     //das muss man noch updaten
-    melder: "Martin",
     gefixt: "0",
   );
 
@@ -51,7 +40,9 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   }
 
   // updatet die Überschrift und den Text des Dropdown Buttons
-  void updateText({String textInTextfield,}) {
+  void updateText({
+    String textInTextfield,
+  }) {
     setState(() {
       _ueberschrift = "Fehler in Raum " + textInTextfield;
       fehler.raum = textInTextfield;
@@ -60,16 +51,36 @@ class _FehlermeldungState extends State<Fehlermeldung> {
 
   @override
   Widget build(BuildContext context) {
-    final FehlerlisteProvider fehlerlisteProvider = Provider.of<FehlerlisteProvider>(context);
+    final FehlerlisteProvider fehlerlisteProvider =
+        Provider.of<FehlerlisteProvider>(context);
+    final BenutzerInfoProvider benutzerInfoProvider =
+        Provider.of<BenutzerInfoProvider>(context);
+
+    final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(_ueberschrift),
         actions: <Widget>[
           FlatButton(
-            child: Text("Senden"),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  "Senden",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(width: deviceSize.width * 0.01),
+                Icon(
+                  Icons.send,
+                  color: Colors.white,
+                ),
+              ],
+            ),
             onPressed: () {
               setState(() {
                 fehler.beschreibung = _beschreibungController.text;
+                // fehler.melder = benutzerInfoProvider.benutzername;
               });
               fehlerlisteProvider.fehlerGemeldet(fehler: fehler);
               Navigator.pop(context);
@@ -94,7 +105,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                 focusNode: _beschreibungNode,
                 keyboardType: TextInputType.text,
                 maxLines: null,
-                textInputAction: TextInputAction.newline,
+                // textInputAction: TextInputAction.newline,
               ),
             ],
           ),

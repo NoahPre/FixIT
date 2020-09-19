@@ -1,37 +1,48 @@
 //main.dart
-// 1
-import "package:flutter/material.dart";
-// 2
-import "./seiten/home.dart";
+import "./imports.dart";
 import "./klassen/thema.dart";
-// Provider:
-import "./klassen/provider/anmeldungProvider.dart";
-import "./klassen/provider/fehlerlisteProvider.dart";
-// 3
-import "package:provider/provider.dart";
 
 main() => runApp(FixIt());
+
+// TODO: wichtige Anmeldedaten zum Server zu .gitignore hinzufügen
+
+// TODO: alle istRegistriert in istAngemeldet umwandeln oder noch einen besseren Namen finden
+// TODO: schauen wie oft ich BenutzerInfoProvider benutze
+// TODO: standardmäßiges Datumsschreibweise festlegen
 
 class FixIt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // wir benutzen hier das Package Provider für ein besseres State Management
+    // wir benutzen hier Provider für ein besseres State Management
     // für mehr Informationen siehe: https://pub.dev/packages/provider
     return MultiProvider(
       providers: [
         // Provider für die Anmeldung / Registrierung
-        ChangeNotifierProvider<AnmeldungProvider>.value(
-          value: AnmeldungProvider(),
+        ChangeNotifierProvider<BenutzerInfoProvider>.value(
+          value: BenutzerInfoProvider(),
         ),
+        // Provider für die Fehlerliste
         ChangeNotifierProvider<FehlerlisteProvider>.value(
           value: FehlerlisteProvider(),
         ),
       ],
       child: MaterialApp(
-        // Startseite der App
-        home: Home(),
         // wird in /klassen/thema.dart definiert
         theme: thema,
+        // darkTheme: dunklesThema,
+        initialRoute: "/",
+        routes: {
+          "/": (context) => Home(),
+          // Startseite (initialRoute) der App
+          "/gemeldeteFehler": (context) => GemeldeteFehler(),
+          "/fehlerDetailansicht": (context) => FehlerDetailansicht(),
+          "/fehlerBehebung": (context) => Fehlerbehebung(),
+          "/soforthilfe": (context) => Soforthilfe(),
+          "/tutorial": (context) => Tutorial(),
+          "/statistiken": (context) => Statistiken(),
+          "/einstellungen": (context) => Einstellungen(),
+          "/ueberUns": (context) => UeberUns(),
+        },
       ),
     );
   }

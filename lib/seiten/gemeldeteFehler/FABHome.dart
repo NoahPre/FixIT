@@ -1,8 +1,6 @@
 // FABHome.dart
 // 1
-import "package:flutter/material.dart";
-// 2
-import "../seiten/fehlermeldung.dart";
+import "../../imports.dart";
 
 class FABHome extends StatelessWidget {
   @override

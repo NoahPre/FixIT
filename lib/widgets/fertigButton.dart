@@ -1,7 +1,6 @@
-import "package:flutter/material.dart";
-//für die iOS Widgets
+// fertigButton.dart
+import "../imports.dart";
 import "package:flutter/cupertino.dart";
-
 
 //Tutorial gefunden unter: https://blog.usejournal.com/keyboard-done-button-ux-in-flutter-ios-app-3b29ad46bacc
 //der "Fertig" Knopf, den man in fehlermeldungVorlage über jeder Tastatur auftauchen lässt

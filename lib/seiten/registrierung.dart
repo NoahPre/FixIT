@@ -1,25 +1,7 @@
 // registrierung.dart
-// 1
-import "package:flutter/material.dart";
-// 2
-import "../klassen/provider/anmeldungProvider.dart";
-// 3
-import "package:provider/provider.dart";
+import "../imports.dart";
 
 class Registrierung extends StatefulWidget {
-  Registrierung({
-    this.userWurdeAngemeldet,
-    this.benutzername,
-    this.passwort,
-    this.istAngemeldet,
-  });
-  // lässt Home() neu bilden
-  final userWurdeAngemeldet;
-  // Benutzername und Passwort für die Anmeldung
-  final String benutzername;
-  final String passwort;
-  final bool istAngemeldet;
-
   @override
   _RegistrierungState createState() => _RegistrierungState();
 }
@@ -32,8 +14,6 @@ class _RegistrierungState extends State<Registrierung> {
 
   // TextEditingController für die vier Textfelder
   final _benutzernameController = TextEditingController();
-  final _passwortController = TextEditingController();
-  final _passwortWiederholenController = TextEditingController();
   final _masterpasswortController = TextEditingController();
 
   // wird ausgeführt, wenn man einen anderen RadioButton auswählt
@@ -44,82 +24,81 @@ class _RegistrierungState extends State<Registrierung> {
     });
   }
 
-  // Methoden für die Validation der Form Textfelder
-  String _validateBenutzernameTextfeld({String benutzername}) {
-    return benutzername.isEmpty ? "Bitte einen Benutzernamen eingeben" : null;
-  }
-
-  String _validatePasswortTextfeld({String passwort}) {
-    return passwort.isEmpty ? "Bitte ein Passwort eingeben" : null;
-  }
-
-  String _validatePasswortWiederholenTextfeld({String passwort}) {
-    return passwort.isEmpty
-        ? "Bitte ein Passwort eingeben"
-        : passwort == _passwortController.text
-            ? null
-            : "Ihre Passwörter müssen übereinstimmen";
-  }
-
-  String _validateMasterpasswortTextfeld({String masterpasswort}) {
-    return masterpasswort == "fixit" ? null : "Falsches Masterpasswort";
-  }
-
   @override
   Widget build(BuildContext context) {
+    ThemeData thema = Theme.of(context);
     // Provider, der alle benötigten Daten und Funktionen für die Anmeldung hat
-    final AnmeldungProvider anmeldungProvider =
-        Provider.of<AnmeldungProvider>(context);
+    final BenutzerInfoProvider benutzerInfoProvider =
+        Provider.of<BenutzerInfoProvider>(context);
 
-    // checkt, ob der eingegebene Benutzername und das eingegebene Passwort mit dem richtigen Benutzernamen und dem richtigen Passwort übereinstimmt
-    bool kannUserSichAnmelden() {
-      if (anmeldungProvider.benutzername == _benutzernameController.text &&
-          anmeldungProvider.passwort == _passwortController.text) {
-        return true;
-      } else {
-        return false;
+    // Methoden für die Validation der Form Textfelder
+    // String _validateBenutzernameTextfeld({String benutzername}) {
+    //   return benutzername.isEmpty ? "Bitte einen Benutzernamen eingeben" : null;
+    // }
+
+    String _validateMasterpasswortTextfeld({
+      @required String masterpasswort,
+      @required bool istFehlermelder,
+    }) {
+      if (masterpasswort == "") {
+        return "Bitte das Masterpasswort eingeben";
+      }
+      switch (istFehlermelder) {
+        case true:
+          return masterpasswort == "fixit" ? null : "Falsches Masterpasswort";
+        case false:
+          return masterpasswort == "Fixit" ? null : "Falsches Masterpasswort";
+        default:
+          return null;
       }
     }
 
-    void userMeldetSichAn() {
+    void _userRegistriertSich() {
       if (_formKey.currentState.validate()) {
-        if (kannUserSichAnmelden()) {
-          print("User hat sich angemeldet");
-          anmeldungProvider.istAngemeldet = true;
-          anmeldungProvider.ueberschreibeUserInformation();
-        } else {
-          //zeigt einen Dialog, der dem User sagt, dass er etwas falsch eingegeben hat
-          showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              title: Text("Fehler"),
-              content: Text(
-                  "Benutzername und Passwort stimmen nicht überein. Haben Sie sich vielleicht vertippt?"),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text("OK"),
-                  onPressed: () => Navigator.pop(context),
-                )
-              ],
-            ),
-          );
-        }
-      }
-    }
-
-    void userRegistriertSich() {
-      if (_formKey.currentState.validate()) {
-        print("User hat sich registriert");
-        anmeldungProvider.istAngemeldet = true;
-        anmeldungProvider.benutzername = _benutzernameController.text;
-        anmeldungProvider.passwort = _passwortController.text;
+        print("userRegistriertSich");
+        benutzerInfoProvider.istBenuterRegistriertSink.add(true);
+        benutzerInfoProvider.istRegistriert = true;
         if (_radioGroupValue == 0) {
-          anmeldungProvider.istFehlermelder = true;
+          benutzerInfoProvider.istFehlermelder = true;
         } else {
-          anmeldungProvider.istFehlermelder = false;
+          benutzerInfoProvider.istFehlermelder = false;
         }
-        anmeldungProvider.ueberschreibeUserInformation();
+        benutzerInfoProvider.ueberschreibeUserInformation();
       }
+    }
+
+    // zeigt eine Alert Dialog mit Hilfe zum Benutzernamen
+    // void _zeigeBenutzernameHilfe() {
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) => AlertDialog(
+    //       title: Text("Benutzername Hilfe"),
+    //       content: Text("Hier steht ein erklärender Text zum Benutzernamen"),
+    //       actions: <Widget>[
+    //         FlatButton(
+    //           child: Text("OK"),
+    //           onPressed: () => Navigator.pop(context),
+    //         )
+    //       ],
+    //     ),
+    //   );
+    // }
+
+    // zeigt eine Alert Dialog mit Hilfe zum Benutzernamen
+    void _zeigeMasterpasswortHilfe() {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Masterpasswort Hilfe"),
+          content: Text("Hier steht ein erklärender Text zum Masterpasswort"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () => Navigator.pop(context),
+            )
+          ],
+        ),
+      );
     }
 
     return Scaffold(
@@ -127,70 +106,26 @@ class _RegistrierungState extends State<Registrierung> {
         title: Text("Registrierung bei FixIt"),
         // ist nur da, damit der Zurückpfeil nicht angezeigt wird
         leading: Container(
-          color: Colors.blue,
+          color: thema.primaryColor,
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          child: Center(
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  // Container mit Benutzername Textfeld
-                  Container(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "Benutzername",
-                          hintText: "Herr/Frau IHR NAME"),
-                      validator: (value) =>
-                          _validateBenutzernameTextfeld(benutzername: value),
-                      autocorrect: false,
-                      controller: _benutzernameController,
-                    ),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  // Container mit Passwort Textfeld
-                  Container(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "Passwort",
-                          hintText: "Geben Sie ein starkes Passwort ein"),
-                      validator: (value) =>
-                          _validatePasswortTextfeld(passwort: value),
-                      autocorrect: false,
-                      controller: _passwortController,
-                    ),
+                  Text(
+                    "Ich bin ",
+                    style: thema.textTheme.bodyText1,
                   ),
-                  // Container mit Passwort wiederholen Textfeld
-                  Container(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Passwort wiederholen",
-                        hintText: "Wiederholen Sie ihr Passwort",
-                      ),
-                      validator: (value) =>
-                          _validatePasswortWiederholenTextfeld(passwort: value),
-                      autocorrect: false,
-                      controller: _passwortWiederholenController,
-                    ),
-                  ),
-                  // Container mit Masterpasswort Textfeld
-                  Container(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "Masterpasswort",
-                          hintText: "Sollte Ihnen mittgeteilt worden sein"),
-                      validator: (value) =>
-                          _validateMasterpasswortTextfeld(masterpasswort: value),
-                      autocorrect: false,
-                      controller: _masterpasswortController,
-                    ),
-                  ),
-                  Divider(),
-                  Text("Ich bin "),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -201,7 +136,10 @@ class _RegistrierungState extends State<Registrierung> {
                           _radioButtonChanged(value);
                         },
                       ),
-                      Text("Fehlermelder"),
+                      Text(
+                        "Fehlermelder",
+                        style: thema.textTheme.bodyText1,
+                      ),
                       Radio(
                         value: 1,
                         groupValue: _radioGroupValue,
@@ -209,28 +147,90 @@ class _RegistrierungState extends State<Registrierung> {
                           _radioButtonChanged(value);
                         },
                       ),
-                      Text("Fehlerbeheber"),
+                      Text(
+                        "Fehlerbeheber",
+                        style: thema.textTheme.bodyText1,
+                      ),
                     ],
                   ),
+                  // Container mit Benutzername Textfeld
+                  // Row(
+                  //   children: <Widget>[
+                  //     Flexible(
+                  //       child: TextFormField(
+                  //         decoration: InputDecoration(
+                  //             labelText: "Benutzername",
+                  //             hintText: "Herr/Frau IHR NAME"),
+                  //         validator: (value) => _validateBenutzernameTextfeld(
+                  //             benutzername: value),
+                  //         autocorrect: false,
+                  //         controller: _benutzernameController,
+                  //       ),
+                  //     ),
+                  //     IconButton(
+                  //       icon: Icon(
+                  //         Icons.help,
+                  //         color: thema.accentIconTheme.color,
+                  //       ),
+                  //       tooltip: "Benutzername Hilfe",
+                  //       onPressed: () => _zeigeBenutzernameHilfe(),
+                  //     ),
+                  //   ],
+                  // ),
+                  // Container mit Masterpasswort Textfeld
                   Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: FlatButton(
-                          child: Text("Stattdessen anmelden"),
-                          onPressed: () => userMeldetSichAn(),
+                      Flexible(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: "Masterpasswort",
+                              hintText: "Sollte Ihnen mitgeteilt worden sein"),
+                          validator: (value) => _validateMasterpasswortTextfeld(
+                            masterpasswort: value,
+                            istFehlermelder: _radioGroupValue == 0,
+                          ),
+                          autocorrect: false,
+                          controller: _masterpasswortController,
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: RaisedButton(
-                          child: Text("Registrieren"),
-                          onPressed: () => userRegistriertSich(),
+                      IconButton(
+                        icon: Icon(
+                          Icons.help,
+                          // TODO: bei eventuellem darkmode das hier updaten
+                          color: Colors.black,
                         ),
-                      ),
+                        tooltip: "Masterpasswort Hilfe",
+                        onPressed: () => _zeigeMasterpasswortHilfe(),
+                      )
                     ],
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  RaisedButton(
+                    child: Text(
+                      "Registrieren",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    color: thema.primaryColor,
+                    shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: thema.primaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(18.0)),
+                    onPressed: () => _userRegistriertSich(),
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  // TODO: das hier beim Release entfernen
+                  Text(
+                    "Zum Debuggen: \nPasswort Fehlermelder: fixit, \nPasswort Fehlerbeheber: Fixit",
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                    style: thema.textTheme.bodyText1,
                   ),
                 ],
               ),
