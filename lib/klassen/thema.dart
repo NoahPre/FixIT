@@ -9,12 +9,14 @@ import "package:flutter/material.dart";
 - Buttons (auch FloatingActionButtons)
 und vieles mehr
 */
+
 var thema = ThemeData(
   primaryColor: Colors.black,
   accentColor: Colors.black,
   textTheme: TextTheme(
     // TODO: die richtige FontSize und FontWeight für standardmäßigen AppBar title herausfinden
     // TextStyle für die Titel von AppBars
+    
     headline1: TextStyle(
       color: Colors.white,
       fontSize: 20,

@@ -1,4 +1,5 @@
 // anmeldungProvider.dart
+
 import "../../imports.dart";
 
 // für eine Erklärung der Provider siehe README.md
@@ -67,10 +68,11 @@ class BenutzerInfoProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // schließt die StreamController
-  @override
-  void dispose() {
-    super.dispose();
-    _istBenutzerRegistriertController.close();
+  Future<bool> istUserAngemeldet() async {
+
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool("istRegistriert");
+
   }
+
 }

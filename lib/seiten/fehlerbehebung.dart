@@ -1,11 +1,10 @@
 // fehlerbehebung.dart
 // 1
 import 'package:bottom_bar/imports.dart';
-import 'package:bottom_bar/klassen/thema.dart';
 import "package:flutter/material.dart";
 
 class Fehlerbehebung extends StatefulWidget {
-  Fehlerbehebung({@required this.fehler});
+  Fehlerbehebung({this.fehler});
 
   final Fehler fehler;
 

@@ -1,6 +1,5 @@
 // fehlerliste.dart
 import "../../imports.dart";
-import "package:http/http.dart" as http;
 
 // TODO: beim fixen des Fehlers Kommentar hinterlassen Funktion hinzufügen
 

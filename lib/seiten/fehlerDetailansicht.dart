@@ -3,7 +3,7 @@ import "../imports.dart";
 
 class FehlerDetailansicht extends StatefulWidget {
   FehlerDetailansicht({
-    @required this.fehler,
+    this.fehler,
     this.fehlerliste,
   });
 
