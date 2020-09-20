@@ -10,11 +10,17 @@ class Fehlermeldung extends StatefulWidget {
 }
 
 class _FehlermeldungState extends State<Fehlermeldung> {
+  // globalKey für das Form Widget
+  final _formKey = GlobalKey<FormState>();
   // dynamische Überschrift
   String _ueberschrift = "Fehler in Raum ";
   // Zeugs fürs Beschreibungstextfeld
   TextEditingController _beschreibungController = TextEditingController();
   FocusNode _beschreibungNode = FocusNode();
+  // für die Raumnummerneingabe
+  TextEditingController _raumController = TextEditingController();
+  FocusNode _raumNode = FocusNode();
+  String _dropdownButtonText = "";
 
   // Fehler, der auf dieser Seite gemeldet wird
   Fehler fehler = Fehler(
@@ -28,6 +34,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   void initState() {
     super.initState();
 
+    // TODO: muss man diesen Listener hier entfernen?
     //sorgt dafür, dass man weiß, wann die Tastatur zu sehen ist
     KeyboardVisibilityNotification().addNewListener(
       onShow: () {
@@ -49,65 +56,155 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     });
   }
 
+  // Validatoren:
+  String _uerberpruefeRaumnummer(String raumnummer) {
+    if (raumnummer.isEmpty || raumnummer == "") {
+      return "Bitte eine Raumnummer eingeben";
+    }
+    else if (raumnummer.length > 3 || int.parse(raumnummer) > 420) {
+      return "Bitte eine gültige Raumnummer eingeben";
+    }
+    else {
+      return null;
+    }
+  }
+
+  String _ueberpruefeBeschreibung(String beschreibung) {
+    if (beschreibung.isEmpty || beschreibung == "") {
+      return "Bitte eine Beschreibung eingeben";
+    }
+    else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    ThemeData thema = Theme.of(context);
+    Size _size = MediaQuery.of(context).size;
     final FehlerlisteProvider fehlerlisteProvider =
         Provider.of<FehlerlisteProvider>(context);
-    final BenutzerInfoProvider benutzerInfoProvider =
-        Provider.of<BenutzerInfoProvider>(context);
 
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text(_ueberschrift),
-        actions: <Widget>[
-          FlatButton(
-            child: Row(
-              children: <Widget>[
-                Text(
-                  "Senden",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(width: deviceSize.width * 0.01),
-                Icon(
-                  Icons.send,
-                  color: Colors.white,
-                ),
-              ],
+        title: Text(
+          _ueberschrift,
+          style: thema.textTheme.headline1,
+        ),
+      ),
+      // Button um den Fehler zu melden
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: "FloatingActionButton",
+        label: Row(
+          children: <Widget>[
+            Text(
+              "Senden",
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
-            onPressed: () {
-              setState(() {
-                fehler.beschreibung = _beschreibungController.text;
-                // fehler.melder = benutzerInfoProvider.benutzername;
-              });
-              fehlerlisteProvider.fehlerGemeldet(fehler: fehler);
-              Navigator.pop(context);
-            },
-          ),
-        ],
+            SizedBox(width: deviceSize.width * 0.01),
+            Icon(
+              Icons.send,
+              color: Colors.white,
+            ),
+          ],
+        ),
+        onPressed: () {
+          if (_formKey.currentState.validate() == false) {
+            return;
+          }
+          setState(() {
+            fehler.beschreibung = _beschreibungController.text;
+            // fehler.melder = benutzerInfoProvider.benutzername;
+          });
+          fehlerlisteProvider.fehlerGemeldet(fehler: fehler);
+          Navigator.pop(context);
+        },
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              RaumnummerEingabe(
-                updateText: updateText,
-              ),
-              TextField(
-                controller: _beschreibungController,
-                decoration: InputDecoration(
-                  labelText: "Beschreibung",
-                  hintText: "",
+          padding: EdgeInsets.fromLTRB(8, 4, 8, 0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Colors.grey.shade100,
+                      ),
+                      padding: EdgeInsets.all(4.0),
+                      child: DropdownButton<String>(
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black,
+                        ),
+                        elevation: 8,
+                        value: _dropdownButtonText,
+                        hint: Text("Präfix"),
+                        items: [
+                          "",
+                          "K",
+                          "N",
+                          "Z",
+                        ].map((value) {
+                          return DropdownMenuItem(
+                            child: Text(value),
+                            value: value,
+                          );
+                        }).toList(),
+                        onChanged: (String value) {
+                          updateText(
+                            textInTextfield: value + _raumController.text,
+                          );
+                          setState(() {
+                            _dropdownButtonText = value;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: _size.width * 0.04,
+                    ),
+                    Flexible(
+                      child: TextFormField(
+                        controller: _raumController,
+                        decoration: InputDecoration(
+                          labelText: "Raumnummer",
+                          hintText: "",
+                        ),
+                        focusNode: _raumNode,
+                        keyboardType: TextInputType.number,
+                        maxLines: 1,
+                        textInputAction: TextInputAction.done,
+                        onChanged: (_) => updateText(
+                          textInTextfield:
+                              _dropdownButtonText + _raumController.text,
+                        ),
+                        validator: (String raumnummer) => _uerberpruefeRaumnummer(raumnummer),
+                      ),
+                    ),
+                  ],
                 ),
-                focusNode: _beschreibungNode,
-                keyboardType: TextInputType.text,
-                maxLines: null,
-                // textInputAction: TextInputAction.newline,
-              ),
-            ],
+                TextFormField(
+                  controller: _beschreibungController,
+                  decoration: InputDecoration(
+                    labelText: "Beschreibung",
+                    hintText: "",
+                  ),
+                  focusNode: _beschreibungNode,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  validator: (String beschreibung) => _ueberpruefeBeschreibung(beschreibung),
+                ),
+              ],
+            ),
           ),
         ),
       ),

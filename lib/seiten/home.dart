@@ -12,9 +12,9 @@ class _HomeState extends State<Home> {
     final BenutzerInfoProvider benutzerInfoProvider =
         Provider.of<BenutzerInfoProvider>(context);
 
-    return StreamBuilder(
-      initialData: benutzerInfoProvider.istRegistriert,
-      stream: benutzerInfoProvider.istBenutzerRegistriertStream,
+    return FutureBuilder(
+      initialData: benutzerInfoProvider.istAngemeldet,
+      future: benutzerInfoProvider.istBenutzerAngemeldet(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return snapshot.hasData
             ? snapshot.data

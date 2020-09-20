@@ -8,24 +8,16 @@ class BenutzerInfoProvider with ChangeNotifier {
     holeUserInformation();
   }
 
-  bool _istRegistriert = false;
+  bool _istAngemeldet = false;
   // String _benutzername = "";
   bool _istFehlermelder = true;
 
-  // StreamController zum Managen des Registrierungs Status
-  StreamController<bool> _istBenutzerRegistriertController =
-      StreamController<bool>();
-  Sink<bool> get istBenuterRegistriertSink =>
-      _istBenutzerRegistriertController.sink;
-  Stream<bool> get istBenutzerRegistriertStream =>
-      _istBenutzerRegistriertController.stream;
-
-  bool get istRegistriert => _istRegistriert;
+  bool get istAngemeldet => _istAngemeldet;
   // String get benutzername => _benutzername;
   bool get istFehlermelder => _istFehlermelder;
 
-  set istRegistriert(bool value) {
-    _istRegistriert = value;
+  set istAngemeldet(bool value) {
+    _istAngemeldet = value;
     notifyListeners();
   }
 
@@ -42,11 +34,9 @@ class BenutzerInfoProvider with ChangeNotifier {
   // überschreibt im Constructor die Variablen mit den entsprechenden Werten aus SharedPreferences
   void holeUserInformation() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    _istRegistriert = sharedPreferences.getBool("istRegistriert") ?? false;
+    _istAngemeldet = sharedPreferences.getBool("istAngemeldet") ?? false;
     // _benutzername = sharedPreferences.getString("benutzername") ?? "";
     _istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
-    istBenuterRegistriertSink.add(_istRegistriert);
-    print("istRegistriert = $_istRegistriert");
   }
 
   // diese Funktion überschreibt die Werte in SharedPreferences mit den aktuellen Werten dieser Klasse
@@ -54,8 +44,8 @@ class BenutzerInfoProvider with ChangeNotifier {
   void ueberschreibeUserInformation() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool(
-      "istRegistriert",
-      this._istRegistriert,
+      "istAngemeldet",
+      this._istAngemeldet,
     );
     // sharedPreferences.setString(
     //   "benutzername",
@@ -68,11 +58,9 @@ class BenutzerInfoProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> istUserAngemeldet() async {
-
+  // wird in home.dart aufgerufen, um zu überprüfen, ob der Benutzer angemeldet ist
+  Future<bool> istBenutzerAngemeldet() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getBool("istRegistriert");
-
   }
-
 }

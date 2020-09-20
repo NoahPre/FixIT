@@ -8,7 +8,7 @@ import "package:flutter/cupertino.dart";
 class FertigButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print("Fertig Button erstellt");
+    ThemeData thema = Theme.of(context);
     return Container(
       width: double.infinity,
       color: Colors.grey[200],
@@ -22,10 +22,10 @@ class FertigButton extends StatelessWidget {
               //die Zeile habe ich noch nicht verstanden
               FocusScope.of(context).requestFocus(FocusNode());
             },
-            child: Text("Fertig",
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.title.color,
-                    fontWeight: FontWeight.bold)),
+            child: Text(
+              "Fertig",
+              style: thema.textTheme.headline3,
+            ),
           ),
         ),
       ),

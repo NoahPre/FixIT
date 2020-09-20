@@ -13,7 +13,6 @@ export "./seiten/gemeldeteFehler/fehlerliste.dart";
 export "./seiten/gemeldeteFehler/FABHome.dart";
 // fehlermeldung:
 export "./seiten/fehlermeldung/fehlermeldung.dart";
-export "./seiten/fehlermeldung/raumnummerEingabe.dart";
 // sonstige:
 export "./seiten/soforthilfe.dart";
 export "./seiten/tutorial.dart";
