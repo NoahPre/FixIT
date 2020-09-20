@@ -61,6 +61,6 @@ class BenutzerInfoProvider with ChangeNotifier {
   // wird in home.dart aufgerufen, um zu überprüfen, ob der Benutzer angemeldet ist
   Future<bool> istBenutzerAngemeldet() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getBool("istRegistriert");
+    return sharedPreferences.getBool("istAngemeldet") ?? false;
   }
 }
