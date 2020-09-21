@@ -6,6 +6,7 @@ class FABHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      heroTag: "FloatingActionButton",
       child: Icon(
         Icons.add,
       ),

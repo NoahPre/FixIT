@@ -56,8 +56,7 @@ class _RegistrierungState extends State<Registrierung> {
     void _userRegistriertSich() {
       if (_formKey.currentState.validate()) {
         print("userRegistriertSich");
-        benutzerInfoProvider.istBenuterRegistriertSink.add(true);
-        benutzerInfoProvider.istRegistriert = true;
+        benutzerInfoProvider.istAngemeldet = true;
         if (_radioGroupValue == 0) {
           benutzerInfoProvider.istFehlermelder = true;
         } else {
