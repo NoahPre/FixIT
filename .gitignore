@@ -74,3 +74,4 @@ pubspec.lock
 *.lock
 *.lock
 pubspec.lock
+.flutter-plugins-dependencies
