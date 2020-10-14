@@ -1,5 +1,6 @@
 // fehlerliste.dart
 import "../../imports.dart";
+import "package:http/http.dart" as http;
 
 // TODO: beim fixen des Fehlers Kommentar hinterlassen Funktion hinzufügen
 
@@ -10,25 +11,24 @@ class Fehlerliste extends StatefulWidget {
 
 class _FehlerlisteState extends State<Fehlerliste> {
   Future<List<Fehler>> holeFehler() async {
-    // var url = 'http://fixapp.ddns.net/gibAlleFehler.php';
-    // http.Response response = await http.get(url);
-    // var jsonObjekt = jsonDecode(response.body);
+    var url = 'https://www.icanfixit.eu/gibAlleFehler.php';
+    http.Response response = await http.get(url);
+    var jsonObjekt = jsonDecode(response.body);
 
-    // List<Fehler> fehlerliste = List.generate(jsonObjekt.length, (int index) {
-    //   // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
-    //   return Fehler(
-    //     id: int.parse(jsonObjekt[index]["id"]),
-    //     datum: jsonObjekt[index]["datum"],
-    //     melder: jsonObjekt[index]["melder"],
-    //     raum: jsonObjekt[index]["raum"],
-    //     beschreibung: jsonObjekt[index]["beschreibung"],
-    //     gefixt: jsonObjekt[index]["gefixt"],
-    //   );
-    // });
-    // return fehlerliste;
+    List<Fehler> fehlerliste = List.generate(jsonObjekt.length, (int index) {
+      // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
+      return Fehler(
+        id: int.parse(jsonObjekt[index]["id"]),
+        datum: jsonObjekt[index]["datum"],
+        raum: jsonObjekt[index]["raum"],
+        beschreibung: jsonObjekt[index]["beschreibung"],
+        gefixt: jsonObjekt[index]["gefixt"],
+      );
+     });
+     return fehlerliste;
 
     // Dummy values für die Fehler, solange der Server noch nicht steht
-    return [
+   /* return [
       Fehler(
         id: 0,
         datum: "2020/01/01",
@@ -70,9 +70,8 @@ class _FehlerlisteState extends State<Fehlerliste> {
         kommentar: "",
         raum: "K21",
       ),
-    ];
+    ];*/
   }
-
   @override
   Widget build(BuildContext context) {
     // aus provider.dart und fehlerlisteProvider.dart

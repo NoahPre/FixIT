@@ -12,8 +12,6 @@ class _RegistrierungState extends State<Registrierung> {
   // GroupValue für die Radio-Buttons
   int _radioGroupValue = 0;
 
-  // TextEditingController für die vier Textfelder
-  final _benutzernameController = TextEditingController();
   final _masterpasswortController = TextEditingController();
 
   // wird ausgeführt, wenn man einen anderen RadioButton auswählt
@@ -195,7 +193,6 @@ class _RegistrierungState extends State<Registrierung> {
                       IconButton(
                         icon: Icon(
                           Icons.help,
-                          // TODO: bei eventuellem darkmode das hier updaten
                           color: Colors.black,
                         ),
                         tooltip: "Masterpasswort Hilfe",

@@ -2,6 +2,8 @@
 import "./imports.dart";
 import "./klassen/thema.dart";
 
+// passwort für melder: winniethepou
+
 main() => runApp(FixIt());
 
 // TODO: wichtige Anmeldedaten zum Server zu .gitignore hinzufügen

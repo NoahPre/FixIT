@@ -38,89 +38,89 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   Future<String> holeFehler() async {
-    // var url = 'http://fixapp.ddns.net/gibAlleFehler.php';
-    // http.Response response = await http.get(url);
-    // var jsonObjekt = jsonDecode(response.body);
+    var url = 'https://www.icanfixit.eu/gibAlleFehler.php';
+    http.Response response = await http.get(url);
+    var jsonObjekt = jsonDecode(response.body);
     // überschreibt fehlerliste mit den Werten aus der Datenbank
-    // this.fehlerliste = List.generate(jsonObjekt.length, (int index) {
-    //   // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
-    //   return Fehler(
-    //     id: int.parse(jsonObjekt[index]["id"]),
-    //     datum: jsonObjekt[index]["datum"],
-    //     melder: jsonObjekt[index]["melder"],
-    //     raum: jsonObjekt[index]["raum"],
-    //     beschreibung: jsonObjekt[index]["beschreibung"],
-    //     gefixt: jsonObjekt[index]["gefixt"],
-    //   );
-    // });
-    fehlerliste = [
-      Fehler(
-        id: 0,
-        datum: "2020/01/01",
-        beschreibung: "Erster Fehler",
-        fixer: "Martin",
-        gefixt: "1",
-        gefixtDatum: "2020/01/03",
-        kommentar: "kein Kommentar",
-        raum: "K21",
-      ),
-      Fehler(
-        id: 1,
-        datum: "2020/01/03",
-        beschreibung: "Zweiter Fehler",
-        fixer: "Noah",
-        gefixt: "1",
-        gefixtDatum: "2020/01/07",
-        kommentar: "kein Kommentar",
-        raum: "N41",
-      ),
-      Fehler(
-        id: 2,
-        datum: "2020/01/02",
-        beschreibung: "Dritter Fehler",
-        fixer: "",
-        gefixt: "0",
-        gefixtDatum: "",
-        kommentar: "",
-        raum: "K21",
-      ),
-      Fehler(
-        id: 3,
-        datum: "2020/01/05",
-        beschreibung: "Vierter Fehler",
-        fixer: "Martin",
-        gefixt: "0",
-        gefixtDatum: "",
-        kommentar: "",
-        raum: "K21",
-      ),
-    ];
-    return "";
-    // return response.body;
+    fehlerliste = List.generate(jsonObjekt.length, (int index) {
+      // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
+      return Fehler(
+        id: int.parse(jsonObjekt[index]["id"]),
+        datum: jsonObjekt[index]["datum"],
+        raum: jsonObjekt[index]["raum"],
+        beschreibung: jsonObjekt[index]["beschreibung"],
+        gefixt: jsonObjekt[index]["gefixt"],
+      );
+    });
+    // fehlerliste = [
+    //   Fehler(
+    //     id: 0,
+    //     datum: "2020/01/01",
+    //     beschreibung: "Erster Fehler",
+    //     fixer: "Martin",
+    //     gefixt: "1",
+    //     gefixtDatum: "2020/01/03",
+    //     kommentar: "kein Kommentar",
+    //     raum: "K21",
+    //   ),
+    //   Fehler(
+    //     id: 1,
+    //     datum: "2020/01/03",
+    //     beschreibung: "Zweiter Fehler",
+    //     fixer: "Noah",
+    //     gefixt: "1",
+    //     gefixtDatum: "2020/01/07",
+    //     kommentar: "kein Kommentar",
+    //     raum: "N41",
+    //   ),
+    //   Fehler(
+    //     id: 2,
+    //     datum: "2020/01/02",
+    //     beschreibung: "Dritter Fehler",
+    //     fixer: "",
+    //     gefixt: "0",
+    //     gefixtDatum: "",
+    //     kommentar: "",
+    //     raum: "K21",
+    //   ),
+    //   Fehler(
+    //     id: 3,
+    //     datum: "2020/01/05",
+    //     beschreibung: "Vierter Fehler",
+    //     fixer: "Martin",
+    //     gefixt: "0",
+    //     gefixtDatum: "",
+    //     kommentar: "",
+    //     raum: "K21",
+    //   ),
+    // ];
+    // return "";
+    return response.body;
   }
 
   // fügt einen Fehler mit schreibeFehler.php hinzu
   Future<void> schreibeFehler({
     int id,
     String datum,
-    String melder,
     String raum,
     String beschreibung,
     String gefixt,
   }) async {
     // die URL, die aufgerufen werden muss (mit den Argumenten implementiert)
     var url =
-        "http://fixapp.ddns.net/schreibeFehler.php?id=$id&datum=$datum&melder=$melder&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt";
+        "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt";
     http.Response response = await http.get(url);
     print(url);
     print("Response body: " + response.body);
+    return;
   }
 
   // löscht einen Fehler mit entferneFehler.php
   Future<void> entferneFehler({int id}) async {
-    var url = "http://fixapp.ddns.net/entferneFehler.php?id=$id";
+    var url = "https://www.icanfixit.eu/entferneFehler.php?id=$id";
     http.Response response = await http.get(url);
     print(url);
     print("entferneFehler: " + response.body);
+    return;
   }
 }
