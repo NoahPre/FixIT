@@ -1,6 +1,7 @@
 // fehlermeldungVorlage.dart
 import "../../imports.dart";
 import "package:intl/intl.dart";
+import "package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart";
 
 class Fehlermeldung extends StatefulWidget {
   @override
@@ -36,14 +37,18 @@ class _FehlermeldungState extends State<Fehlermeldung> {
 
     // TODO: muss man diesen Listener hier entfernen?
     //sorgt dafür, dass man weiß, wann die Tastatur zu sehen ist
-    KeyboardVisibilityNotification().addNewListener(
-      onShow: () {
-        zeigeFertigButton(context);
-      },
-      onHide: () {
-        entferneFertigButton();
-      },
-    );
+    KeyboardVisibility.onChange.listen((bool visible) {
+      switch (visible) {
+        case true:
+          zeigeFertigButton(context);
+          break;
+        case false:
+          entferneFertigButton();
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   // updatet die Überschrift und den Text des Dropdown Buttons
@@ -60,11 +65,9 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   String _uerberpruefeRaumnummer(String raumnummer) {
     if (raumnummer.isEmpty || raumnummer == "") {
       return "Bitte eine Raumnummer eingeben";
-    }
-    else if (raumnummer.length > 3 || int.parse(raumnummer) > 420) {
+    } else if (raumnummer.length > 3 || int.parse(raumnummer) > 420) {
       return "Bitte eine gültige Raumnummer eingeben";
-    }
-    else {
+    } else {
       return null;
     }
   }
@@ -72,8 +75,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   String _ueberpruefeBeschreibung(String beschreibung) {
     if (beschreibung.isEmpty || beschreibung == "") {
       return "Bitte eine Beschreibung eingeben";
-    }
-    else {
+    } else {
       return null;
     }
   }
@@ -129,7 +131,6 @@ class _FehlermeldungState extends State<Fehlermeldung> {
           child: Form(
             key: _formKey,
             child: Column(
-
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -187,7 +188,8 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                           textInTextfield:
                               _dropdownButtonText + _raumController.text,
                         ),
-                        validator: (String raumnummer) => _uerberpruefeRaumnummer(raumnummer),
+                        validator: (String raumnummer) =>
+                            _uerberpruefeRaumnummer(raumnummer),
                       ),
                     ),
                   ],
@@ -201,7 +203,8 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                   focusNode: _beschreibungNode,
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
-                  validator: (String beschreibung) => _ueberpruefeBeschreibung(beschreibung),
+                  validator: (String beschreibung) =>
+                      _ueberpruefeBeschreibung(beschreibung),
                 ),
               ],
             ),
