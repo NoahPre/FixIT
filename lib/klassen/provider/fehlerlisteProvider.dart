@@ -16,7 +16,7 @@ class FehlerlisteProvider with ChangeNotifier {
   // Liste der Fehler, die auf der Startseite angezeigt werden
   List<Fehler> fehlerliste;
   // um einen neuen Fehler zu schreiben muss man nur diese Funktion aufrufen
-  void fehlerGemeldet({Fehler fehler}) {
+  void fehlerGemeldet({@required Fehler fehler, @required File image}) {
     schreibeFehler(
       id: fehler.id,
       datum: fehler.datum,
@@ -24,8 +24,36 @@ class FehlerlisteProvider with ChangeNotifier {
       beschreibung: fehler.beschreibung,
       gefixt: fehler.gefixt,
     );
+    startUpload(file: image);
     fehlerliste.add(fehler);
     notifyListeners();
+  }
+
+  void startUpload({@required File file}) {
+    if (null == file) {
+      return;
+    }
+    String fileName = file.path.split('/').last;
+    upload(
+      fileName: fileName,
+      base64Image: base64Encode(
+        file.readAsBytesSync(),
+      ),
+    );
+  }
+
+  String upload({String fileName, String base64Image}) {
+    print("uploading");
+    http.post("https://www.icanfixit.eu/BildUpload.php", body: {
+      "image": base64Image,
+      "name": fileName,
+    }).then((result) {
+      print(result.body);
+      return result.statusCode == 200 ? result.body : "";
+    }).catchError((error) {
+      print(error.toString());
+      return error.toString();
+    });
   }
 
   void fehlerGefixt({int indexInFehlerliste}) {}

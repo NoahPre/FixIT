@@ -11,6 +11,7 @@ class GemeldeteFehler extends StatefulWidget {
 class _GemeldeteFehlerState extends State<GemeldeteFehler> {
   @override
   Widget build(BuildContext context) {
+    print("building GemeldeteFehler");
     ThemeData thema = Theme.of(context);
 
     return Scaffold(

@@ -26,51 +26,6 @@ class _FehlerlisteState extends State<Fehlerliste> {
       );
      });
      return fehlerliste;
-
-    // Dummy values für die Fehler, solange der Server noch nicht steht
-   /* return [
-      Fehler(
-        id: 0,
-        datum: "2020/01/01",
-        beschreibung:
-            "Erster Fehler blubb blubb bla bla blö blö blü blü blä blä",
-        fixer: "Martin",
-        gefixt: "1",
-        gefixtDatum: "2020/01/03",
-        kommentar: "kein Kommentar",
-        raum: "K21",
-      ),
-      Fehler(
-        id: 1,
-        datum: "2020/01/03",
-        beschreibung: "Zweiter Fehler",
-        fixer: "Noah",
-        gefixt: "1",
-        gefixtDatum: "2020/01/07",
-        kommentar: "kein Kommentar",
-        raum: "N41",
-      ),
-      Fehler(
-        id: 2,
-        datum: "2020/01/02",
-        beschreibung: "Dritter Fehler",
-        fixer: "",
-        gefixt: "0",
-        gefixtDatum: "",
-        kommentar: "",
-        raum: "K21",
-      ),
-      Fehler(
-        id: 3,
-        datum: "2020/01/05",
-        beschreibung: "Vierter Fehler",
-        fixer: "",
-        gefixt: "0",
-        gefixtDatum: "",
-        kommentar: "",
-        raum: "K21",
-      ),
-    ];*/
   }
   @override
   Widget build(BuildContext context) {

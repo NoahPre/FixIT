@@ -1,6 +1,8 @@
 // fehlermeldungVorlage.dart
 import "../../imports.dart";
 import "package:intl/intl.dart";
+import "package:image_picker/image_picker.dart";
+import "package:http/http.dart" as http;
 
 class Fehlermeldung extends StatefulWidget {
   @override
@@ -30,6 +32,13 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     gefixt: "0",
   );
 
+  // Variablen fürs Uploaden der Bilder via php
+  Future<File> file;
+  String status = '';
+  String base64Image;
+  File tmpFile;
+  String errMessage = 'Error Uploading Image';
+
   @override
   void initState() {
     super.initState();
@@ -56,15 +65,51 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     });
   }
 
+  // lässt den Benutzer das Bild auswählen
+  void chooseImage() {
+    setState(() {
+      file = ImagePicker.pickImage(source: ImageSource.gallery, );
+      
+    });
+  }
+
+  Widget showImage() {
+    return FutureBuilder<File>(
+      future: file,
+      builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            null != snapshot.data) {
+          tmpFile = snapshot.data;
+          base64Image = base64Encode(snapshot.data.readAsBytesSync());
+          return Flexible(
+            child: Image.file(
+              snapshot.data,
+              fit: BoxFit.fill,
+            ),
+          );
+         
+        } else if (null != snapshot.error) {
+          return const Text(
+            'Error Picking Image',
+            textAlign: TextAlign.center,
+          );
+        } else {
+          return const Text(
+            'No Image Selected',
+            textAlign: TextAlign.center,
+          );
+        }
+      },
+    );
+  }
+
   // Validatoren:
   String _uerberpruefeRaumnummer(String raumnummer) {
     if (raumnummer.isEmpty || raumnummer == "") {
       return "Bitte eine Raumnummer eingeben";
-    }
-    else if (raumnummer.length > 3 || int.parse(raumnummer) > 420) {
+    } else if (raumnummer.length > 3 || int.parse(raumnummer) > 420) {
       return "Bitte eine gültige Raumnummer eingeben";
-    }
-    else {
+    } else {
       return null;
     }
   }
@@ -72,8 +117,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   String _ueberpruefeBeschreibung(String beschreibung) {
     if (beschreibung.isEmpty || beschreibung == "") {
       return "Bitte eine Beschreibung eingeben";
-    }
-    else {
+    } else {
       return null;
     }
   }
@@ -119,7 +163,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
             fehler.beschreibung = _beschreibungController.text;
             // fehler.melder = benutzerInfoProvider.benutzername;
           });
-          fehlerlisteProvider.fehlerGemeldet(fehler: fehler);
+          fehlerlisteProvider.fehlerGemeldet(fehler: fehler, image: tmpFile);
           Navigator.pop(context);
         },
       ),
@@ -129,7 +173,6 @@ class _FehlermeldungState extends State<Fehlermeldung> {
           child: Form(
             key: _formKey,
             child: Column(
-
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -187,7 +230,8 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                           textInTextfield:
                               _dropdownButtonText + _raumController.text,
                         ),
-                        validator: (String raumnummer) => _uerberpruefeRaumnummer(raumnummer),
+                        validator: (String raumnummer) =>
+                            _uerberpruefeRaumnummer(raumnummer),
                       ),
                     ),
                   ],
@@ -201,8 +245,16 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                   focusNode: _beschreibungNode,
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
-                  validator: (String beschreibung) => _ueberpruefeBeschreibung(beschreibung),
+                  validator: (String beschreibung) =>
+                      _ueberpruefeBeschreibung(beschreibung),
                 ),
+                SizedBox(height: 10),
+                RaisedButton(
+                  child: Text("Bild hochladen"),
+                  onPressed: () => chooseImage(),
+                ),
+                const SizedBox(height: 10),
+                showImage(),
               ],
             ),
           ),

@@ -37,7 +37,6 @@ export "./klassen/provider/fehlerlisteProvider.dart";
 export "package:keyboard_visibility/keyboard_visibility.dart";
 export "package:shared_preferences/shared_preferences.dart";
 export "package:provider/provider.dart";
-export "package:http/http.dart";
 
 // fehlende Exports:
 // intl.dart
