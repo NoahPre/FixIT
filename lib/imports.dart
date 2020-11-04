@@ -34,7 +34,7 @@ export "./klassen/provider/benutzerInfoProvider.dart";
 export "./klassen/provider/fehlerlisteProvider.dart";
 
 // 3rd party Packages:
-export "package:keyboard_visibility/keyboard_visibility.dart";
+// export "package:keyboard_visibility/keyboard_visibility.dart";
 export "package:shared_preferences/shared_preferences.dart";
 export "package:provider/provider.dart";
 
