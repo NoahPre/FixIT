@@ -8,6 +8,7 @@ class Fehler {
     this.fixer = "",
     this.gefixtDatum = "",
     this.kommentar = "",
+    this.bild = ""
   });
 
   // was automatisch an die Fehlermeldung angehängt wird
@@ -23,4 +24,5 @@ class Fehler {
   String fixer;
   String gefixtDatum;
   String kommentar;
+  String bild;
 }

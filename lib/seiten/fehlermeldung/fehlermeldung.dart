@@ -44,7 +44,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     super.initState();
 
     // TODO: muss man diesen Listener hier entfernen?
-    //sorgt dafür, dass man weiß, wann die Tastatur zu sehen ist
+/*    //sorgt dafür, dass man weiß, wann die Tastatur zu sehen ist
     KeyboardVisibilityNotification().addNewListener(
       onShow: () {
         zeigeFertigButton(context);
@@ -53,8 +53,8 @@ class _FehlermeldungState extends State<Fehlermeldung> {
         entferneFertigButton();
       },
     );
+    */
   }
-
   // updatet die Überschrift und den Text des Dropdown Buttons
   void updateText({
     String textInTextfield,

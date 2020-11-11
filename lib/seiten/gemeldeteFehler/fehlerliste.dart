@@ -23,6 +23,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
         raum: jsonObjekt[index]["raum"],
         beschreibung: jsonObjekt[index]["beschreibung"],
         gefixt: jsonObjekt[index]["gefixt"],
+        bild: "https://www.icanfix.eu/fehlerBilder/" + jsonObjekt[index]["bild"]
       );
      });
      return fehlerliste;

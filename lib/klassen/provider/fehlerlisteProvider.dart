@@ -17,23 +17,28 @@ class FehlerlisteProvider with ChangeNotifier {
   List<Fehler> fehlerliste;
   // um einen neuen Fehler zu schreiben muss man nur diese Funktion aufrufen
   void fehlerGemeldet({@required Fehler fehler, @required File image}) {
+    String fileName = fehler.id.toString() + "." + image.path.split('/').last.split(".")[1];
+
     schreibeFehler(
       id: fehler.id,
       datum: fehler.datum,
       raum: fehler.raum,
       beschreibung: fehler.beschreibung,
       gefixt: fehler.gefixt,
+      bild: fileName,
     );
-    startUpload(file: image);
+
+    fehler.bild = fileName;
+    startUpload(fehler: fehler, file: image);
     fehlerliste.add(fehler);
     notifyListeners();
   }
 
-  void startUpload({@required File file}) {
+  void startUpload({@required Fehler fehler, @required File file}) {
     if (null == file) {
       return;
     }
-    String fileName = file.path.split('/').last;
+    String fileName = fehler.id.toString() + "." + file.path.split('/').last.split(".")[1];
     upload(
       fileName: fileName,
       base64Image: base64Encode(
@@ -78,6 +83,7 @@ class FehlerlisteProvider with ChangeNotifier {
         raum: jsonObjekt[index]["raum"],
         beschreibung: jsonObjekt[index]["beschreibung"],
         gefixt: jsonObjekt[index]["gefixt"],
+        bild: "https://www.icanfixit.eu/fehlerBilder/" + jsonObjekt[index]["bild"],
       );
     });
     // fehlerliste = [
@@ -133,10 +139,11 @@ class FehlerlisteProvider with ChangeNotifier {
     String raum,
     String beschreibung,
     String gefixt,
+    String bild
   }) async {
     // die URL, die aufgerufen werden muss (mit den Argumenten implementiert)
     var url =
-        "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt";
+        "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild";
     http.Response response = await http.get(url);
     print(url);
     print("Response body: " + response.body);

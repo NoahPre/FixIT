@@ -77,6 +77,10 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                     "Beschreibung:",
                     style: thema.textTheme.headline5,
                   ),
+                  SizedBox(
+                    height: deviceSize.height *0.25,
+                    child: Image.network(widget.fehler.bild)
+                  ),
                   Expanded(
                     child: Text(
                       widget.fehler.beschreibung,
