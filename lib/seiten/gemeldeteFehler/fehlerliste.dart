@@ -29,11 +29,22 @@ class _FehlerlisteState extends State<Fehlerliste> {
 
     return StreamBuilder(
       stream: fehlerlisteProvider.fehlerlisteStream,
-      initialData: [],
+      initialData: fehlerlisteProvider.fehlerliste,
       builder: (
         BuildContext context,
         AsyncSnapshot snapshot,
       ) {
+        String datumInSchoen(Fehler fehler) {
+          String tag = fehler.datum.split("")[6] + fehler.datum.split("")[7];
+          String monat = fehler.datum.split("")[4] + fehler.datum.split("")[5];
+          String jahr = fehler.datum.split("")[0] +
+              fehler.datum.split("")[1] +
+              fehler.datum.split("")[2] +
+              fehler.datum.split("")[3];
+          String gesamt = tag + "." + monat + "." + jahr;
+          return gesamt;
+        }
+
         return snapshot.hasData
             ? snapshot.data.length == 0
                 ? Column(
@@ -158,7 +169,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
 
                                                         // Datumsangabe der Fehlermeldung
                                                         Text(
-                                                          fehler.datum,
+                                                          datumInSchoen(fehler),
                                                           maxLines: 1,
                                                           style: thema.textTheme
                                                               .bodyText1,

@@ -15,7 +15,8 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   //StreamController für die Fehlerliste
-  StreamController fehlerlisteController = StreamController<List<Fehler>>();
+  StreamController fehlerlisteController =
+      StreamController<List<Fehler>>.broadcast();
   Sink get fehlerlisteSink => fehlerlisteController.sink;
   Stream<List<Fehler>> get fehlerlisteStream => fehlerlisteController.stream;
 
@@ -36,8 +37,7 @@ class FehlerlisteProvider with ChangeNotifier {
         raum: jsonObjekt[index]["raum"],
         beschreibung: jsonObjekt[index]["beschreibung"],
         gefixt: jsonObjekt[index]["gefixt"],
-        bild: "https://www.icanfixit.eu/fehlerBilder/" +
-            jsonObjekt[index]["bild"],
+        bild: jsonObjekt[index]["bild"],
       );
     });
     // fügt die geholten Fehler dem fehlerlisteController hinzu und aktualisiert damit das Widget Fehlerliste

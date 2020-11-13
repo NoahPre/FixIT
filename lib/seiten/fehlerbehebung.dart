@@ -18,6 +18,21 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
     ThemeData thema = Theme.of(context);
     final Size deviceSize = MediaQuery.of(context).size;
 
+    // das Datum in schön
+    // TODO: evtl. das intelligenter lösen
+    String datumInSchoen() {
+      String tag =
+          widget.fehler.datum.split("")[6] + widget.fehler.datum.split("")[7];
+      String monat =
+          widget.fehler.datum.split("")[4] + widget.fehler.datum.split("")[5];
+      String jahr = widget.fehler.datum.split("")[0] +
+          widget.fehler.datum.split("")[1] +
+          widget.fehler.datum.split("")[2] +
+          widget.fehler.datum.split("")[3];
+      String gesamt = tag + "." + monat + "." + jahr;
+      return gesamt;
+    }
+
     void fehlerBeheben() {}
 
     return Scaffold(
@@ -66,7 +81,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                         width: 5.0,
                       ),
                       Text(
-                        "gemeldet am: ${widget.fehler.datum}",
+                        "gemeldet am: " + datumInSchoen(),
                         style: thema.textTheme.bodyText1,
                       ),
                     ],
@@ -86,11 +101,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                   // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
                   (widget.fehler.bild.isEmpty ||
                           widget.fehler.bild == "" ||
-                          widget.fehler.bild == null ||
-                          //TODO: das hier besser machen
-                          // das hier ist nur als Übergangslösung gedacht, bessere Lösung ist erwünscht
-                          widget.fehler.bild ==
-                              "https://www.icanfixit.eu/fehlerBilder/")
+                          widget.fehler.bild == null)
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -99,7 +110,9 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                             ),
                             Text(
                               "Kein Bild gemeldet",
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
                             ),
                             const SizedBox(
                               height: 5.0,
@@ -118,14 +131,17 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                                   fullscreenDialog: true,
                                   builder: (BuildContext context) =>
                                       BildDetailansicht(
-                                    urlZumBild: widget.fehler.bild,
+                                    urlZumBild:
+                                        "https://www.icanfixit.eu/fehlerBilder/" +
+                                            widget.fehler.bild,
                                   ),
                                 ),
                               );
                             },
                             child: Center(
                               child: Image.network(
-                                widget.fehler.bild,
+                                "https://www.icanfixit.eu/fehlerBilder/" +
+                                    widget.fehler.bild,
                                 fit: BoxFit.contain,
                                 loadingBuilder: (
                                   BuildContext context,
@@ -147,8 +163,18 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                                         StackTrace stackTrace) =>
                                     Column(
                                   children: [
-                                    Text("Bild konnte nicht geladen werden"),
-                                    Text(exception.toString()),
+                                    Text(
+                                      "Bild konnte nicht geladen werden",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      exception.toString(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

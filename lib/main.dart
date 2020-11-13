@@ -12,6 +12,8 @@ main() => runApp(FixIt());
 // TODO: schauen wie oft ich BenutzerInfoProvider benutze
 // TODO: standardmäßiges Datumsschreibweise festlegen
 
+// TODO: die IDs der Fehler mit nem anderm Algorithmus machen, z.B. mit de uuid package
+
 class FixIt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
