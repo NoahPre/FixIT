@@ -128,18 +128,18 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   @override
   Widget build(BuildContext context) {
     ThemeData thema = Theme.of(context);
-    Size _size = MediaQuery.of(context).size;
+    MediaQueryData mediaQuery = MediaQuery.of(context);
     final FehlerlisteProvider fehlerlisteProvider =
         Provider.of<FehlerlisteProvider>(context);
 
-    final deviceSize = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _ueberschrift,
-          style: thema.textTheme.headline1,
-        ),
+    var appBar = AppBar(
+      title: Text(
+        _ueberschrift,
+        style: thema.textTheme.headline1,
       ),
+    );
+    return Scaffold(
+      appBar: appBar,
       // Button um den Fehler zu melden
       floatingActionButton: FloatingActionButton.extended(
         heroTag: "FloatingActionButton",
@@ -151,7 +151,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                 color: Colors.white,
               ),
             ),
-            SizedBox(width: deviceSize.width * 0.01),
+            SizedBox(width: mediaQuery.size.width * 0.01),
             Icon(
               Icons.send,
               color: Colors.white,
@@ -176,10 +176,15 @@ class _FehlermeldungState extends State<Fehlermeldung> {
           Navigator.pop(context);
         },
       ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(8, 4, 8, 0),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(8, 4, 8, 0),
+          child: Container(
+            //TODO: dieses Problem hier kann glaube ich noch eleganter gelöst werden
+            height: mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top -
+                mediaQuery.padding.bottom,
             child: Form(
               key: _formKey,
               child: Column(
@@ -223,7 +228,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                         ),
                       ),
                       SizedBox(
-                        width: _size.width * 0.04,
+                        width: mediaQuery.size.width * 0.04,
                       ),
                       Flexible(
                         child: TextFormField(

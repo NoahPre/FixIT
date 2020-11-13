@@ -16,7 +16,6 @@ class _HomeState extends State<Home> {
       initialData: benutzerInfoProvider.istAngemeldet,
       future: benutzerInfoProvider.istBenutzerAngemeldet(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        
         return snapshot.hasData
             ? snapshot.data
                 // wird angezeigt, wenn der User angemeldet ist, also wenn istRegistriert in SharedPreferences true ist

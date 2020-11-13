@@ -80,7 +80,13 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                     "Beschreibung:",
                     style: thema.textTheme.headline5,
                   ),
-                  // TODO: bei Änderungen hier, auch den Code in Fehlerbehebung aktualisieren
+
+                  Text(
+                    widget.fehler.beschreibung,
+                    style: thema.textTheme.bodyText1,
+                  ),
+
+                  // TODO: bei Änderungen hier, auch den Code in FehlerDetailansicht aktualisieren
                   // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
                   (widget.fehler.bild.isEmpty ||
                           widget.fehler.bild == "" ||
@@ -104,6 +110,7 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                             ),
                           ],
                         )
+
                       // lädt das Bild und gibt beim Fehlschlagen einen Error aus
                       : Flexible(
                           child: GestureDetector(
@@ -112,19 +119,33 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    fullscreenDialog: true,
-                                    builder: (BuildContext context) {
-                                      // hier das Bild nicht extra nochmal runterladen
-                                      return BildDetailansicht(
-                                        urlZumBild: widget.fehler.bild,
-                                      );
-                                    }),
+                                  fullscreenDialog: true,
+                                  builder: (BuildContext context) =>
+                                      BildDetailansicht(
+                                    urlZumBild: widget.fehler.bild,
+                                  ),
+                                ),
                               );
                             },
                             child: Center(
                               child: Image.network(
                                 widget.fehler.bild,
                                 fit: BoxFit.contain,
+                                loadingBuilder: (
+                                  BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent loadingProgress,
+                                ) {
+                                  // zeigt das Bild an, wenn es fertig heruntergeladen ist
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return CircularProgressIndicator(
+                                      // valueColor: AlwaysStoppedAnimation<Color>(
+                                      //   thema.primaryColor,
+                                      // ),
+                                      );
+                                },
                                 errorBuilder: (BuildContext context,
                                         Object exception,
                                         StackTrace stackTrace) =>
@@ -138,12 +159,6 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                             ),
                           ),
                         ),
-                  Expanded(
-                    child: Text(
-                      widget.fehler.beschreibung,
-                      style: thema.textTheme.bodyText1,
-                    ),
-                  ),
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Column(

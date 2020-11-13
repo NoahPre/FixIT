@@ -13,8 +13,38 @@ class FehlerlisteProvider with ChangeNotifier {
   FehlerlisteProvider() {
     holeFehler();
   }
+
+  //StreamController für die Fehlerliste
+  StreamController fehlerlisteController = StreamController<List<Fehler>>();
+  Sink get fehlerlisteSink => fehlerlisteController.sink;
+  Stream<List<Fehler>> get fehlerlisteStream => fehlerlisteController.stream;
+
   // Liste der Fehler, die auf der Startseite angezeigt werden
   List<Fehler> fehlerliste;
+
+  // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
+  Future<String> holeFehler() async {
+    var url = 'https://www.icanfixit.eu/gibAlleFehler.php';
+    http.Response response = await http.get(url);
+    var jsonObjekt = jsonDecode(response.body);
+    // überschreibt fehlerliste mit den Werten aus der Datenbank
+    fehlerliste = List.generate(jsonObjekt.length, (int index) {
+      // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
+      return Fehler(
+        id: int.parse(jsonObjekt[index]["id"]),
+        datum: jsonObjekt[index]["datum"],
+        raum: jsonObjekt[index]["raum"],
+        beschreibung: jsonObjekt[index]["beschreibung"],
+        gefixt: jsonObjekt[index]["gefixt"],
+        bild: "https://www.icanfixit.eu/fehlerBilder/" +
+            jsonObjekt[index]["bild"],
+      );
+    });
+    // fügt die geholten Fehler dem fehlerlisteController hinzu und aktualisiert damit das Widget Fehlerliste
+    fehlerlisteSink.add(fehlerliste);
+    return response.body;
+  }
+
   // um einen neuen Fehler zu schreiben muss man nur diese Funktion aufrufen
   void fehlerGemeldet({@required Fehler fehler, File image}) {
     String fileName = "";
@@ -38,6 +68,7 @@ class FehlerlisteProvider with ChangeNotifier {
     );
 
     fehlerliste.add(fehler);
+    fehlerlisteSink.add(fehlerliste);
     notifyListeners();
   }
 
@@ -76,27 +107,8 @@ class FehlerlisteProvider with ChangeNotifier {
     entferneFehler(id: fehler.id);
     fehlerliste
         .removeWhere((aktuellerFehler) => aktuellerFehler.id == fehler.id);
+    fehlerlisteSink.add(fehlerliste);
     notifyListeners();
-  }
-
-  Future<String> holeFehler() async {
-    var url = 'https://www.icanfixit.eu/gibAlleFehler.php';
-    http.Response response = await http.get(url);
-    var jsonObjekt = jsonDecode(response.body);
-    // überschreibt fehlerliste mit den Werten aus der Datenbank
-    fehlerliste = List.generate(jsonObjekt.length, (int index) {
-      // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
-      return Fehler(
-        id: int.parse(jsonObjekt[index]["id"]),
-        datum: jsonObjekt[index]["datum"],
-        raum: jsonObjekt[index]["raum"],
-        beschreibung: jsonObjekt[index]["beschreibung"],
-        gefixt: jsonObjekt[index]["gefixt"],
-        bild: "https://www.icanfixit.eu/fehlerBilder/" +
-            jsonObjekt[index]["bild"],
-      );
-    });
-    return response.body;
   }
 
   // fügt einen Fehler mit schreibeFehler.php hinzu
@@ -123,5 +135,9 @@ class FehlerlisteProvider with ChangeNotifier {
     print(url);
     print("entferneFehler: " + response.body);
     return;
+  }
+
+  void dispose() {
+    fehlerlisteController.close();
   }
 }

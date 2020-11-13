@@ -1,15 +1,14 @@
 class Fehler {
-  Fehler({
-    this.id = 0,
-    this.datum = "",
-    this.raum = "",
-    this.beschreibung = "",
-    this.gefixt = "0",
-    this.fixer = "",
-    this.gefixtDatum = "",
-    this.kommentar = "",
-    this.bild = ""
-  });
+  Fehler(
+      {this.id = 0,
+      this.datum = "",
+      this.raum = "",
+      this.beschreibung = "",
+      this.gefixt = "0",
+      this.fixer = "",
+      this.gefixtDatum = "",
+      this.kommentar = "",
+      this.bild = ""});
 
   // was automatisch an die Fehlermeldung angehängt wird
   // wir benutzen als ID einfach DateTime.now().millisecondsSinceEpoch
@@ -24,5 +23,6 @@ class Fehler {
   String fixer;
   String gefixtDatum;
   String kommentar;
+  //TODO: dieser Wert ist eigentlich überflüssig, da die Information ja eigentlich schon in id gespeichert ist
   String bild;
 }
