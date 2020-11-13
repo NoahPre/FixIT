@@ -1,5 +1,7 @@
 PODS:
   - Flutter (1.0.0)
+  - image_picker (0.0.1):
+    - Flutter
   - keyboard_visibility (0.5.0):
     - Flutter
     - Reachability
@@ -9,6 +11,7 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - keyboard_visibility (from `.symlinks/plugins/keyboard_visibility/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
 
@@ -19,6 +22,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  image_picker:
+    :path: ".symlinks/plugins/image_picker/ios"
   keyboard_visibility:
     :path: ".symlinks/plugins/keyboard_visibility/ios"
   shared_preferences:
@@ -26,6 +31,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   keyboard_visibility: 96a24de806fe6823c3ad956c01ba2ec6d056616f
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01

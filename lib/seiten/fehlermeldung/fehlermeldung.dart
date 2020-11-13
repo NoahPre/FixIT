@@ -2,6 +2,7 @@
 import "../../imports.dart";
 import "package:intl/intl.dart";
 import "package:image_picker/image_picker.dart";
+import "package:keyboard_visibility/keyboard_visibility.dart";
 import "package:http/http.dart" as http;
 
 class Fehlermeldung extends StatefulWidget {
@@ -44,7 +45,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     super.initState();
 
     // TODO: muss man diesen Listener hier entfernen?
-/*    //sorgt dafür, dass man weiß, wann die Tastatur zu sehen ist
+    //sorgt dafür, dass man weiß, wann die Tastatur zu sehen ist
     KeyboardVisibilityNotification().addNewListener(
       onShow: () {
         zeigeFertigButton(context);
@@ -53,8 +54,8 @@ class _FehlermeldungState extends State<Fehlermeldung> {
         entferneFertigButton();
       },
     );
-    */
   }
+
   // updatet die Überschrift und den Text des Dropdown Buttons
   void updateText({
     String textInTextfield,
@@ -68,8 +69,11 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   // lässt den Benutzer das Bild auswählen
   void chooseImage() {
     setState(() {
-      file = ImagePicker.pickImage(source: ImageSource.gallery, );
-      
+      //TODO: das hier auf ImagePicker.getImage() updaten
+      file = ImagePicker.pickImage(
+        source: ImageSource.gallery,
+      );
+      status = "Bild ausgewählt";
     });
   }
 
@@ -87,7 +91,6 @@ class _FehlermeldungState extends State<Fehlermeldung> {
               fit: BoxFit.fill,
             ),
           );
-         
         } else if (null != snapshot.error) {
           return const Text(
             'Error Picking Image',
@@ -163,99 +166,107 @@ class _FehlermeldungState extends State<Fehlermeldung> {
             fehler.beschreibung = _beschreibungController.text;
             // fehler.melder = benutzerInfoProvider.benutzername;
           });
-          fehlerlisteProvider.fehlerGemeldet(fehler: fehler, image: tmpFile);
+          if (status == "") {
+            fehlerlisteProvider.fehlerGemeldet(
+              fehler: fehler,
+            );
+          } else {
+            fehlerlisteProvider.fehlerGemeldet(fehler: fehler, image: tmpFile);
+          }
           Navigator.pop(context);
         },
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(8, 4, 8, 0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.grey.shade100,
-                      ),
-                      padding: EdgeInsets.all(4.0),
-                      child: DropdownButton<String>(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(8, 4, 8, 0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.grey.shade100,
                         ),
-                        elevation: 8,
-                        value: _dropdownButtonText,
-                        hint: Text("Präfix"),
-                        items: [
-                          "",
-                          "K",
-                          "N",
-                          "Z",
-                        ].map((value) {
-                          return DropdownMenuItem(
-                            child: Text(value),
-                            value: value,
-                          );
-                        }).toList(),
-                        onChanged: (String value) {
-                          updateText(
-                            textInTextfield: value + _raumController.text,
-                          );
-                          setState(() {
-                            _dropdownButtonText = value;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: _size.width * 0.04,
-                    ),
-                    Flexible(
-                      child: TextFormField(
-                        controller: _raumController,
-                        decoration: InputDecoration(
-                          labelText: "Raumnummer",
-                          hintText: "",
+                        padding: EdgeInsets.all(4.0),
+                        child: DropdownButton<String>(
+                          icon: Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.black,
+                          ),
+                          elevation: 8,
+                          value: _dropdownButtonText,
+                          hint: Text("Präfix"),
+                          items: [
+                            "",
+                            "K",
+                            "N",
+                            "Z",
+                          ].map((value) {
+                            return DropdownMenuItem(
+                              child: Text(value),
+                              value: value,
+                            );
+                          }).toList(),
+                          onChanged: (String value) {
+                            updateText(
+                              textInTextfield: value + _raumController.text,
+                            );
+                            setState(() {
+                              _dropdownButtonText = value;
+                            });
+                          },
                         ),
-                        focusNode: _raumNode,
-                        keyboardType: TextInputType.number,
-                        maxLines: 1,
-                        textInputAction: TextInputAction.done,
-                        onChanged: (_) => updateText(
-                          textInTextfield:
-                              _dropdownButtonText + _raumController.text,
-                        ),
-                        validator: (String raumnummer) =>
-                            _uerberpruefeRaumnummer(raumnummer),
                       ),
-                    ),
-                  ],
-                ),
-                TextFormField(
-                  controller: _beschreibungController,
-                  decoration: InputDecoration(
-                    labelText: "Beschreibung",
-                    hintText: "",
+                      SizedBox(
+                        width: _size.width * 0.04,
+                      ),
+                      Flexible(
+                        child: TextFormField(
+                          controller: _raumController,
+                          decoration: InputDecoration(
+                            labelText: "Raumnummer",
+                            hintText: "",
+                          ),
+                          focusNode: _raumNode,
+                          keyboardType: TextInputType.number,
+                          maxLines: 1,
+                          textInputAction: TextInputAction.done,
+                          onChanged: (_) => updateText(
+                            textInTextfield:
+                                _dropdownButtonText + _raumController.text,
+                          ),
+                          validator: (String raumnummer) =>
+                              _uerberpruefeRaumnummer(raumnummer),
+                        ),
+                      ),
+                    ],
                   ),
-                  focusNode: _beschreibungNode,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  validator: (String beschreibung) =>
-                      _ueberpruefeBeschreibung(beschreibung),
-                ),
-                SizedBox(height: 10),
-                RaisedButton(
-                  child: Text("Bild hochladen"),
-                  onPressed: () => chooseImage(),
-                ),
-                const SizedBox(height: 10),
-                showImage(),
-              ],
+                  TextFormField(
+                    controller: _beschreibungController,
+                    decoration: InputDecoration(
+                      labelText: "Beschreibung",
+                      hintText: "",
+                    ),
+                    focusNode: _beschreibungNode,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    validator: (String beschreibung) =>
+                        _ueberpruefeBeschreibung(beschreibung),
+                  ),
+                  SizedBox(height: 10),
+                  RaisedButton(
+                    child: Text("Bild hochladen"),
+                    onPressed: () => chooseImage(),
+                  ),
+                  const SizedBox(height: 10),
+                  showImage(),
+                ],
+              ),
             ),
           ),
         ),

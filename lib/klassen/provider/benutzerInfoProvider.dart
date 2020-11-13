@@ -8,7 +8,7 @@ class BenutzerInfoProvider with ChangeNotifier {
     holeUserInformation();
   }
 
-  bool _istAngemeldet = false;
+  bool _istAngemeldet = true;
   // String _benutzername = "";
   bool _istFehlermelder = true;
 
@@ -34,7 +34,9 @@ class BenutzerInfoProvider with ChangeNotifier {
   // überschreibt im Constructor die Variablen mit den entsprechenden Werten aus SharedPreferences
   void holeUserInformation() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
     _istAngemeldet = sharedPreferences.getBool("istAngemeldet") ?? false;
+
     // _benutzername = sharedPreferences.getString("benutzername") ?? "";
     _istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
   }

@@ -22,6 +22,7 @@ export "./seiten/ueberUns.dart";
 export "./seiten/registrierung.dart";
 export "./seiten/fehlerbehebung.dart";
 export "./seiten/fehlerDetailansicht.dart";
+export "./seiten/bildDetailansicht.dart";
 
 // Widgets:
 export "./widgets/fertigButton.dart";

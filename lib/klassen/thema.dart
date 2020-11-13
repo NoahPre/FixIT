@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 // Thema für die ganze App
 /* Hier kann man verschiedene, app-weite Design Standards implementieren, z.B. für:
 - Primär- und Akzentfarben
-- AppBar
+- AppBar 
 - BottomAppBar
 - Buttons (auch FloatingActionButtons)
 und vieles mehr
@@ -16,7 +16,7 @@ var thema = ThemeData(
   textTheme: TextTheme(
     // TODO: die richtige FontSize und FontWeight für standardmäßigen AppBar title herausfinden
     // TextStyle für die Titel von AppBars
-    
+
     headline1: TextStyle(
       color: Colors.white,
       fontSize: 20,

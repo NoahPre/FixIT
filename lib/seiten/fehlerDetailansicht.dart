@@ -17,6 +17,7 @@ class FehlerDetailansicht extends StatefulWidget {
 class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
   @override
   Widget build(BuildContext context) {
+    print("url zum Bild: " + widget.fehler.bild);
     ThemeData thema = Theme.of(context);
     Size deviceSize = MediaQuery.of(context).size;
 
@@ -47,7 +48,9 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const SizedBox(height: 5.0,),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
                   Row(
                     children: <Widget>[
                       Hero(
@@ -77,10 +80,64 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                     "Beschreibung:",
                     style: thema.textTheme.headline5,
                   ),
-                  SizedBox(
-                    height: deviceSize.height *0.25,
-                    child: Image.network(widget.fehler.bild)
-                  ),
+                  // TODO: bei Änderungen hier, auch den Code in Fehlerbehebung aktualisieren
+                  // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
+                  (widget.fehler.bild.isEmpty ||
+                          widget.fehler.bild == "" ||
+                          widget.fehler.bild == null ||
+                          //TODO: das hier besser machen
+                          // das hier ist nur als Übergangslösung gedacht, bessere Lösung ist erwünscht
+                          widget.fehler.bild ==
+                              "https://www.icanfixit.eu/fehlerBilder/")
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(
+                              height: 5.0,
+                            ),
+                            Text(
+                              "Kein Bild gemeldet",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            const SizedBox(
+                              height: 5.0,
+                            ),
+                          ],
+                        )
+                      // lädt das Bild und gibt beim Fehlschlagen einen Error aus
+                      : Flexible(
+                          child: GestureDetector(
+                            onTap: () {
+                              // zeigt nach Tippen das Bild im Vollbild an
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    fullscreenDialog: true,
+                                    builder: (BuildContext context) {
+                                      // hier das Bild nicht extra nochmal runterladen
+                                      return BildDetailansicht(
+                                        urlZumBild: widget.fehler.bild,
+                                      );
+                                    }),
+                              );
+                            },
+                            child: Center(
+                              child: Image.network(
+                                widget.fehler.bild,
+                                fit: BoxFit.contain,
+                                errorBuilder: (BuildContext context,
+                                        Object exception,
+                                        StackTrace stackTrace) =>
+                                    Column(
+                                  children: [
+                                    Text("Bild konnte nicht geladen werden"),
+                                    Text(exception.toString()),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                   Expanded(
                     child: Text(
                       widget.fehler.beschreibung,

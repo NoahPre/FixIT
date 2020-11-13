@@ -16,9 +16,18 @@ class FehlerlisteProvider with ChangeNotifier {
   // Liste der Fehler, die auf der Startseite angezeigt werden
   List<Fehler> fehlerliste;
   // um einen neuen Fehler zu schreiben muss man nur diese Funktion aufrufen
-  void fehlerGemeldet({@required Fehler fehler, @required File image}) {
-    String fileName = fehler.id.toString() + "." + image.path.split('/').last.split(".")[1];
+  void fehlerGemeldet({@required Fehler fehler, File image}) {
+    String fileName = "";
+    print("fileName: " + fileName);
+    // Bild wird hochgeladen, wenn eins aufgenommen wurde
+    if (image != null) {
+      print("image != null");
+      fileName =
+          fehler.id.toString() + "." + image.path.split('/').last.split(".")[1];
 
+      fehler.bild = fileName;
+      startUpload(fehler: fehler, file: image);
+    }
     schreibeFehler(
       id: fehler.id,
       datum: fehler.datum,
@@ -28,8 +37,6 @@ class FehlerlisteProvider with ChangeNotifier {
       bild: fileName,
     );
 
-    fehler.bild = fileName;
-    startUpload(fehler: fehler, file: image);
     fehlerliste.add(fehler);
     notifyListeners();
   }
@@ -38,7 +45,8 @@ class FehlerlisteProvider with ChangeNotifier {
     if (null == file) {
       return;
     }
-    String fileName = fehler.id.toString() + "." + file.path.split('/').last.split(".")[1];
+    String fileName =
+        fehler.id.toString() + "." + file.path.split('/').last.split(".")[1];
     upload(
       fileName: fileName,
       base64Image: base64Encode(
@@ -66,7 +74,8 @@ class FehlerlisteProvider with ChangeNotifier {
   // um einen alten Fehler zu löschen muss man nur diese Funktion aufrufen
   void fehlerGeloescht({Fehler fehler}) {
     entferneFehler(id: fehler.id);
-    fehlerliste.remove(fehler);
+    fehlerliste
+        .removeWhere((aktuellerFehler) => aktuellerFehler.id == fehler.id);
     notifyListeners();
   }
 
@@ -83,64 +92,21 @@ class FehlerlisteProvider with ChangeNotifier {
         raum: jsonObjekt[index]["raum"],
         beschreibung: jsonObjekt[index]["beschreibung"],
         gefixt: jsonObjekt[index]["gefixt"],
-        bild: "https://www.icanfixit.eu/fehlerBilder/" + jsonObjekt[index]["bild"],
+        bild: "https://www.icanfixit.eu/fehlerBilder/" +
+            jsonObjekt[index]["bild"],
       );
     });
-    // fehlerliste = [
-    //   Fehler(
-    //     id: 0,
-    //     datum: "2020/01/01",
-    //     beschreibung: "Erster Fehler",
-    //     fixer: "Martin",
-    //     gefixt: "1",
-    //     gefixtDatum: "2020/01/03",
-    //     kommentar: "kein Kommentar",
-    //     raum: "K21",
-    //   ),
-    //   Fehler(
-    //     id: 1,
-    //     datum: "2020/01/03",
-    //     beschreibung: "Zweiter Fehler",
-    //     fixer: "Noah",
-    //     gefixt: "1",
-    //     gefixtDatum: "2020/01/07",
-    //     kommentar: "kein Kommentar",
-    //     raum: "N41",
-    //   ),
-    //   Fehler(
-    //     id: 2,
-    //     datum: "2020/01/02",
-    //     beschreibung: "Dritter Fehler",
-    //     fixer: "",
-    //     gefixt: "0",
-    //     gefixtDatum: "",
-    //     kommentar: "",
-    //     raum: "K21",
-    //   ),
-    //   Fehler(
-    //     id: 3,
-    //     datum: "2020/01/05",
-    //     beschreibung: "Vierter Fehler",
-    //     fixer: "Martin",
-    //     gefixt: "0",
-    //     gefixtDatum: "",
-    //     kommentar: "",
-    //     raum: "K21",
-    //   ),
-    // ];
-    // return "";
     return response.body;
   }
 
   // fügt einen Fehler mit schreibeFehler.php hinzu
-  Future<void> schreibeFehler({
-    int id,
-    String datum,
-    String raum,
-    String beschreibung,
-    String gefixt,
-    String bild
-  }) async {
+  Future<void> schreibeFehler(
+      {int id,
+      String datum,
+      String raum,
+      String beschreibung,
+      String gefixt,
+      String bild}) async {
     // die URL, die aufgerufen werden muss (mit den Argumenten implementiert)
     var url =
         "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild";

@@ -18,16 +18,17 @@ class _FehlerlisteState extends State<Fehlerliste> {
     List<Fehler> fehlerliste = List.generate(jsonObjekt.length, (int index) {
       // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
       return Fehler(
-        id: int.parse(jsonObjekt[index]["id"]),
-        datum: jsonObjekt[index]["datum"],
-        raum: jsonObjekt[index]["raum"],
-        beschreibung: jsonObjekt[index]["beschreibung"],
-        gefixt: jsonObjekt[index]["gefixt"],
-        bild: "https://www.icanfix.eu/fehlerBilder/" + jsonObjekt[index]["bild"]
-      );
-     });
-     return fehlerliste;
+          id: int.parse(jsonObjekt[index]["id"]),
+          datum: jsonObjekt[index]["datum"],
+          raum: jsonObjekt[index]["raum"],
+          beschreibung: jsonObjekt[index]["beschreibung"],
+          gefixt: jsonObjekt[index]["gefixt"],
+          bild: "https://www.icanfixit.eu/fehlerBilder/" +
+              jsonObjekt[index]["bild"]);
+    });
+    return fehlerliste;
   }
+
   @override
   Widget build(BuildContext context) {
     // aus provider.dart und fehlerlisteProvider.dart
