@@ -17,6 +17,10 @@ dependencies:
     sdk: flutter
   # Package für das App Icon
   flutter_launcher_icons: ^0.8.0
+  # Allgemeine Packages
+  path: ^1.7.0
+  path_provider: ^1.6.24
+  # Package fürs State Management
   shared_preferences: ^0.5.6
   provider: ^4.0.4
   # für die IDs der Fehler
@@ -24,7 +28,9 @@ dependencies:
   keyboard_visibility: ^0.5.6
   http: ^0.12.2
   intl: ^0.16.1
+  # fürs Bilder machen und hochladen
   image_picker: ^0.6.7
+  camera: ^0.5.8
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

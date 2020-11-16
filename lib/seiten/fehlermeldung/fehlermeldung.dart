@@ -1,9 +1,13 @@
 // fehlermeldungVorlage.dart
 import "../../imports.dart";
+import "../../main.dart";
+import "dart:io";
+import "package:flutter/cupertino.dart";
 import "package:intl/intl.dart";
 import "package:image_picker/image_picker.dart";
 import "package:keyboard_visibility/keyboard_visibility.dart";
-import "package:http/http.dart" as http;
+import "package:path/path.dart" show join;
+import "package:path_provider/path_provider.dart";
 
 class Fehlermeldung extends StatefulWidget {
   @override
@@ -40,10 +44,20 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   File tmpFile;
   String errMessage = 'Error Uploading Image';
 
+  // Controller für die Kamera
+  CameraController controller;
+  String pfadZumBild = "";
+
   @override
   void initState() {
     super.initState();
-
+    controller = CameraController(cameras[0], ResolutionPreset.medium);
+    controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    });
     // TODO: muss man diesen Listener hier entfernen?
     //sorgt dafür, dass man weiß, wann die Tastatur zu sehen ist
     KeyboardVisibilityNotification().addNewListener(
@@ -56,6 +70,12 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     );
   }
 
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
   // updatet die Überschrift und den Text des Dropdown Buttons
   void updateText({
     String textInTextfield,
@@ -64,6 +84,57 @@ class _FehlermeldungState extends State<Fehlermeldung> {
       _ueberschrift = "Fehler in Raum " + textInTextfield;
       fehler.raum = textInTextfield;
     });
+  }
+
+  // lässt den Benutzer ein Bild aufnehmen
+  void bildAufnehmen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (BuildContext context) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Kamera"),
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.camera_alt),
+              // Provide an onPressed callback.
+              onPressed: () async {
+                // Take the Picture in a try / catch block. If anything goes wrong,
+                // catch the error.
+                try {
+                  // Construct the path where the image should be saved using the path
+                  // package.
+                  final path = join(
+                    // Store the picture in the temp directory.
+                    // Find the temp directory using the `path_provider` plugin.
+                    (await getTemporaryDirectory()).path,
+                    '${DateTime.now()}.png',
+                  );
+
+                  // Attempt to take a picture and log where it's been saved.
+                  await controller.takePicture(path);
+
+                  Navigator.pop(context);
+
+                  setState(() {
+                    pfadZumBild = path;
+                  });
+                } catch (e) {
+                  // If an error occurs, log the error to the console.
+                  print(e);
+                }
+              },
+            ),
+            body: AspectRatio(
+              aspectRatio: controller.value.aspectRatio,
+              child: CameraPreview(controller),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   // lässt den Benutzer das Bild auswählen
@@ -77,6 +148,12 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     });
   }
 
+  // zeigt das aufgenommene Bild
+  Widget zeigeAufgenommenesBild() {
+    return Image.file(File(pfadZumBild));
+  }
+
+  // zeigt das gewählte Bild
   Widget showImage() {
     return FutureBuilder<File>(
       future: file,
@@ -104,6 +181,65 @@ class _FehlermeldungState extends State<Fehlermeldung> {
         }
       },
     );
+  }
+
+  // zeigt je nach Betriebssystem einen Auswahldialog
+  Future<void> zeigeBilderAuswahl({BuildContext currentContext}) async {
+    Platform.isIOS
+        ? CupertinoActionSheet(
+            actions: [
+              CupertinoActionSheetAction(
+                child: Text(""),
+              ),
+            ],
+          )
+        // zeigt das ein Material Design Bottom Sheet
+        : showModalBottomSheet(
+            isDismissible: false,
+            context: currentContext,
+            builder: (BuildContext context) => BottomSheet(
+              onClosing: () {},
+              builder: (BuildContext context) {
+                return Container(
+                  height: 100,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 100.0,
+                          child: IconButton(
+                            icon: Icon(Icons.photo_camera, color: Colors.black, ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              bildAufnehmen();
+                            },
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 100.0,
+                        width: 2.0,
+                        color: Colors.black,
+                      ),
+                      Expanded(
+                        child: Container(
+                          height: 100.0,
+                          child: IconButton(
+                            icon: Icon(Icons.collections, color: Colors.black,),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              chooseImage();
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
   }
 
   // Validatoren:
@@ -167,9 +303,16 @@ class _FehlermeldungState extends State<Fehlermeldung> {
             // fehler.melder = benutzerInfoProvider.benutzername;
           });
           if (status == "") {
-            fehlerlisteProvider.fehlerGemeldet(
-              fehler: fehler,
-            );
+            if (pfadZumBild == "") {
+              fehlerlisteProvider.fehlerGemeldet(
+                fehler: fehler,
+              );
+            } else {
+              fehlerlisteProvider.fehlerGemeldet(
+                fehler: fehler,
+                image: File(pfadZumBild),
+              );
+            }
           } else {
             fehlerlisteProvider.fehlerGemeldet(fehler: fehler, image: tmpFile);
           }
@@ -264,12 +407,17 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                         _ueberpruefeBeschreibung(beschreibung),
                   ),
                   SizedBox(height: 10),
-                  RaisedButton(
-                    child: Text("Bild hochladen"),
-                    onPressed: () => chooseImage(),
+                  Builder(
+                    builder: (BuildContext currentContext) => RaisedButton(
+                      child: Text("Bild hinzufügen"),
+                      onPressed: () async {
+                        await zeigeBilderAuswahl(
+                            currentContext: currentContext);
+                      },
+                    ),
                   ),
                   const SizedBox(height: 10),
-                  showImage(),
+                  pfadZumBild == "" ? showImage() : zeigeAufgenommenesBild(),
                 ],
               ),
             ),

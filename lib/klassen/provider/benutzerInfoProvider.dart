@@ -1,5 +1,4 @@
 // benutzerInfoProvider.dart
-
 import "../../imports.dart";
 
 // für eine Erklärung der Provider siehe README.md
@@ -65,4 +64,6 @@ class BenutzerInfoProvider with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getBool("istAngemeldet") ?? false;
   }
+
+  
 }

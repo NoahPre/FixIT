@@ -4,7 +4,11 @@ import "./klassen/thema.dart";
 
 // passwort für melder: winniethepou
 
-main() => runApp(FixIt());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
+  runApp(FixIt());
+}
 
 // TODO: wichtige Anmeldedaten zum Server zu .gitignore hinzufügen
 
@@ -14,7 +18,15 @@ main() => runApp(FixIt());
 
 // TODO: die IDs der Fehler mit nem anderm Algorithmus machen, z.B. mit de uuid package
 
-class FixIt extends StatelessWidget {
+List<CameraDescription> cameras = [];
+
+class FixIt extends StatefulWidget {
+  @override
+  _FixItState createState() => _FixItState();
+}
+
+class _FixItState extends State<FixIt> {
+
   @override
   Widget build(BuildContext context) {
     // wir benutzen hier Provider für ein besseres State Management

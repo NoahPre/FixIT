@@ -181,7 +181,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                             ),
                           ),
                         ),
-                  Align(
+                  /*Align(
                     alignment: Alignment.bottomLeft,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,7 +201,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                         ),
                       ],
                     ),
-                  ),
+                  ), */
                 ],
               ),
             ),

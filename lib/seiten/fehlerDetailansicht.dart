@@ -181,10 +181,9 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                             ),
                           ),
                         ),
-                  Align(
+                 /* Align(
                     alignment: Alignment.bottomLeft,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         Text(
@@ -201,7 +200,7 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                         ),
                       ],
                     ),
-                  ),
+                  ), */
                 ],
               ),
             ),

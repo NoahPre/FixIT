@@ -3,11 +3,22 @@ import "../imports.dart";
 
 class Seitenmenue extends StatelessWidget {
   final String aktuelleSeite;
+  String gemeldeteFehlerAnzahl;
 
-  Seitenmenue({this.aktuelleSeite});
+  Seitenmenue({this.aktuelleSeite}) {
+    anzahlAnGemeldetenFehlern();
+  }
+
+  // TODO: das hier intelligenter machen
+  Future<void> anzahlAnGemeldetenFehlern() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    gemeldeteFehlerAnzahl = sharedPreferences.getInt("anzahlAnGefixtenFehlern").toString();
+  }
 
   @override
   Widget build(BuildContext context) {
+
+
     ThemeData thema = Theme.of(context);
 
     final BenutzerInfoProvider benutzerInfoProvider =
@@ -58,7 +69,7 @@ class Seitenmenue extends StatelessWidget {
                 Flexible(
                   child: benutzerInfoProvider.istFehlermelder
                       ? Text("Anzahl an gemeldeten Fehlern: 27")
-                      : Text("Anzahl an gefixten Fehlern: 27"),
+                      : Text("Anzahl an gefixten Fehlern: " + gemeldeteFehlerAnzahl),
                 ),
               ],
             ),
