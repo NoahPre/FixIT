@@ -1,7 +1,6 @@
 // fehlermeldungVorlage.dart
 import "../../imports.dart";
 import "../../main.dart";
-import "dart:io";
 import "package:flutter/cupertino.dart";
 import "package:intl/intl.dart";
 import "package:image_picker/image_picker.dart";
@@ -185,61 +184,58 @@ class _FehlermeldungState extends State<Fehlermeldung> {
 
   // zeigt je nach Betriebssystem einen Auswahldialog
   Future<void> zeigeBilderAuswahl({BuildContext currentContext}) async {
-    Platform.isIOS
-        ? CupertinoActionSheet(
-            actions: [
-              CupertinoActionSheetAction(
-                child: Text(""),
-              ),
-            ],
-          )
-        // zeigt das ein Material Design Bottom Sheet
-        : showModalBottomSheet(
-            isDismissible: false,
-            context: currentContext,
-            builder: (BuildContext context) => BottomSheet(
-              onClosing: () {},
-              builder: (BuildContext context) {
-                return Container(
-                  height: 100,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 100.0,
-                          child: IconButton(
-                            icon: Icon(Icons.photo_camera, color: Colors.black, ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              bildAufnehmen();
-                            },
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 100.0,
-                        width: 2.0,
+    showModalBottomSheet(
+      isDismissible: false,
+      context: currentContext,
+      builder: (BuildContext context) => BottomSheet(
+        onClosing: () {},
+        builder: (BuildContext context) {
+          return Container(
+            height: 100,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 100.0,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.photo_camera,
                         color: Colors.black,
                       ),
-                      Expanded(
-                        child: Container(
-                          height: 100.0,
-                          child: IconButton(
-                            icon: Icon(Icons.collections, color: Colors.black,),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              chooseImage();
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
+                      onPressed: () {
+                        Navigator.pop(context);
+                        bildAufnehmen();
+                      },
+                    ),
                   ),
-                );
-              },
+                ),
+                Container(
+                  height: 100.0,
+                  width: 2.0,
+                  color: Colors.black,
+                ),
+                Expanded(
+                  child: Container(
+                    height: 100.0,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.collections,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        chooseImage();
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
+        },
+      ),
+    );
   }
 
   // Validatoren:
