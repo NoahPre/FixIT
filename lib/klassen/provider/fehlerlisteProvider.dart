@@ -11,6 +11,7 @@ import "dart:async";
 // - Fehler löschen kann
 class FehlerlisteProvider with ChangeNotifier {
   FehlerlisteProvider() {
+    print("created");
     holeFehler();
   }
 
@@ -27,7 +28,10 @@ class FehlerlisteProvider with ChangeNotifier {
   Future<String> holeFehler() async {
     var url = 'https://www.icanfixit.eu/gibAlleFehler.php';
     http.Response response = await http.get(url);
-    var jsonObjekt = jsonDecode(response.body);
+    print("1");
+    var jsonObjekt = jsonDecode(response.body) ?? [];
+    print("2");
+    print(jsonObjekt);
     // überschreibt fehlerliste mit den Werten aus der Datenbank
     fehlerliste = List.generate(jsonObjekt.length, (int index) {
       // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
@@ -114,13 +118,14 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   // fügt einen Fehler mit schreibeFehler.php hinzu
-  Future<void> schreibeFehler(
-      {String id,
-      String datum,
-      String raum,
-      String beschreibung,
-      String gefixt,
-      String bild}) async {
+  Future<void> schreibeFehler({
+    String id,
+    String datum,
+    String raum,
+    String beschreibung,
+    String gefixt,
+    String bild,
+  }) async {
     // die URL, die aufgerufen werden muss (mit den Argumenten implementiert)
     var url =
         "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild";

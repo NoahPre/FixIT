@@ -18,7 +18,6 @@ class _RegistrierungState extends State<Registrierung> {
 
   /// wird ausgeführt, wenn man einen anderen RadioButton auswählt
   void _radioButtonChanged(int value) {
-    print(value.toString());
     setState(() {
       _radioGroupValue = value;
     });
@@ -229,7 +228,7 @@ class _RegistrierungState extends State<Registrierung> {
                   ),
                   // TODO: das hier beim Release entfernen
                   Text(
-                    "Zum Debuggen: \nPasswort Fehlermelder: fixit, \nPasswort Fehlerbeheber: Fixit",
+                    "Zum Debuggen: \nPasswort Fehlermelder: fixit \nPasswort Fehlerbeheber: Fixit",
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                     style: thema.textTheme.bodyText1,

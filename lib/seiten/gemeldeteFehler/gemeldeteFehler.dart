@@ -14,13 +14,14 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler> {
     print("building GemeldeteFehler");
     ThemeData thema = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "FixIt",
-          style: thema.textTheme.headline1,
-        ),
+    var appBar = AppBar(
+      title: Text(
+        "FixIt",
+        style: thema.textTheme.headline1,
       ),
+    );
+    return Scaffold(
+      appBar: appBar,
       // Seitenmenü
       drawer: Seitenmenue(
         aktuelleSeite: "/gemeldeteFehler",
@@ -30,7 +31,9 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler> {
           padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
 
           // Liste mit gemeldeten Fehlern
-          child: Fehlerliste(),
+          child: Fehlerliste(
+            appBarHoehe: appBar.preferredSize.height,
+          ),
         ),
       ),
       floatingActionButton: FABHome(),

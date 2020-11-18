@@ -68,21 +68,27 @@ class BenutzerInfoProvider with ChangeNotifier {
   // }
   /// authentifiziert den Benutzer mit den gegebenen Werten
   // wird in registrierung.dart benutzt, um eingangs das eingegebene Passwort zu überprüfen
-  Future<bool> authentifizierungMitWerten({@required bool istFehlermelderInFunktion, @required String passwortInFunktion,}) async {
+  Future<bool> authentifizierungMitWerten({
+    @required bool istFehlermelderInFunktion,
+    @required String passwortInFunktion,
+  }) async {
+    print(istFehlermelderInFunktion.toString());
     // schickt eine Anfrage mit den folgenden Informationen an den Server:
     // - ob der Benutzer Fehlermelder ist
     // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
     String url =
-        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelderInFunktion.toString()}&passwort=${passwortInFunktion.toString()}";
+        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelderInFunktion.toString()}&passwort=$passwortInFunktion";
     http.Response response = await http.get(url);
     print("response: " + response.body);
     // überprüft die Ausgabe des Scripts
+    // TODO: warum wird hier von authentifizierung.php immer ein s mit ausgegeben
     if (response.body == "1") {
       return true;
     } else {
       return false;
     }
   }
+
   /// authentifiziert den Benutzer mit den in SharedPreferences gespeicherten Werten
   // wird in home.dart verwendet, um sich beim Start der App sicherzugehen, dass das gespeicherte Passwort richtig ist
   Future<bool> authentifizierung() async {
@@ -97,6 +103,7 @@ class BenutzerInfoProvider with ChangeNotifier {
     http.Response response = await http.get(url);
     print("response: " + response.body);
     // überprüft die Ausgabe des Scripts
+    // TODO: warum wird hier von authentifizierung.php immer ein s mit ausgegeben
     if (response.body == "1") {
       return true;
     } else {

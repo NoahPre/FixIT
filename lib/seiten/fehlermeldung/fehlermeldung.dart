@@ -127,9 +127,16 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                 }
               },
             ),
-            body: AspectRatio(
-              aspectRatio: controller.value.aspectRatio,
-              child: CameraPreview(controller),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: controller.value.aspectRatio,
+                    child: CameraPreview(controller),
+                  ),
+                ),
+              ],
             ),
           );
         },
@@ -318,14 +325,14 @@ class _FehlermeldungState extends State<Fehlermeldung> {
         },
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(8, 4, 8, 0),
-          child: Container(
-            //TODO: dieses Problem hier kann glaube ich noch eleganter gelöst werden
-            height: mediaQuery.size.height -
-                appBar.preferredSize.height -
-                mediaQuery.padding.top -
-                mediaQuery.padding.bottom,
+        child: Container(
+          //TODO: dieses Problem hier kann glaube ich noch eleganter gelöst werden
+          height: mediaQuery.size.height -
+              appBar.preferredSize.height -
+              mediaQuery.padding.top -
+              mediaQuery.padding.bottom,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(8, 4, 8, 0),
             child: Form(
               key: _formKey,
               child: Column(
