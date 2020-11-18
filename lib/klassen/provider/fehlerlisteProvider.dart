@@ -48,12 +48,10 @@ class FehlerlisteProvider with ChangeNotifier {
   // um einen neuen Fehler zu schreiben muss man nur diese Funktion aufrufen
   void fehlerGemeldet({@required Fehler fehler, File image}) {
     String fileName = "";
-    print("fileName: " + fileName);
     // Bild wird hochgeladen, wenn eins aufgenommen wurde
     if (image != null) {
       print("image != null");
-      fileName =
-          fehler.id.toString() + "." + image.path.split('/').last.split(".")[1];
+      fileName = fehler.id + "." + image.path.split('/').last.split(".")[1];
 
       fehler.bild = fileName;
       startUpload(fehler: fehler, file: image);
@@ -76,8 +74,7 @@ class FehlerlisteProvider with ChangeNotifier {
     if (null == file) {
       return;
     }
-    String fileName =
-        fehler.id.toString() + "." + file.path.split('/').last.split(".")[1];
+    String fileName = fehler.id + "." + file.path.split('/').last.split(".")[1];
     upload(
       fileName: fileName,
       base64Image: base64Encode(
@@ -88,6 +85,7 @@ class FehlerlisteProvider with ChangeNotifier {
 
   String upload({String fileName, String base64Image}) {
     print("uploading");
+    print(fileName);
     http.post("https://www.icanfixit.eu/BildUpload.php", body: {
       "image": base64Image,
       "name": fileName,
@@ -98,13 +96,17 @@ class FehlerlisteProvider with ChangeNotifier {
       print(error.toString());
       return error.toString();
     });
+    return "";
   }
 
   void fehlerGefixt({int indexInFehlerliste}) {}
 
   // um einen alten Fehler zu löschen muss man nur diese Funktion aufrufen
   void fehlerGeloescht({Fehler fehler}) {
-    entferneFehler(id: fehler.id);
+    entferneFehler(
+      id: fehler.id,
+      fileName: fehler.bild,
+    );
     fehlerliste
         .removeWhere((aktuellerFehler) => aktuellerFehler.id == fehler.id);
     fehlerlisteSink.add(fehlerliste);
@@ -129,8 +131,12 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   // löscht einen Fehler mit entferneFehler.php
-  Future<void> entferneFehler({String id}) async {
-    var url = "https://www.icanfixit.eu/entferneFehler.php?id=$id";
+  Future<void> entferneFehler({
+    @required String id,
+    @required String fileName,
+  }) async {
+    var url =
+        "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName";
     http.Response response = await http.get(url);
     print(url);
     print("entferneFehler: " + response.body);

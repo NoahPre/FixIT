@@ -31,7 +31,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
 
   /// Fehler, der auf dieser Seite gemeldet wird
   Fehler neuerFehler = Fehler(
-    id: Uuid().v1(),
+    id: Uuid().v1().replaceAll("-", "_"),
     datum: DateFormat("yyyyMMdd").format(DateTime.now()).toString(),
     //das muss man noch updaten
     gefixt: "0",
