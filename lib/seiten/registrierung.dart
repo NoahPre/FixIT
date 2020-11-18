@@ -7,19 +7,69 @@ class Registrierung extends StatefulWidget {
 }
 
 class _RegistrierungState extends State<Registrierung> {
-  // Key für die Form (wird benötigt)
+  /// Key für die Form (wird benötigt)
   final _formKey = GlobalKey<FormState>();
-  // GroupValue für die Radio-Buttons
+
+  /// GroupValue für die Radio-Buttons
   int _radioGroupValue = 0;
 
-  final _masterpasswortController = TextEditingController();
+  /// TextEditingController für das Passwort Textfeld
+  final _passwortController = TextEditingController();
 
-  // wird ausgeführt, wenn man einen anderen RadioButton auswählt
+  /// wird ausgeführt, wenn man einen anderen RadioButton auswählt
   void _radioButtonChanged(int value) {
     print(value.toString());
     setState(() {
       _radioGroupValue = value;
     });
+  }
+
+  /// Validator für das Passwort Textfeld
+  String _validierePasswortTextfeld({
+    @required bool istFehlermelder,
+    @required String passwort,
+  }) {
+    if (passwort == "") {
+      return "Bitte das Passwort eingeben";
+    } else {
+      return null;
+    }
+  }
+
+  /// zeigt eine Alert Dialog mit Hilfe zum Passwort
+  Future<void> _zeigePasswortHilfe(
+      {@required BuildContext currentContext}) async {
+    await showDialog(
+      context: currentContext,
+      builder: (context) => AlertDialog(
+        title: Text("Passwort Hilfe"),
+        content: Text("Hier steht ein erklärender Text zum Passwort"),
+        actions: <Widget>[
+          FlatButton(
+            child: Text("OK"),
+            onPressed: () => Navigator.pop(context),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> _passwortIstFalsch(
+      {@required BuildContext currentContext}) async {
+    await showDialog(
+      context: currentContext,
+      builder: (context) => AlertDialog(
+        title: Text("Authentifizierung fehlgeschlagen"),
+        content: Text(
+            "Das eingegebene Passwort für den angegebenen Benutzer ist falsch. Bitter versuchen Sie es erneut."),
+        actions: <Widget>[
+          FlatButton(
+            child: Text("OK"),
+            onPressed: () => Navigator.pop(context),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -29,73 +79,50 @@ class _RegistrierungState extends State<Registrierung> {
     final BenutzerInfoProvider benutzerInfoProvider =
         Provider.of<BenutzerInfoProvider>(context);
 
-    // Methoden für die Validation der Form Textfelder
-    // String _validateBenutzernameTextfeld({String benutzername}) {
-    //   return benutzername.isEmpty ? "Bitte einen Benutzernamen eingeben" : null;
-    // }
-
-    String _validateMasterpasswortTextfeld({
-      @required String masterpasswort,
-      @required bool istFehlermelder,
-    }) {
-      if (masterpasswort == "") {
-        return "Bitte das Masterpasswort eingeben";
-      }
-      switch (istFehlermelder) {
-        case true:
-          return masterpasswort == "fixit" ? null : "Falsches Masterpasswort";
-        case false:
-          return masterpasswort == "Fixit" ? null : "Falsches Masterpasswort";
-        default:
-          return null;
-      }
-    }
-
-    void _userRegistriertSich() {
-      if (_formKey.currentState.validate()) {
-        print("userRegistriertSich");
-        benutzerInfoProvider.istAngemeldet = true;
-        if (_radioGroupValue == 0) {
-          benutzerInfoProvider.istFehlermelder = true;
-        } else {
-          benutzerInfoProvider.istFehlermelder = false;
-        }
-        benutzerInfoProvider.ueberschreibeUserInformation();
-      }
-    }
-
-    // zeigt eine Alert Dialog mit Hilfe zum Benutzernamen
-    // void _zeigeBenutzernameHilfe() {
-    //   showDialog(
-    //     context: context,
-    //     builder: (context) => AlertDialog(
-    //       title: Text("Benutzername Hilfe"),
-    //       content: Text("Hier steht ein erklärender Text zum Benutzernamen"),
-    //       actions: <Widget>[
-    //         FlatButton(
-    //           child: Text("OK"),
-    //           onPressed: () => Navigator.pop(context),
-    //         )
-    //       ],
-    //     ),
-    //   );
-    // }
-
-    // zeigt eine Alert Dialog mit Hilfe zum Benutzernamen
-    void _zeigeMasterpasswortHilfe() {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Masterpasswort Hilfe"),
-          content: Text("Hier steht ein erklärender Text zum Masterpasswort"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("OK"),
-              onPressed: () => Navigator.pop(context),
-            )
-          ],
-        ),
+    // diese beiden Funktionen müssen in build() stehen, da sie auf benutzerInfoProvider zugreifen
+    /// überprüft das gegebene Passwort
+    Future<bool> _ueberpruefePasswort({
+      @required bool istFehlermelderInFunktion,
+      @required String passwortInFunktion,
+    }) async {
+      // sendet eine Anfrage mit den eingegebenen Informationen an den Server
+      bool istAuthentifiziert =
+          await benutzerInfoProvider.authentifizierungMitWerten(
+        istFehlermelderInFunktion: istFehlermelderInFunktion,
+        passwortInFunktion: passwortInFunktion,
       );
+
+      return istAuthentifiziert;
+    }
+
+    /// wird ausgeführt, wenn das eingegebene Passwort erfolgreich von _ueberpruefePasswort() geprüft wurde
+    Future<void> _userRegistriertSich() async {
+      // macht eine Anfangsüberprüfung
+      if (_formKey.currentState.validate()) {
+        bool istFehlermelderInFunktion;
+        String passwortInFunktion = _passwortController.text;
+
+        if (_radioGroupValue == 0) {
+          istFehlermelderInFunktion = true;
+        } else {
+          istFehlermelderInFunktion = false;
+        }
+        // überprüft das eingegebene Passwort
+        if (await _ueberpruefePasswort(
+          istFehlermelderInFunktion: istFehlermelderInFunktion,
+          passwortInFunktion: passwortInFunktion,
+        )) {
+          print("userRegistriertSich");
+          await benutzerInfoProvider.ueberschreibeUserInformation(
+            istFehlermelderInFunktion: istFehlermelderInFunktion,
+            passwortInFunktion: passwortInFunktion,
+          );
+        }
+        // informiert den Benutzer, dass sein Passwort falsch ist
+        else {
+          await _passwortIstFalsch(currentContext: context);
+        }
+      }
     }
 
     return Scaffold(
@@ -150,31 +177,6 @@ class _RegistrierungState extends State<Registrierung> {
                       ),
                     ],
                   ),
-                  // Container mit Benutzername Textfeld
-                  // Row(
-                  //   children: <Widget>[
-                  //     Flexible(
-                  //       child: TextFormField(
-                  //         decoration: InputDecoration(
-                  //             labelText: "Benutzername",
-                  //             hintText: "Herr/Frau IHR NAME"),
-                  //         validator: (value) => _validateBenutzernameTextfeld(
-                  //             benutzername: value),
-                  //         autocorrect: false,
-                  //         controller: _benutzernameController,
-                  //       ),
-                  //     ),
-                  //     IconButton(
-                  //       icon: Icon(
-                  //         Icons.help,
-                  //         color: thema.accentIconTheme.color,
-                  //       ),
-                  //       tooltip: "Benutzername Hilfe",
-                  //       onPressed: () => _zeigeBenutzernameHilfe(),
-                  //     ),
-                  //   ],
-                  // ),
-                  // Container mit Masterpasswort Textfeld
                   Row(
                     children: <Widget>[
                       Flexible(
@@ -182,12 +184,14 @@ class _RegistrierungState extends State<Registrierung> {
                           decoration: InputDecoration(
                               labelText: "Masterpasswort",
                               hintText: "Sollte Ihnen mitgeteilt worden sein"),
-                          validator: (value) => _validateMasterpasswortTextfeld(
-                            masterpasswort: value,
-                            istFehlermelder: _radioGroupValue == 0,
-                          ),
+                          validator: (value) {
+                            return _validierePasswortTextfeld(
+                              passwort: value,
+                              istFehlermelder: _radioGroupValue == 0,
+                            );
+                          },
                           autocorrect: false,
-                          controller: _masterpasswortController,
+                          controller: _passwortController,
                         ),
                       ),
                       IconButton(
@@ -196,7 +200,9 @@ class _RegistrierungState extends State<Registrierung> {
                           color: Colors.black,
                         ),
                         tooltip: "Masterpasswort Hilfe",
-                        onPressed: () => _zeigeMasterpasswortHilfe(),
+                        onPressed: () => _zeigePasswortHilfe(
+                          currentContext: context,
+                        ),
                       )
                     ],
                   ),

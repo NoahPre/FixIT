@@ -17,6 +17,7 @@ Future<void> main() async {
 // TODO: standardmäßiges Datumsschreibweise festlegen
 
 // TODO: die IDs der Fehler mit nem anderm Algorithmus machen, z.B. mit de uuid package
+// TODO: Meldung einbauen, wenn keine Internetverbindung vorhanden ist
 
 List<CameraDescription> cameras = [];
 
@@ -26,7 +27,6 @@ class FixIt extends StatefulWidget {
 }
 
 class _FixItState extends State<FixIt> {
-
   @override
   Widget build(BuildContext context) {
     // wir benutzen hier Provider für ein besseres State Management
@@ -48,8 +48,8 @@ class _FixItState extends State<FixIt> {
         // darkTheme: dunklesThema,
         initialRoute: "/",
         routes: {
-          "/": (context) => Home(),
           // Startseite (initialRoute) der App
+          "/": (context) => Home(),
           "/gemeldeteFehler": (context) => GemeldeteFehler(),
           "/fehlerDetailansicht": (context) => FehlerDetailansicht(),
           "/fehlerBehebung": (context) => Fehlerbehebung(),

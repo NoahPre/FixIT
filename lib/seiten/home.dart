@@ -9,14 +9,17 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    
     final BenutzerInfoProvider benutzerInfoProvider =
         Provider.of<BenutzerInfoProvider>(context);
 
-    return FutureBuilder(
-      initialData: benutzerInfoProvider.istAngemeldet,
-      future: benutzerInfoProvider.istBenutzerAngemeldet(),
+    return FutureBuilder<bool>(
+      future: benutzerInfoProvider.authentifizierung(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return snapshot.hasData
+
+        return 
+        // solange die Funktion am laufen ist, wird ein Ladedonut angezeigt
+        snapshot.hasData
             ? snapshot.data
                 // wird angezeigt, wenn der User angemeldet ist, also wenn istRegistriert in SharedPreferences true ist
                 ? GemeldeteFehler()
