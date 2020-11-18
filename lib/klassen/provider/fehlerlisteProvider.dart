@@ -32,7 +32,7 @@ class FehlerlisteProvider with ChangeNotifier {
     fehlerliste = List.generate(jsonObjekt.length, (int index) {
       // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
       return Fehler(
-        id: int.parse(jsonObjekt[index]["id"]),
+        id: jsonObjekt[index]["id"],
         datum: jsonObjekt[index]["datum"],
         raum: jsonObjekt[index]["raum"],
         beschreibung: jsonObjekt[index]["beschreibung"],
@@ -113,7 +113,7 @@ class FehlerlisteProvider with ChangeNotifier {
 
   // fügt einen Fehler mit schreibeFehler.php hinzu
   Future<void> schreibeFehler(
-      {int id,
+      {String id,
       String datum,
       String raum,
       String beschreibung,
@@ -129,7 +129,7 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   // löscht einen Fehler mit entferneFehler.php
-  Future<void> entferneFehler({int id}) async {
+  Future<void> entferneFehler({String id}) async {
     var url = "https://www.icanfixit.eu/entferneFehler.php?id=$id";
     http.Response response = await http.get(url);
     print(url);

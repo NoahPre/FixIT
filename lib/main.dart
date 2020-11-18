@@ -10,11 +10,8 @@ Future<void> main() async {
   runApp(FixIt());
 }
 
-// TODO: wichtige Anmeldedaten zum Server zu .gitignore hinzufügen
-
 // TODO: alle istRegistriert in istAngemeldet umwandeln oder noch einen besseren Namen finden
-// TODO: schauen wie oft ich BenutzerInfoProvider benutze
-// TODO: standardmäßiges Datumsschreibweise festlegen
+// TODO: schauen wie oft wir BenutzerInfoProvider benutzen
 
 // TODO: die IDs der Fehler mit nem anderm Algorithmus machen, z.B. mit de uuid package
 // TODO: Meldung einbauen, wenn keine Internetverbindung vorhanden ist

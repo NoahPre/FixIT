@@ -7,6 +7,7 @@ import "package:image_picker/image_picker.dart";
 import "package:keyboard_visibility/keyboard_visibility.dart";
 import "package:path/path.dart" show join;
 import "package:path_provider/path_provider.dart";
+import "package:uuid/uuid.dart";
 
 class Fehlermeldung extends StatefulWidget {
   @override
@@ -28,9 +29,9 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   FocusNode _raumNode = FocusNode();
   String _dropdownButtonText = "";
 
-  // Fehler, der auf dieser Seite gemeldet wird
-  Fehler fehler = Fehler(
-    id: DateTime.now().millisecondsSinceEpoch,
+  /// Fehler, der auf dieser Seite gemeldet wird
+  Fehler neuerFehler = Fehler(
+    id: Uuid().v1(),
     datum: DateFormat("yyyyMMdd").format(DateTime.now()).toString(),
     //das muss man noch updaten
     gefixt: "0",
@@ -81,7 +82,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   }) {
     setState(() {
       _ueberschrift = "Fehler in Raum " + textInTextfield;
-      fehler.raum = textInTextfield;
+      neuerFehler.raum = textInTextfield;
     });
   }
 
@@ -295,22 +296,23 @@ class _FehlermeldungState extends State<Fehlermeldung> {
             return;
           }
           setState(() {
-            fehler.beschreibung = _beschreibungController.text;
+            neuerFehler.beschreibung = _beschreibungController.text;
             // fehler.melder = benutzerInfoProvider.benutzername;
           });
           if (status == "") {
             if (pfadZumBild == "") {
               fehlerlisteProvider.fehlerGemeldet(
-                fehler: fehler,
+                fehler: neuerFehler,
               );
             } else {
               fehlerlisteProvider.fehlerGemeldet(
-                fehler: fehler,
+                fehler: neuerFehler,
                 image: File(pfadZumBild),
               );
             }
           } else {
-            fehlerlisteProvider.fehlerGemeldet(fehler: fehler, image: tmpFile);
+            fehlerlisteProvider.fehlerGemeldet(
+                fehler: neuerFehler, image: tmpFile);
           }
           Navigator.pop(context);
         },

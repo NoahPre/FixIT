@@ -1,10 +1,13 @@
 // imports.dart
+// Standardmäßige Importe:
 // dart:
 export "dart:async";
 export "dart:convert";
 export "dart:io";
 // Flutter:
 export "package:flutter/material.dart";
+
+// Unsere Widgets:
 // Seiten:
 export "./seiten/home.dart";
 // gemeldeteFehler:
@@ -24,7 +27,7 @@ export "./seiten/fehlerbehebung.dart";
 export "./seiten/fehlerDetailansicht.dart";
 export "./seiten/bildDetailansicht.dart";
 
-// Widgets:
+// Andere Widgets:
 export "./widgets/fertigButton.dart";
 export "./widgets/seitenmenue.dart";
 
@@ -39,7 +42,3 @@ export "./klassen/provider/fehlerlisteProvider.dart";
 export "package:shared_preferences/shared_preferences.dart";
 export "package:provider/provider.dart";
 export "package:camera/camera.dart";
-
-// fehlende Exports:
-// intl.dart
-// http.dart as http
