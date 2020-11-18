@@ -75,3 +75,8 @@ pubspec.lock
 *.lock
 pubspec.lock
 .flutter-plugins-dependencies
+
+# My configuration
+**/android/key.properties
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/flutter_export_environment.sh
