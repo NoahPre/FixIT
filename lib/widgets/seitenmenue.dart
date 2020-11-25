@@ -5,18 +5,8 @@ import "../imports.dart";
 
 class Seitenmenue extends StatelessWidget {
   final String aktuelleSeite;
-  // String gemeldeteFehlerAnzahl;
 
-  Seitenmenue({this.aktuelleSeite}) {
-    // anzahlAnGemeldetenFehlern();
-  }
-
-  // TODO: das hier intelligenter machen
-  Future<int> anzahlAnGemeldetenFehlern() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    // gemeldeteFehlerAnzahl =
-    // sharedPreferences.getInt("anzahlAnGefixtenFehlern").toString();
-  }
+  Seitenmenue({this.aktuelleSeite});
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +21,8 @@ class Seitenmenue extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           DrawerHeader(
+            // entfernt den komischen Platz zwischen dem Header und dem ersten ListTile
+            margin: EdgeInsets.only(bottom: 0.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -61,29 +53,28 @@ class Seitenmenue extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                // TODO: richtigen gefixte Fehler Zähler erstellen
-                Flexible(
-                  child: benutzerInfoProvider.istFehlermelder
-                      ? Text("Anzahl an gemeldeten Fehlern: 27")
-                      : Text("Anzahl an gefixten Fehlern: "),
-                ),
+                // const SizedBox(
+                //   height: 10.0,
+                // ),
+                // // TODO: richtigen gefixte Fehler Zähler erstellen
+                // Flexible(
+                //   child: benutzerInfoProvider.istFehlermelder
+                //       ? Text("Anzahl an gemeldeten Fehlern: 27")
+                //       : Text("Anzahl an gefixten Fehlern: "),
+                // ),
               ],
             ),
           ),
-          // TODO: hier komischen Abstand wegmachen
           ListTile(
             title: Text("Gemeldete Fehler"),
             onTap: () {
-              if (this.aktuelleSeite == "/gemeldeteFehler") {
+              if (this.aktuelleSeite == "/") {
                 // lässt das Seitenmenü einklappen
                 Navigator.pop(context);
               } else {
                 // lässt das Seitenmenü einklappen
                 Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, "/gemeldeteFehler");
+                Navigator.pushReplacementNamed(context, "/");
               }
             },
           ),
@@ -159,6 +150,7 @@ class Seitenmenue extends StatelessWidget {
               }
             },
           ),
+          Divider(),
         ],
       ),
     );

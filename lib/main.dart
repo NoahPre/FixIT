@@ -46,8 +46,7 @@ class _FixItState extends State<FixIt> {
         initialRoute: "/",
         routes: {
           // Startseite (initialRoute) der App
-          "/": (context) => Home(),
-          "/gemeldeteFehler": (context) => GemeldeteFehler(),
+          "/": (context) => GemeldeteFehler(),
           "/fehlerDetailansicht": (context) => FehlerDetailansicht(),
           "/fehlerBehebung": (context) => Fehlerbehebung(),
           "/soforthilfe": (context) => Soforthilfe(),

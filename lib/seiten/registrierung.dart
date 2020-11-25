@@ -1,5 +1,7 @@
 // registrierung.dart
 import "../imports.dart";
+import "package:url_launcher/url_launcher.dart";
+import "package:flutter/gestures.dart";
 
 class Registrierung extends StatefulWidget {
   @override
@@ -15,6 +17,22 @@ class _RegistrierungState extends State<Registrierung> {
 
   /// TextEditingController für das Passwort Textfeld
   final _passwortController = TextEditingController();
+
+  /// GestureRecognizer für den Link zu der Datenschutz Erklärung
+  TapGestureRecognizer _datenschutzErklaerungRecognizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _datenschutzErklaerungRecognizer = TapGestureRecognizer()
+      ..onTap = _oeffneDatenschutzErklaerung;
+  }
+
+  @override
+  void dispose() {
+    _datenschutzErklaerungRecognizer.dispose();
+    super.dispose();
+  }
 
   /// wird ausgeführt, wenn man einen anderen RadioButton auswählt
   void _radioButtonChanged(int value) {
@@ -42,7 +60,8 @@ class _RegistrierungState extends State<Registrierung> {
       context: currentContext,
       builder: (context) => AlertDialog(
         title: Text("Passwort Hilfe"),
-        content: Text("Hier steht ein erklärender Text zum Passwort"),
+        content: Text(
+            "Das Passwort sollte Ihnen entweder via E-Mail oder von einem unserer Administratoren genannt worden sein"),
         actions: <Widget>[
           FlatButton(
             child: Text("OK"),
@@ -60,7 +79,7 @@ class _RegistrierungState extends State<Registrierung> {
       builder: (context) => AlertDialog(
         title: Text("Authentifizierung fehlgeschlagen"),
         content: Text(
-            "Das eingegebene Passwort für den angegebenen Benutzer ist falsch. Bitter versuchen Sie es erneut."),
+            "Das eingegebene Passwort für den angegebenen Benutzer ist falsch. Bitte versuchen Sie es erneut."),
         actions: <Widget>[
           FlatButton(
             child: Text("OK"),
@@ -69,6 +88,16 @@ class _RegistrierungState extends State<Registrierung> {
         ],
       ),
     );
+  }
+
+  /// öffnet die Datenschutz Erklärung von FixIT im Standardbrowser des Benutzers
+  void _oeffneDatenschutzErklaerung() async {
+    const url = "https://www.icanfixit.eu/datenschutz.html";
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw "Could not launch: $url";
+    }
   }
 
   @override
@@ -112,7 +141,7 @@ class _RegistrierungState extends State<Registrierung> {
           passwortInFunktion: passwortInFunktion,
         )) {
           print("userRegistriertSich");
-          await benutzerInfoProvider.ueberschreibeUserInformation(
+          await benutzerInfoProvider.benutzerRegistriertSich(
             istFehlermelderInFunktion: istFehlermelderInFunktion,
             passwortInFunktion: passwortInFunktion,
           );
@@ -126,7 +155,7 @@ class _RegistrierungState extends State<Registrierung> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Registrierung bei FixIt"),
+        title: Text("Registrierung bei FixIT"),
         // ist nur da, damit der Zurückpfeil nicht angezeigt wird
         leading: Container(
           color: thema.primaryColor,
@@ -206,7 +235,30 @@ class _RegistrierungState extends State<Registrierung> {
                     ],
                   ),
                   const SizedBox(
-                    height: 10.0,
+                    height: 20.0,
+                  ),
+                  // Datenschutz Erklärung Disclaimer
+                  RichText(
+                    maxLines: 10,
+                    textAlign: TextAlign.justify,
+                    text: TextSpan(
+                        text: "Indem Sie fortfahren stimmen Sie unserer ",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: "Datenschutz Erklärung",
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                            recognizer: _datenschutzErklaerungRecognizer,
+                          ),
+                          TextSpan(text: " zu.")
+                        ]),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
                   ),
                   RaisedButton(
                     child: Text(
@@ -222,16 +274,6 @@ class _RegistrierungState extends State<Registrierung> {
                         ),
                         borderRadius: BorderRadius.circular(18.0)),
                     onPressed: () => _userRegistriertSich(),
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  // TODO: das hier beim Release entfernen
-                  Text(
-                    "Zum Debuggen: \nPasswort Fehlermelder: fixit \nPasswort Fehlerbeheber: Fixit",
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                    style: thema.textTheme.bodyText1,
                   ),
                 ],
               ),

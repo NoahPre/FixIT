@@ -96,7 +96,6 @@ class _FehlerlisteState extends State<Fehlerliste> {
                                       ),
                                       onDismissed:
                                           (DismissDirection direction) {
-                                        print(fehler.id.toString());
                                         fehlerlisteProvider.fehlerGeloescht(
                                           fehler: fehler,
                                         );

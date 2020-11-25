@@ -17,10 +17,12 @@ class FehlerDetailansicht extends StatefulWidget {
 class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
   @override
   Widget build(BuildContext context) {
-    print("url zum Bild: " + widget.fehler.bild);
     ThemeData thema = Theme.of(context);
     Size deviceSize = MediaQuery.of(context).size;
+    final FehlerlisteProvider fehlerlisteProvider =
+        Provider.of<FehlerlisteProvider>(context);
 
+    /// nimmt das in der Form YYYYMMDD gespeicherte Datum und formatiert es neu
     String datumInSchoen() {
       String tag =
           widget.fehler.datum.split("")[6] + widget.fehler.datum.split("")[7];
@@ -42,13 +44,17 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
-              Icons.delete,
-              color: thema.iconTheme.color,
-            ),
-            tooltip: "Fehler löschen",
-            onPressed: () {},
-          ),
+              icon: Icon(
+                Icons.delete,
+                color: thema.iconTheme.color,
+              ),
+              tooltip: "Fehler löschen",
+              onPressed: () {
+                fehlerlisteProvider.fehlerGeloescht(
+                  fehler: widget.fehler,
+                );
+                Navigator.pop(context);
+              }),
         ],
       ),
       body: SafeArea(
@@ -181,7 +187,7 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                             ),
                           ),
                         ),
-                 /* Align(
+                  /* Align(
                     alignment: Alignment.bottomLeft,
                     child: Column(
                       mainAxisSize: MainAxisSize.max,

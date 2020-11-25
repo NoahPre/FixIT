@@ -9,7 +9,6 @@ export "package:flutter/material.dart";
 
 // Unsere Widgets:
 // Seiten:
-export "./seiten/home.dart";
 // gemeldeteFehler:
 export "./seiten/gemeldeteFehler/gemeldeteFehler.dart";
 export "./seiten/gemeldeteFehler/fehlerliste.dart";

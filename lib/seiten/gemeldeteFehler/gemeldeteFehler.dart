@@ -1,18 +1,13 @@
 // gemeldeteFehler.dart
 import "../../imports.dart";
 
-class GemeldeteFehler extends StatefulWidget {
-  @override
-  _GemeldeteFehlerState createState() => _GemeldeteFehlerState();
-}
-
-class _GemeldeteFehlerState extends State<GemeldeteFehler> {
-  Future<void> refresh() async {}
-
+class GemeldeteFehler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print("building GemeldeteFehler");
     ThemeData thema = Theme.of(context);
+    final BenutzerInfoProvider benutzerInfoProvider =
+        Provider.of<BenutzerInfoProvider>(context);
+    MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     var appBar = AppBar(
       title: Text(
@@ -20,23 +15,58 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler> {
         style: thema.textTheme.headline1,
       ),
     );
-    return Scaffold(
-      appBar: appBar,
-      // Seitenmenü
-      drawer: Seitenmenue(
-        aktuelleSeite: "/gemeldeteFehler",
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
 
-          // Liste mit gemeldeten Fehlern
-          child: Fehlerliste(
-            appBarHoehe: appBar.preferredSize.height,
+    Future<void> erneutAuthentifizieren() async {
+      await benutzerInfoProvider.authentifizierung();
+      return;
+    }
+
+    return StreamBuilder<bool>(
+      stream: benutzerInfoProvider.authentifizierungStream,
+      initialData: benutzerInfoProvider.istAuthentifiziert,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.data == false) {
+          return Registrierung();
+        }
+        return Scaffold(
+          appBar: appBar,
+          // Seitenmenü
+          drawer: Seitenmenue(
+            aktuelleSeite: "/",
           ),
-        ),
-      ),
-      floatingActionButton: FABHome(),
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
+
+              // Liste mit gemeldeten Fehlern
+              child: snapshot.hasData
+                  ? Fehlerliste(
+                      appBarHoehe: appBar.preferredSize.height,
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () => erneutAuthentifizieren(),
+                      child: ListView(
+                        children: <Widget>[
+                          Container(
+                            height: mediaQueryData.size.height -
+                                mediaQueryData.padding.top -
+                                mediaQueryData.padding.bottom,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ),
+          ),
+          floatingActionButton: FABHome(),
+        );
+      },
     );
   }
 }

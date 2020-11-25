@@ -51,13 +51,17 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   @override
   void initState() {
     super.initState();
-    controller = CameraController(cameras[0], ResolutionPreset.medium);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
+    try {
+      controller = CameraController(cameras[0], ResolutionPreset.medium);
+      controller.initialize().then((_) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {});
+      });
+    } catch (error) {
+      print(error.toString());
+    }
     // TODO: muss man diesen Listener hier entfernen?
     //sorgt dafür, dass man weiß, wann die Tastatur zu sehen ist
     KeyboardVisibilityNotification().addNewListener(

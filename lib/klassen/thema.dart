@@ -63,6 +63,18 @@ var thema = ThemeData(
       color: Colors.white,
       fontSize: 14.0,
     ),
+
+    /// dunkelgrauer, normaler Text
+    subtitle1: TextStyle(
+      color: Colors.grey.shade800,
+      fontSize: 14.0,
+    ),
+
+    /// dunkelgrauer, kleiner Text
+    subtitle2: TextStyle(
+      color: Colors.grey.shade800,
+      fontSize: 12.0,
+    ),
   ),
   // weiße Icons
   iconTheme: IconThemeData(

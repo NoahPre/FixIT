@@ -11,7 +11,6 @@ import "dart:async";
 // - Fehler löschen kann
 class FehlerlisteProvider with ChangeNotifier {
   FehlerlisteProvider() {
-    print("created");
     holeFehler();
   }
 
@@ -25,13 +24,10 @@ class FehlerlisteProvider with ChangeNotifier {
   List<Fehler> fehlerliste;
 
   // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
-  Future<String> holeFehler() async {
+  Future<void> holeFehler() async {
     var url = 'https://www.icanfixit.eu/gibAlleFehler.php';
     http.Response response = await http.get(url);
-    print("1");
     var jsonObjekt = jsonDecode(response.body) ?? [];
-    print("2");
-    print(jsonObjekt);
     // überschreibt fehlerliste mit den Werten aus der Datenbank
     fehlerliste = List.generate(jsonObjekt.length, (int index) {
       // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
@@ -46,7 +42,7 @@ class FehlerlisteProvider with ChangeNotifier {
     });
     // fügt die geholten Fehler dem fehlerlisteController hinzu und aktualisiert damit das Widget Fehlerliste
     fehlerlisteSink.add(fehlerliste);
-    return response.body;
+    notifyListeners();
   }
 
   // um einen neuen Fehler zu schreiben muss man nur diese Funktion aufrufen
@@ -149,6 +145,7 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   void dispose() {
+    super.dispose();
     fehlerlisteController.close();
   }
 }
