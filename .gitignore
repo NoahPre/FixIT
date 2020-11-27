@@ -81,3 +81,4 @@ pubspec.lock
 **/ios/Flutter/.last_build_id
 **/ios/Flutter/flutter_export_environment.sh
 android/key.jks
+android/app/key.jks
