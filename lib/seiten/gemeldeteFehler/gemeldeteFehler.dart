@@ -11,7 +11,7 @@ class GemeldeteFehler extends StatelessWidget {
 
     var appBar = AppBar(
       title: Text(
-        "FixIt",
+        "FixIT",
         style: thema.textTheme.headline1,
       ),
     );
