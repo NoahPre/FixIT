@@ -16,7 +16,18 @@ class _RegistrierungState extends State<Registrierung> {
   int _radioGroupValue = 0;
 
   /// TextEditingController für das Passwort Textfeld
-  final _passwortController = TextEditingController();
+  final TextEditingController _passwortController = TextEditingController();
+
+  /// boolean Wert, der speichert, ob das Passwort sichtbar oder verdeckt ist
+  bool _passwortIstVerdeckt = true;
+
+  /// Icon für den rechtes Rand des Passwort Textfeldes
+  ///
+  /// zeigt an, ob das Passwort sichtbar oder verdeckt ist
+  Icon _passwortIcon = Icon(
+    Icons.visibility,
+    color: Colors.black,
+  );
 
   /// GestureRecognizer für den Link zu der Datenschutz Erklärung
   TapGestureRecognizer _datenschutzErklaerungRecognizer;
@@ -210,16 +221,39 @@ class _RegistrierungState extends State<Registrierung> {
                       Flexible(
                         child: TextFormField(
                           decoration: InputDecoration(
-                              labelText: "Masterpasswort",
-                              hintText: "Sollte Ihnen mitgeteilt worden sein"),
+                            labelText: "Masterpasswort",
+                            hintText: "Sollte Ihnen mitgeteilt worden sein",
+                            suffix: IconButton(
+                              icon: _passwortIcon,
+                              onPressed: () {
+                                setState(() {
+                                  if (_passwortIstVerdeckt == true) {
+                                    _passwortIstVerdeckt = false;
+                                    _passwortIcon = Icon(
+                                      Icons.visibility_off,
+                                      color: Colors.black,
+                                    );
+                                  } else {
+                                    _passwortIstVerdeckt = true;
+                                    _passwortIcon = Icon(
+                                      Icons.visibility,
+                                      color: Colors.black,
+                                    );
+                                  }
+                                });
+                              },
+                            ),
+                          ),
+                          obscureText: _passwortIstVerdeckt,
+                          autocorrect: false,
+                          maxLines: 1,
+                          controller: _passwortController,
                           validator: (value) {
                             return _validierePasswortTextfeld(
                               passwort: value,
                               istFehlermelder: _radioGroupValue == 0,
                             );
                           },
-                          autocorrect: false,
-                          controller: _passwortController,
                         ),
                       ),
                       IconButton(

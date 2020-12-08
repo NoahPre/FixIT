@@ -1,5 +1,5 @@
 // einstellungen.dart
-import "../imports.dart";
+import '../imports.dart';
 
 class Einstellungen extends StatelessWidget {
   @override

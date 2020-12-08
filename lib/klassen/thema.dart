@@ -78,7 +78,7 @@ var thema = ThemeData(
   ),
   // weiße Icons
   iconTheme: IconThemeData(
-    color: Colors.white,
+    color: Colors.black,
   ),
   dividerTheme: DividerThemeData(
     color: Colors.grey.shade600,

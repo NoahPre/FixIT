@@ -1,14 +1,15 @@
 // fehlermeldungVorlage.dart
+import "dart:typed_data";
 import "../../imports.dart";
 import "../../main.dart";
 import "package:flutter/cupertino.dart";
 import "package:intl/intl.dart";
 import "package:image_picker/image_picker.dart";
 import "package:keyboard_visibility/keyboard_visibility.dart";
-import "package:path/path.dart" show join;
-import "package:path_provider/path_provider.dart";
+
 import "package:uuid/uuid.dart";
 
+// Seite, auf der der Benutzer seine Fehlermeldung abschicken kann
 class Fehlermeldung extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -17,16 +18,23 @@ class Fehlermeldung extends StatefulWidget {
 }
 
 class _FehlermeldungState extends State<Fehlermeldung> {
-  // globalKey für das Form Widget
+  /// Variablen für das Error Handling
+  bool errorVorhanden = false;
+  String errorNachricht = "";
+
+  /// GlobalKey für das Form Widget
   final _formKey = GlobalKey<FormState>();
-  // dynamische Überschrift
+
+  /// dynamische Überschrift, die sich nach jeder Eingabe aktualisiert
   String _ueberschrift = "Fehler in Raum ";
-  // Zeugs fürs Beschreibungstextfeld
-  TextEditingController _beschreibungController = TextEditingController();
-  FocusNode _beschreibungNode = FocusNode();
-  // für die Raumnummerneingabe
-  TextEditingController _raumController = TextEditingController();
-  FocusNode _raumNode = FocusNode();
+
+  /// Variablen für das Beschreibungstextfeld
+  final TextEditingController _beschreibungController = TextEditingController();
+  final FocusNode _beschreibungNode = FocusNode();
+
+  /// Variablen für die Raumnummerneingabe
+  final TextEditingController _raumController = TextEditingController();
+  final FocusNode _raumNode = FocusNode();
   String _dropdownButtonText = "";
 
   /// Fehler, der auf dieser Seite gemeldet wird
@@ -37,23 +45,28 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     gefixt: "0",
   );
 
-  // Variablen fürs Uploaden der Bilder via php
-  Future<File> file;
+  /// Variablen für das Hochladen des aufgenommenen / ausgewählten Bildes via php
+  Future<PickedFile> ausgewaehltesBild;
   String status = '';
-  String base64Image;
-  File tmpFile;
-  String errMessage = 'Error Uploading Image';
+  String base64Bild;
+  PickedFile temporaeresBild;
+  String bildErrorNachricht = 'Error Uploading Image';
 
   // Controller für die Kamera
-  CameraController controller;
-  String pfadZumBild = "";
+  CameraController kameraController;
+  String _pfadZumBild = "";
+  void setzePfadZumBild(String pfad) {
+    setState(() {
+      _pfadZumBild = pfad;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     try {
-      controller = CameraController(cameras[0], ResolutionPreset.medium);
-      controller.initialize().then((_) {
+      kameraController = CameraController(cameras[0], ResolutionPreset.medium);
+      kameraController.initialize().then((_) {
         if (!mounted) {
           return;
         }
@@ -61,6 +74,8 @@ class _FehlermeldungState extends State<Fehlermeldung> {
       });
     } catch (error) {
       print(error.toString());
+      errorVorhanden = true;
+      errorNachricht = error.toString();
     }
     // TODO: muss man diesen Listener hier entfernen?
     //sorgt dafür, dass man weiß, wann die Tastatur zu sehen ist
@@ -76,11 +91,11 @@ class _FehlermeldungState extends State<Fehlermeldung> {
 
   @override
   void dispose() {
-    controller?.dispose();
     super.dispose();
+    kameraController?.dispose();
   }
 
-  // updatet die Überschrift und den Text des Dropdown Buttons
+  /// updatet die Überschrift und den Text des Dropdown Buttons
   void updateText({
     String textInTextfield,
   }) {
@@ -90,167 +105,62 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     });
   }
 
-  // lässt den Benutzer ein Bild aufnehmen
-  void bildAufnehmen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (BuildContext context) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text("Kamera"),
-            ),
-            floatingActionButton: FloatingActionButton(
-              child: Icon(Icons.camera_alt),
-              // Provide an onPressed callback.
-              onPressed: () async {
-                // Take the Picture in a try / catch block. If anything goes wrong,
-                // catch the error.
-                try {
-                  // Construct the path where the image should be saved using the path
-                  // package.
-                  final path = join(
-                    // Store the picture in the temp directory.
-                    // Find the temp directory using the `path_provider` plugin.
-                    (await getTemporaryDirectory()).path,
-                    '${DateTime.now()}.png',
-                  );
-
-                  // Attempt to take a picture and log where it's been saved.
-                  await controller.takePicture(path);
-
-                  Navigator.pop(context);
-
-                  setState(() {
-                    pfadZumBild = path;
-                  });
-                } catch (e) {
-                  // If an error occurs, log the error to the console.
-                  print(e);
-                }
-              },
-            ),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: AspectRatio(
-                    aspectRatio: controller.value.aspectRatio,
-                    child: CameraPreview(controller),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+  /// zeigt das aufgenommene Bild
+  Widget zeigeAufgenommenesBild() {
+    return Image.file(
+      File(_pfadZumBild),
     );
   }
 
-  // lässt den Benutzer das Bild auswählen
-  void chooseImage() {
+  void setzeBildWerte({
+    @required PickedFile temporaeresBild,
+    @required String base64Bild,
+  }) {
+    // TODO: warum kann man hier kein setState() benutzen?
+    this.temporaeresBild = temporaeresBild;
+    this.base64Bild = base64Bild;
+  }
+
+  /// lässt den Benutzer das Bild aus der Gallerie des Geräts auswählen
+  void bildAusGallerieAuswaehlen() {
     setState(() {
       //TODO: das hier auf ImagePicker.getImage() updaten
-      file = ImagePicker.pickImage(
+      ausgewaehltesBild = ImagePicker().getImage(
         source: ImageSource.gallery,
       );
       status = "Bild ausgewählt";
     });
   }
 
-  // zeigt das aufgenommene Bild
-  Widget zeigeAufgenommenesBild() {
-    return Image.file(File(pfadZumBild));
+  // für die Logik vom Fertig Button über der Tastatur:
+  /// overlayEntry property für die Fertig Button Widget Logik
+  OverlayEntry overlayEntry;
+
+  /// zeigt den Fertig Button über dem Zahlenfeld an (iOS bietet hier keinen Button, der die Eingabe beendet, Android schon)
+  void zeigeFertigButton(BuildContext context) {
+    if (overlayEntry != null) return;
+    OverlayState overlayState = Overlay.of(context);
+    overlayEntry = OverlayEntry(builder: (context) {
+      return Positioned(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          right: 0.0,
+          left: 0.0,
+          child: FertigButton());
+    });
+
+    overlayState.insert(overlayEntry);
   }
 
-  // zeigt das gewählte Bild
-  Widget showImage() {
-    return FutureBuilder<File>(
-      future: file,
-      builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            null != snapshot.data) {
-          tmpFile = snapshot.data;
-          base64Image = base64Encode(snapshot.data.readAsBytesSync());
-          return Flexible(
-            child: Image.file(
-              snapshot.data,
-              fit: BoxFit.fill,
-            ),
-          );
-        } else if (null != snapshot.error) {
-          return const Text(
-            'Error Picking Image',
-            textAlign: TextAlign.center,
-          );
-        } else {
-          return const Text(
-            'No Image Selected',
-            textAlign: TextAlign.center,
-          );
-        }
-      },
-    );
-  }
-
-  // zeigt je nach Betriebssystem einen Auswahldialog
-  Future<void> zeigeBilderAuswahl({BuildContext currentContext}) async {
-    showModalBottomSheet(
-      isDismissible: false,
-      context: currentContext,
-      builder: (BuildContext context) => BottomSheet(
-        onClosing: () {},
-        builder: (BuildContext context) {
-          return Container(
-            height: 100,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 100.0,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.photo_camera,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        bildAufnehmen();
-                      },
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 100.0,
-                  width: 2.0,
-                  color: Colors.black,
-                ),
-                Expanded(
-                  child: Container(
-                    height: 100.0,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.collections,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        chooseImage();
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+  /// entfernt den Fertig Button über dem Zahlenfeld
+  void entferneFertigButton() {
+    if (overlayEntry != null) {
+      overlayEntry.remove();
+      overlayEntry = null;
+    }
   }
 
   // Validatoren:
+  /// Validator für die Raumnummer des Fehlers
   String _uerberpruefeRaumnummer(String raumnummer) {
     if (raumnummer.isEmpty || raumnummer == "") {
       return "Bitte eine Raumnummer eingeben";
@@ -261,6 +171,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     }
   }
 
+  /// Validator für die Beschreibung des Fehlers
   String _ueberpruefeBeschreibung(String beschreibung) {
     if (beschreibung.isEmpty || beschreibung == "") {
       return "Bitte eine Beschreibung eingeben";
@@ -273,8 +184,12 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   Widget build(BuildContext context) {
     ThemeData thema = Theme.of(context);
     MediaQueryData mediaQuery = MediaQuery.of(context);
+    // listen ist false, da dieses Widget hier nicht auf Werte aus dem Provider zugreift, sondern nur dessen Funktionen aufruft
     final FehlerlisteProvider fehlerlisteProvider =
-        Provider.of<FehlerlisteProvider>(context);
+        Provider.of<FehlerlisteProvider>(
+      context,
+      listen: false,
+    );
 
     var appBar = AppBar(
       title: Text(
@@ -308,22 +223,21 @@ class _FehlermeldungState extends State<Fehlermeldung> {
           }
           setState(() {
             neuerFehler.beschreibung = _beschreibungController.text;
-            // fehler.melder = benutzerInfoProvider.benutzername;
           });
           if (status == "") {
-            if (pfadZumBild == "") {
+            if (_pfadZumBild == "") {
               fehlerlisteProvider.fehlerGemeldet(
                 fehler: neuerFehler,
               );
             } else {
               fehlerlisteProvider.fehlerGemeldet(
                 fehler: neuerFehler,
-                image: File(pfadZumBild),
+                image: File(_pfadZumBild),
               );
             }
           } else {
             fehlerlisteProvider.fehlerGemeldet(
-                fehler: neuerFehler, image: tmpFile);
+                fehler: neuerFehler, pickedImage: temporaeresBild);
           }
           Navigator.pop(context);
         },
@@ -420,13 +334,29 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                     builder: (BuildContext currentContext) => RaisedButton(
                       child: Text("Bild hinzufügen"),
                       onPressed: () async {
+                        // if (errorVorhanden == true) {
+                        //   zeigeSnackBarNachricht(
+                        //       nachricht: errorNachricht,
+                        //       context: currentContext);
+                        //   return;
+                        // }
+
                         await zeigeBilderAuswahl(
-                            currentContext: currentContext);
+                          currentContext: currentContext,
+                          pfadZumBild: setzePfadZumBild,
+                          controller: kameraController,
+                          bildAusGallerieAuswaehlen: bildAusGallerieAuswaehlen,
+                        );
                       },
                     ),
                   ),
                   const SizedBox(height: 10),
-                  pfadZumBild == "" ? showImage() : zeigeAufgenommenesBild(),
+                  _pfadZumBild == ""
+                      ? zeigeAusgewaehltesBild(
+                          ausgewaehltesBild: ausgewaehltesBild,
+                          setzeBildWerte: setzeBildWerte,
+                        )
+                      : zeigeAufgenommenesBild(),
                 ],
               ),
             ),
@@ -434,32 +364,5 @@ class _FehlermeldungState extends State<Fehlermeldung> {
         ),
       ),
     );
-  }
-
-  // für die Logik vom Fertig Button über der Tastatur:
-  //overlayEntry property für die Fertig Button Widget Logik
-  OverlayEntry overlayEntry;
-
-  //helfen, den Fertig Button über dem Zahlenfeld anzuzeigen
-  void zeigeFertigButton(BuildContext context) {
-    if (overlayEntry != null) return;
-    OverlayState overlayState = Overlay.of(context);
-    overlayEntry = OverlayEntry(builder: (context) {
-      return Positioned(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-          right: 0.0,
-          left: 0.0,
-          child: FertigButton());
-    });
-
-    overlayState.insert(overlayEntry);
-  }
-
-  //lässt den Fertig Button über dem Zahlenfeld erscheinen
-  void entferneFertigButton() {
-    if (overlayEntry != null) {
-      overlayEntry.remove();
-      overlayEntry = null;
-    }
   }
 }

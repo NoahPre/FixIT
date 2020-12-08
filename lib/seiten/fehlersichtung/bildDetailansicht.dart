@@ -1,5 +1,5 @@
 // bildDetailansicht.dart
-import "../imports.dart";
+import '../../imports.dart';
 
 class BildDetailansicht extends StatefulWidget {
   BildDetailansicht({@required this.urlZumBild});

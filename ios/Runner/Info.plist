@@ -26,8 +26,6 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Erlauben Sie den Zugriff auf Ihre Kamera, um Bilder von Fehlern hochladen zu können (und damit wir Sie heimlich ausspionieren können)</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Erlauben Sie den Zugriff auf Ihr Mikrofon, damit wir Sie abhören können</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Erlauben Sie den Zugriff auf Ihre Foto Mediathek, um Bilder von Fehler hochladen zu können</string>
 	<key>UILaunchStoryboardName</key>

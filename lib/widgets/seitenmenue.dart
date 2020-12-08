@@ -3,10 +3,11 @@ import "../imports.dart";
 
 // TODO: richtigen gemeldete / gefixte Fehler Counter einführen
 
+// Seitenmenü der App
 class Seitenmenue extends StatelessWidget {
   final String aktuelleSeite;
 
-  Seitenmenue({this.aktuelleSeite});
+  const Seitenmenue({this.aktuelleSeite});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,8 @@ class Seitenmenue extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: <Widget>[
+          // Abschnitt über der Liste mit den verfügbaren Seiten
+          // zeigt Informationen über den Benutzer an
           DrawerHeader(
             // entfernt den komischen Platz zwischen dem Header und dem ersten ListTile
             margin: EdgeInsets.only(bottom: 0.0),
@@ -53,15 +56,6 @@ class Seitenmenue extends StatelessWidget {
                     ),
                   ],
                 ),
-                // const SizedBox(
-                //   height: 10.0,
-                // ),
-                // // TODO: richtigen gefixte Fehler Zähler erstellen
-                // Flexible(
-                //   child: benutzerInfoProvider.istFehlermelder
-                //       ? Text("Anzahl an gemeldeten Fehlern: 27")
-                //       : Text("Anzahl an gefixten Fehlern: "),
-                // ),
               ],
             ),
           ),

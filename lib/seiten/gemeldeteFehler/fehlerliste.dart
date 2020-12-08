@@ -65,9 +65,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
                           ? [
                               Container(
                                 height: mediaQueryData.size.height -
-                                    widget.appBarHoehe -
-                                    mediaQueryData.padding.top -
-                                    mediaQueryData.padding.bottom,
+                                    widget.appBarHoehe,
                                 child: Center(
                                   child: Text(
                                     "Noch keine Fehler gemeldet",
@@ -245,6 +243,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
                       : [
                           Container(
                             height: mediaQueryData.size.height -
+                                widget.appBarHoehe -
                                 mediaQueryData.padding.top -
                                 mediaQueryData.padding.bottom,
                             child: Center(

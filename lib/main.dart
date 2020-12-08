@@ -2,9 +2,8 @@
 import "./imports.dart";
 import "./klassen/thema.dart";
 
-// passwort für melder: winniethepou
-
 Future<void> main() async {
+  // wichtig für das Kamera Package
   WidgetsFlutterBinding.ensureInitialized();
   cameras = await availableCameras();
   runApp(FixIt());
@@ -13,18 +12,11 @@ Future<void> main() async {
 // TODO: alle istRegistriert in istAngemeldet umwandeln oder noch einen besseren Namen finden
 // TODO: schauen wie oft wir BenutzerInfoProvider benutzen
 
-// TODO: die IDs der Fehler mit nem anderm Algorithmus machen, z.B. mit de uuid package
 // TODO: Meldung einbauen, wenn keine Internetverbindung vorhanden ist
 
 List<CameraDescription> cameras = [];
 
-class FixIt extends StatefulWidget {
-  @override
-  _FixItState createState() => _FixItState();
-}
-
-class _FixItState extends State<FixIt> {
-  @override
+class FixIt extends StatelessWidget {
   Widget build(BuildContext context) {
     // wir benutzen hier Provider für ein besseres State Management
     // für mehr Informationen siehe: https://pub.dev/packages/provider

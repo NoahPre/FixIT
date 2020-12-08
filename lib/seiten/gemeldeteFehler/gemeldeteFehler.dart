@@ -1,12 +1,16 @@
 // gemeldeteFehler.dart
 import "../../imports.dart";
 
+/// Startseite der App
 class GemeldeteFehler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData thema = Theme.of(context);
     final BenutzerInfoProvider benutzerInfoProvider =
-        Provider.of<BenutzerInfoProvider>(context);
+        Provider.of<BenutzerInfoProvider>(
+      context,
+      listen: false,
+    );
     MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     var appBar = AppBar(
@@ -30,25 +34,26 @@ class GemeldeteFehler extends StatelessWidget {
         }
         return Scaffold(
           appBar: appBar,
-          // Seitenmenü
-          drawer: Seitenmenue(
+          drawer: const Seitenmenue(
             aktuelleSeite: "/",
           ),
+          floatingActionButton: FABHome(),
           body: SafeArea(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
-
-              // Liste mit gemeldeten Fehlern
+              padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
               child: snapshot.hasData
+                  // Liste mit gemeldeten Fehlern
                   ? Fehlerliste(
                       appBarHoehe: appBar.preferredSize.height,
                     )
+                  // Ladedonut in der Mitte der Seite mit Option zum neuladen
                   : RefreshIndicator(
                       onRefresh: () => erneutAuthentifizieren(),
                       child: ListView(
                         children: <Widget>[
                           Container(
                             height: mediaQueryData.size.height -
+                                appBar.preferredSize.height -
                                 mediaQueryData.padding.top -
                                 mediaQueryData.padding.bottom,
                             child: Center(
@@ -64,7 +69,6 @@ class GemeldeteFehler extends StatelessWidget {
                     ),
             ),
           ),
-          floatingActionButton: FABHome(),
         );
       },
     );

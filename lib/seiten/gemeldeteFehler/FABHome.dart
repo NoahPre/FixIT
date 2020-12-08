@@ -1,8 +1,10 @@
 // FABHome.dart
-// 1
 import "../../imports.dart";
 
+/// FloatingActionButton für GemeldeteFehler
 class FABHome extends StatelessWidget {
+  const FABHome();
+
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(

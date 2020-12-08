@@ -1,8 +1,8 @@
 // fehlerlisteProvider.dart
-// 1
+import "dart:async";
 import "../../imports.dart";
 import "package:http/http.dart" as http;
-import "dart:async";
+import "package:image_picker/image_picker.dart";
 
 // Dieser Provider enthält die Fehlerliste, die dem Benutzer angezeigt wird.
 // Außerdem enthält er Funktionalität, mit der man
@@ -45,16 +45,40 @@ class FehlerlisteProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // um einen neuen Fehler zu schreiben muss man nur diese Funktion aufrufen
-  void fehlerGemeldet({@required Fehler fehler, File image}) {
+  /// um einen neuen Fehler zu schreiben muss man nur diese Funktion aufrufen
+  ///
+  /// es kann immer nur entweder image oder pickedImage angegeben werden
+  Future<void> fehlerGemeldet(
+      {@required Fehler fehler, File image, PickedFile pickedImage}) async {
     String fileName = "";
+    // TODO: das hier alles ein wenig sicherer und generell besser machen
     // Bild wird hochgeladen, wenn eins aufgenommen wurde
     if (image != null) {
       print("image != null");
       fileName = fehler.id + "." + image.path.split('/').last.split(".")[1];
 
       fehler.bild = fileName;
-      startUpload(fehler: fehler, file: image);
+      await startUpload(
+        fehler: fehler,
+        base64EncodedImage: base64Encode(
+          image?.readAsBytesSync(),
+        ),
+        path: image.path,
+      );
+    }
+    if (pickedImage != null) {
+      print("pickedImage != null");
+      fileName =
+          fehler.id + "." + pickedImage.path.split('/').last.split(".")[1];
+
+      fehler.bild = fileName;
+      await startUpload(
+        fehler: fehler,
+        base64EncodedImage: base64Encode(
+          await pickedImage?.readAsBytes(),
+        ),
+        path: pickedImage.path,
+      );
     }
     schreibeFehler(
       id: fehler.id,
@@ -70,16 +94,21 @@ class FehlerlisteProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void startUpload({@required Fehler fehler, @required File file}) {
-    if (null == file) {
+  Future<void> startUpload({
+    @required Fehler fehler,
+    @required String base64EncodedImage,
+    @required String path,
+  }) async {
+    if (base64EncodedImage == null) {
       return;
     }
-    String fileName = fehler.id + "." + file.path.split('/').last.split(".")[1];
+    String fileName = fehler.id + "." + path.split('/').last.split(".")[1];
     upload(
       fileName: fileName,
-      base64Image: base64Encode(
-        file.readAsBytesSync(),
-      ),
+      base64Image: base64EncodedImage,
+      // base64Image: base64Encode(
+      //   await file.readAsBytes(),
+      // ),
     );
   }
 
