@@ -1,0 +1,2 @@
+# Provider 
+FixIT benutzt als Tool zum State Management das Flutter Package [provider](https://pub.dev/packages/provider). Ein gutes Tutorial zu Flutter State Management im Allgemeinen kann [hier](https://flutter.dev/docs/development/data-and-backend/state-mgmt), zur Funktionsweise und zur Nutzung von Provider [hier](https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple) gefunden werden.

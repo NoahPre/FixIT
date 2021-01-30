@@ -1,5 +1,5 @@
 // bildAufnahme.dart
-import '../../imports.dart';
+import 'package:FixIT/imports.dart';
 import "package:path/path.dart" show join;
 import "package:path_provider/path_provider.dart";
 
@@ -35,7 +35,8 @@ class BildAufnahme extends StatelessWidget {
               );
 
               // Attempt to take a picture and log where it's been saved.
-              await controller.takePicture(path);
+              XFile photo = await controller.takePicture();
+              photo.saveTo(path);
 
               Navigator.pop(context);
 
@@ -44,7 +45,10 @@ class BildAufnahme extends StatelessWidget {
               // If an error occurs, log the error to the console.
               print(error);
               zeigeSnackBarNachricht(
-                  nachricht: error.toString(), context: currentContext);
+                nachricht: error.toString(),
+                context: currentContext,
+                istError: true,
+              );
             }
           },
         ),

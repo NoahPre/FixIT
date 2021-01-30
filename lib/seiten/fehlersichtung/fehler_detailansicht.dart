@@ -144,33 +144,34 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                         },
                         child: Center(
                           child: Image.network(
-                              "https://www.icanfixit.eu/fehlerBilder/" +
-                                  widget.fehler.bild,
-                              fit: BoxFit.contain, loadingBuilder: (
-                            BuildContext context,
-                            Widget child,
-                            ImageChunkEvent loadingProgress,
-                          ) {
-                            // zeigt das Bild an, wenn es fertig heruntergeladen ist
-                            if (loadingProgress == null) {
-                              return child;
-                            }
-                            return CircularProgressIndicator(
-                                // valueColor: AlwaysStoppedAnimation<Color>(
-                                //   thema.primaryColor,
-                                // ),
-                                );
-                          }, errorBuilder: (BuildContext currentContext,
-                                  Object exception, StackTrace stackTrace) {
-                            zeigeSnackBarNachricht(
-                                nachricht: null, context: null);
-                            return Text(
-                              "Bild konnte nicht geladen werden",
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            );
-                          }),
+                            "https://www.icanfixit.eu/fehlerBilder/" +
+                                widget.fehler.bild,
+                            fit: BoxFit.contain,
+                            loadingBuilder: (
+                              BuildContext context,
+                              Widget child,
+                              ImageChunkEvent loadingProgress,
+                            ) {
+                              // zeigt das Bild an, wenn es fertig heruntergeladen ist
+                              if (loadingProgress == null) {
+                                return child;
+                              }
+                              return CircularProgressIndicator(
+                                  // valueColor: AlwaysStoppedAnimation<Color>(
+                                  //   thema.primaryColor,
+                                  // ),
+                                  );
+                            },
+                            errorBuilder: (BuildContext currentContext,
+                                Object exception, StackTrace stackTrace) {
+                              return Text(
+                                "Bild konnte nicht geladen werden",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),

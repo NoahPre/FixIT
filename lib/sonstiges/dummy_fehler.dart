@@ -1,5 +1,5 @@
 // dummyFehler.dart
-import "../klassen/fehler.dart";
+import '../klassen/fehler.dart';
 
 List fehlerliste = [
   Fehler(

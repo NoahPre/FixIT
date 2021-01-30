@@ -1,5 +1,5 @@
 // seitenmenue.dart
-import "../imports.dart";
+import '../imports.dart';
 
 // TODO: richtigen gemeldete / gefixte Fehler Counter einführen
 
@@ -36,7 +36,7 @@ class Seitenmenue extends StatelessWidget {
                   children: <Widget>[
                     CircleAvatar(
                       child: Icon(Icons.person),
-                      backgroundColor: thema.primaryColor,
+                      backgroundColor: thema.colorScheme.primary,
                       foregroundColor: Colors.white,
                       minRadius: deviceSize.width * 0.07,
                     ),
@@ -90,7 +90,7 @@ class Seitenmenue extends StatelessWidget {
           // Divider(),
           ListTile(
             // alternativer Titel: Tutorial
-            title: Text("Wie funktioniert's"),
+            title: Text("Wie funktioniert's?"),
             onTap: () {
               if (this.aktuelleSeite == "/tutorial") {
                 // lässt das Seitenmenü einklappen

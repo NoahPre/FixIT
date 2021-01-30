@@ -2,7 +2,7 @@
 import "../../imports.dart";
 import "package:http/http.dart" as http;
 
-// für eine Erklärung der Provider siehe README.md
+// für eine Erklärung der Provider siehe Dokumentation/Provider.md
 class BenutzerInfoProvider with ChangeNotifier {
   BenutzerInfoProvider() {
     holeUserInformationUndAuthentifiziere();
@@ -12,7 +12,7 @@ class BenutzerInfoProvider with ChangeNotifier {
   bool istFehlermelder = true;
 
   /// ob die Authentifizierung mit den in SharedPreferences gespeicherten Werten erfolgreich war
-  bool istAuthentifiziert = true;
+  bool istAuthentifiziert;
 
   /// StreamController zum Verwalten der Authentifizierung des Benutzers:
   StreamController authentifizierungController =
@@ -81,7 +81,6 @@ class BenutzerInfoProvider with ChangeNotifier {
     String url =
         "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelder.toString()}&passwort=${passwort.toString()}";
     http.Response response = await http.get(url);
-    print("response: " + response.body);
     // überprüft die Ausgabe des Scripts
     if (response.body == "1") {
       authentifizierungSink.add(true);

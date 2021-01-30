@@ -9,39 +9,40 @@ export "package:flutter/material.dart";
 
 // Unsere Widgets:
 // Seiten:
-// gemeldeteFehler:
-export "./seiten/gemeldeteFehler/gemeldeteFehler.dart";
-export "./seiten/gemeldeteFehler/fehlerliste.dart";
-export "./seiten/gemeldeteFehler/FABHome.dart";
-// fehlermeldung:
-export "./seiten/fehlermeldung/fehlermeldung.dart";
-export "./seiten/fehlermeldung/bildAufnahme.dart";
-export "./seiten/fehlermeldung/bildFunktionen.dart";
-// fehlersichtung:
-export "./seiten/fehlersichtung/fehlerDetailansicht.dart";
-export "./seiten/fehlersichtung/fehlerbehebung.dart";
-export "./seiten/fehlersichtung/bildDetailansicht.dart";
-// sonstige:
-export "./seiten/soforthilfe.dart";
-export "./seiten/tutorial.dart";
-export "./seiten/statistiken.dart";
-export 'seiten/einstellungen.dart';
-export "./seiten/ueberUns.dart";
-export "./seiten/registrierung.dart";
-export 'seiten/fehlersichtung/fehlerbehebung.dart';
-export 'seiten/fehlersichtung/fehlerDetailansicht.dart';
-export 'seiten/fehlersichtung/bildDetailansicht.dart';
+// Gemeldete Fehler:
+export "package:FixIT/seiten/gemeldeteFehler/gemeldete_fehler.dart";
+export "package:FixIT/seiten/gemeldeteFehler/fehlerliste.dart";
+export "package:FixIT/seiten/gemeldeteFehler/floating_action_button_home.dart";
+export "package:FixIT/seiten/gemeldeteFehler/fehlerliste_eintrag.dart";
+// Fehlermeldung:
+export "package:FixIT/seiten/fehlermeldung/fehlermeldung.dart";
+export "package:FixIT/seiten/fehlermeldung/bild_aufnahme.dart";
+export "package:FixIT/seiten/fehlermeldung/bild_funktionen.dart";
+// Fehlersichtung:
+export "package:FixIT/seiten/fehlersichtung/fehler_detailansicht.dart";
+export "package:FixIT/seiten/fehlersichtung/fehlerbehebung.dart";
+export "package:FixIT/seiten/fehlersichtung/bild_detailansicht.dart";
+// Sonstige Seiten:
+export "package:FixIT/seiten/soforthilfe.dart";
+export "package:FixIT/seiten/tutorial.dart";
+export "package:FixIT/seiten/statistiken.dart";
+export "package:FixIT/seiten/einstellungen.dart";
+export "package:FixIT/seiten/über_uns.dart";
+export "package:FixIT/seiten/registrierung.dart";
+export "package:FixIT/seiten/fehlersichtung/fehlerbehebung.dart";
+export "package:FixIT/seiten/fehlersichtung/fehler_detailansicht.dart";
+export "package:FixIT/seiten/fehlersichtung/bild_detailansicht.dart";
 
 // Andere Widgets:
-export "./widgets/fertigButton.dart";
-export "./widgets/seitenmenue.dart";
-export './widgets/zeigeSnackBarNachricht.dart';
+export "package:FixIT/widgets/fertig_button.dart";
+export "package:FixIT/widgets/seiten_menü.dart";
+export "package:FixIT/widgets/zeige_snackbar_nachricht.dart";
 
 // Klassen:
-export "./klassen/fehler.dart";
+export "package:FixIT/klassen/fehler.dart";
 // Provider:
-export "./klassen/provider/benutzerInfoProvider.dart";
-export "./klassen/provider/fehlerlisteProvider.dart";
+export "package:FixIT/klassen/provider/benutzerInfoProvider.dart";
+export "package:FixIT/klassen/provider/fehlerlisteProvider.dart";
 
 // 3rd party Packages:
 // export "package:keyboard_visibility/keyboard_visibility.dart";

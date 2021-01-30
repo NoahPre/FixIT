@@ -1,5 +1,5 @@
 // bildFunktionen.dart
-import "../../imports.dart";
+import '../../imports.dart';
 // für den Typ PickedFile
 import "package:image_picker/image_picker.dart";
 

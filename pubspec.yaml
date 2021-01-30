@@ -34,7 +34,7 @@ dependencies:
   uuid: ^2.2.2
   # fürs Bilder machen und hochladen
   image_picker: ^0.6.7
-  camera: ^0.5.8
+  camera: ^0.6.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

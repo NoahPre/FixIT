@@ -1,17 +1,18 @@
 // FABHome.dart
-import "../../imports.dart";
+import '../../imports.dart';
 
 /// FloatingActionButton für GemeldeteFehler
 class FABHome extends StatelessWidget {
-  const FABHome();
-
   @override
   Widget build(BuildContext context) {
+    ThemeData thema = Theme.of(context);
     return FloatingActionButton(
       heroTag: "FloatingActionButton",
       child: Icon(
         Icons.add,
+        color: thema.colorScheme.onSecondary,
       ),
+      backgroundColor: thema.colorScheme.secondary,
       tooltip: "Fehler melden",
       onPressed: () {
         Navigator.push(

@@ -1,5 +1,5 @@
-# Strukturierung
-In diesem Dokument wird kurz erklärt, wie FixIt aufgebaut ist und wie unsere Flutter Widgets aufgebaut sind.
+# Struktur
+In diesem Dokument wird kurz und knapp erklärt, wie FixIT aufgebaut ist und wie unsere Flutter Widgets aufgebaut sind.
 
 ## FixIt Aufbau
 FixIt startet mit dem Home Widget. Zur Navigation gibt es ein Seitenmenü, über das man zu den folgenden Seiten gelangt:
@@ -17,9 +17,14 @@ FixIt startet mit dem Home Widget. Zur Navigation gibt es ein Seitenmenü, über
 
 ## Widgets Aufbau
 - alle Variablen
-- getter und setter
 - Constructor(s)
+- getter und setter (wenn vorhanden)
 - Funktionen
 - spezielle Funktionen, wie initState(), didUpdateWidget() oder dispose()
 - build() Methode
+
+## build() Methode Aufbau
+- lokale Variablen
+- lokale Funktionen
+- Rückgabewert
 

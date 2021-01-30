@@ -1,5 +1,5 @@
 // ueberUns.dart
-import "../imports.dart";
+import '../imports.dart';
 import "package:url_launcher/url_launcher.dart";
 
 class UeberUns extends StatelessWidget {
@@ -45,6 +45,7 @@ class UeberUns extends StatelessWidget {
           "Über uns",
           style: thema.textTheme.headline1,
         ),
+        backgroundColor: thema.colorScheme.primary,
       ),
       drawer: Seitenmenue(
         aktuelleSeite: "/ueberUns",
