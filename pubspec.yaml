@@ -1,4 +1,4 @@
-name: FixIT
+name: fixit
 description: FixIT ist eine App zur Meldung, Verarbeitung und Behebung von Fehlern
 
 # The following defines the version and build number for your application.
@@ -7,7 +7,7 @@ description: FixIT ist eine App zur Meldung, Verarbeitung und Behebung von Fehle
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 0.3.1+2
+version: 0.3.2+1
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
@@ -16,30 +16,27 @@ dependencies:
   flutter:
     sdk: flutter
   # Package für das App Icon
-  flutter_launcher_icons: ^0.8.0
+  flutter_launcher_icons: ^0.9.0
   # Allgemeine Packages
-  path: ^1.7.0
-  path_provider: ^1.6.24
-  http: ^0.12.2
-  url_launcher: ^5.7.10
-  after_layout: ^1.0.7
+  path: ^1.8.0
+  path_provider: ^2.0.1
+  http: ^0.13.0
+  url_launcher: ^6.0.2
+  after_layout: ^1.1.0
   # zum Formatieren von Datumsangaben
-  intl: ^0.16.1
+  intl: ^0.17.0
   # um den Status der Softwaretastatur zu checken
   keyboard_visibility: ^0.5.6
   # Package fürs Local Persistence und State Management
-  shared_preferences: ^0.5.6
-  provider: ^4.0.4
+  shared_preferences: ^2.0.5
+  provider: ^5.0.0
   # für die IDs der Fehler
-  uuid: ^2.2.2
+  uuid: ^3.0.1
   # fürs Bilder machen und hochladen
-  image_picker: ^0.6.7
-  camera: ^0.6.2
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
-  
+  image_picker: ^0.7.3
+  camera: ^0.8.0
+  # die folgenden Packages sind noch nicht auf dart Null Safety umgestellt
+  # keyboard_visibility
 
 dev_dependencies:
   flutter_test:

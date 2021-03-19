@@ -3,9 +3,13 @@ import '../../imports.dart';
 import "package:flutter/material.dart";
 
 class Fehlerbehebung extends StatefulWidget {
-  Fehlerbehebung({this.fehler});
+  Fehlerbehebung({
+    this.fehler,
+    this.fehlerBehoben,
+  });
 
   final Fehler fehler;
+  final Function fehlerBehoben;
 
   @override
   _FehlerbehebungState createState() => _FehlerbehebungState();
@@ -33,21 +37,28 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
       return gesamt;
     }
 
-    void fehlerBeheben() {}
+    // TODO: ein richtiges Beheben von Fehlern einbauen
+    void fehlerBeheben() {
+      return;
+    }
 
     var appBar = AppBar(
       title: Text(
         "Fehlerbehebung",
         style: thema.textTheme.headline1,
       ),
+      backgroundColor: thema.colorScheme.primary,
       actions: <Widget>[
         IconButton(
           icon: Icon(
             Icons.done,
-            color: thema.iconTheme.color,
+            color: thema.colorScheme.onPrimary,
           ),
           tooltip: "Fehler beheben",
-          onPressed: () {},
+          onPressed: () {
+            widget.fehlerBehoben(fehler: widget.fehler);
+            Navigator.pop(context);
+          },
         ),
       ],
     );
@@ -69,7 +80,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                     tag: "CircleAvatar${widget.fehler.id}",
                     child: CircleAvatar(
                       radius: deviceSize.width * 0.1,
-                      backgroundColor: thema.primaryColor,
+                      backgroundColor: thema.colorScheme.secondary,
                       child: Text(
                         widget.fehler.raum,
                         style: thema.textTheme.headline4,

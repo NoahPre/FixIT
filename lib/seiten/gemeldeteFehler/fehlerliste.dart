@@ -6,9 +6,7 @@ import "../../imports.dart";
 // TODO: beim fixen des Fehlers Kommentar hinterlassen Funktion hinzufügen
 
 class Fehlerliste extends StatefulWidget {
-  Fehlerliste({this.appBarHoehe = 0.0}) {
-    print("fehlerliste");
-  }
+  Fehlerliste({this.appBarHoehe = 0.0});
 
   final double appBarHoehe;
 
@@ -27,7 +25,6 @@ class _FehlerlisteState extends State<Fehlerliste> {
 
     // aktualisiert die Liste
     Future<void> refresh() async {
-      print("snons");
       if (fehlerlisteProvider.fehlerliste != null) {
         fehlerlisteProvider.fehlerliste.clear();
       }

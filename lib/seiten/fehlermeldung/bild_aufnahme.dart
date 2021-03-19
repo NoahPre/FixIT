@@ -1,5 +1,5 @@
 // bildAufnahme.dart
-import 'package:FixIT/imports.dart';
+import 'package:fixit/imports.dart';
 import "package:path/path.dart" show join;
 import "package:path_provider/path_provider.dart";
 
@@ -13,9 +13,11 @@ class BildAufnahme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData thema = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Kamera"),
+        backgroundColor: thema.colorScheme.primary,
       ),
       floatingActionButton: Builder(
         builder: (BuildContext currentContext) => FloatingActionButton(
@@ -40,7 +42,7 @@ class BildAufnahme extends StatelessWidget {
 
               Navigator.pop(context);
 
-              pfadZumBild(path);
+              pfadZumBild(photo.path);
             } catch (error) {
               // If an error occurs, log the error to the console.
               print(error);

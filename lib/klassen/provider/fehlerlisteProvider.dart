@@ -3,6 +3,7 @@ import "dart:async";
 import "../../imports.dart";
 import "package:http/http.dart" as http;
 import "package:image_picker/image_picker.dart";
+import 'package:crypto/crypto.dart';
 
 // Dieser Provider enthält die Fehlerliste, die dem Benutzer angezeigt wird.
 // Außerdem enthält er Funktionalität, mit der man
@@ -12,8 +13,11 @@ import "package:image_picker/image_picker.dart";
 class FehlerlisteProvider with ChangeNotifier {
   FehlerlisteProvider() {
     holeFehler();
+    berechneToken();
   }
 
+  /// Token zur Authentifizierung
+  String token = "";
   //StreamController für die Fehlerliste
   StreamController fehlerlisteController =
       StreamController<List<Fehler>>.broadcast();
@@ -26,7 +30,7 @@ class FehlerlisteProvider with ChangeNotifier {
   // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
   Future<void> holeFehler() async {
     var url = 'https://www.icanfixit.eu/gibAlleFehler.php';
-    http.Response response = await http.get(url);
+    http.Response response = await http.get(Uri.parse(url));
     var jsonObjekt = jsonDecode(response.body) ?? [];
     // überschreibt fehlerliste mit den Werten aus der Datenbank
     fehlerliste = List.generate(jsonObjekt.length, (int index) {
@@ -43,6 +47,12 @@ class FehlerlisteProvider with ChangeNotifier {
     // fügt die geholten Fehler dem fehlerlisteController hinzu und aktualisiert damit das Widget Fehlerliste
     fehlerlisteSink.add(fehlerliste);
     notifyListeners();
+  }
+
+  Future<void> berechneToken() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String passwort = sharedPreferences.getString("passwort") ?? "";
+    token = sha256.convert(utf8.encode(passwort)).toString();
   }
 
   /// um einen neuen Fehler zu schreiben muss man nur diese Funktion aufrufen
@@ -115,10 +125,11 @@ class FehlerlisteProvider with ChangeNotifier {
   String upload({String fileName, String base64Image}) {
     print("uploading");
     print(fileName);
-    http.post("https://www.icanfixit.eu/BildUpload.php", body: {
-      "image": base64Image,
-      "name": fileName,
-    }).then((result) {
+    http.post(Uri.parse("https://www.icanfixit.eu/BildUpload.php?token=$token"),
+        body: {
+          "image": base64Image,
+          "name": fileName,
+        }).then((result) {
       print(result.body);
       return result.statusCode == 200 ? result.body : "";
     }).catchError((error) {
@@ -153,8 +164,8 @@ class FehlerlisteProvider with ChangeNotifier {
   }) async {
     // die URL, die aufgerufen werden muss (mit den Argumenten implementiert)
     var url =
-        "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild";
-    http.Response response = await http.get(url);
+        "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&token=$token";
+    http.Response response = await http.get(Uri.parse(url));
     print(url);
     print("Response body: " + response.body);
     return;
@@ -166,11 +177,8 @@ class FehlerlisteProvider with ChangeNotifier {
     @required String fileName,
   }) async {
     var url =
-        "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName";
-    http.Response response = await http.get(url);
-    print(url);
-    print("entferneFehler: " + response.body);
-    return;
+        "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName&token=$token";
+    http.Response response = await http.get(Uri.parse(url));
   }
 
   void dispose() {

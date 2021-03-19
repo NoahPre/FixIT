@@ -1,5 +1,5 @@
 // fehlerliste_eintrag.dart
-import "package:FixIT/imports.dart";
+import "package:fixit/imports.dart";
 
 class FehlerlisteEintrag extends StatelessWidget {
   final Fehler fehler;
@@ -59,6 +59,7 @@ class FehlerlisteEintrag extends StatelessWidget {
                           fehler.gefixt == "0") {
                         return Fehlerbehebung(
                           fehler: fehler,
+                          fehlerBehoben: fehlerlisteProvider.fehlerGeloescht,
                         );
                       } else {
                         return FehlerDetailansicht(

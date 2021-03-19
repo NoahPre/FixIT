@@ -169,8 +169,9 @@ class _RegistrierungState extends State<Registrierung> {
         title: Text("Registrierung bei FixIT"),
         // ist nur da, damit der Zurückpfeil nicht angezeigt wird
         leading: Container(
-          color: thema.primaryColor,
+          color: thema.colorScheme.primary,
         ),
+        backgroundColor: thema.colorScheme.primary,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -195,6 +196,7 @@ class _RegistrierungState extends State<Registrierung> {
                       Radio(
                         value: 0,
                         groupValue: _radioGroupValue,
+                        activeColor: thema.colorScheme.primary,
                         onChanged: (value) {
                           _radioButtonChanged(value);
                         },
@@ -206,6 +208,7 @@ class _RegistrierungState extends State<Registrierung> {
                       Radio(
                         value: 1,
                         groupValue: _radioGroupValue,
+                        activeColor: thema.colorScheme.primary,
                         onChanged: (int value) {
                           _radioButtonChanged(value);
                         },
@@ -222,7 +225,14 @@ class _RegistrierungState extends State<Registrierung> {
                         child: TextFormField(
                           decoration: InputDecoration(
                             labelText: "Masterpasswort",
+                            labelStyle: TextStyle(
+                              color: thema.colorScheme.primary,
+                            ),
                             hintText: "Sollte Ihnen mitgeteilt worden sein",
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: thema.colorScheme.primary),
+                            ),
                             suffix: IconButton(
                               icon: _passwortIcon,
                               onPressed: () {
@@ -294,19 +304,22 @@ class _RegistrierungState extends State<Registrierung> {
                   const SizedBox(
                     height: 20.0,
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text(
                       "Registrieren",
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
-                    color: thema.primaryColor,
-                    shape: RoundedRectangleBorder(
+                    style: TextButton.styleFrom(
+                      backgroundColor: thema.colorScheme.primary,
+                      shape: RoundedRectangleBorder(
                         side: BorderSide(
-                          color: thema.primaryColor,
+                          color: thema.colorScheme.primary,
                         ),
-                        borderRadius: BorderRadius.circular(18.0)),
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                    ),
                     onPressed: () => _userRegistriertSich(),
                   ),
                 ],

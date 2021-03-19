@@ -65,7 +65,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   void initState() {
     super.initState();
     try {
-      kameraController = CameraController(cameras[0], ResolutionPreset.medium);
+      kameraController = CameraController(cameras[0], ResolutionPreset.high);
       kameraController.initialize().then((_) {
         if (!mounted) {
           return;
@@ -116,7 +116,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     @required PickedFile temporaeresBild,
     @required String base64Bild,
   }) {
-    // TODO: warum kann man hier kein setState() benutzen?
+    // TODO: warum muss man hier kein setState() benutzen?
     this.temporaeresBild = temporaeresBild;
     this.base64Bild = base64Bild;
   }
@@ -196,6 +196,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
         _ueberschrift,
         style: thema.textTheme.headline1,
       ),
+      backgroundColor: thema.colorScheme.primary,
     );
     return Scaffold(
       appBar: appBar,
@@ -301,7 +302,13 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                           controller: _raumController,
                           decoration: InputDecoration(
                             labelText: "Raumnummer",
-                            hintText: "",
+                            labelStyle: TextStyle(
+                              color: thema.colorScheme.primary,
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: thema.colorScheme.primary),
+                            ),
                           ),
                           focusNode: _raumNode,
                           keyboardType: TextInputType.number,
@@ -321,7 +328,13 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                     controller: _beschreibungController,
                     decoration: InputDecoration(
                       labelText: "Beschreibung",
-                      hintText: "",
+                      labelStyle: TextStyle(
+                        color: thema.colorScheme.primary,
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: thema.colorScheme.primary),
+                      ),
                     ),
                     focusNode: _beschreibungNode,
                     keyboardType: TextInputType.multiline,
@@ -334,16 +347,9 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                     builder: (BuildContext currentContext) => RaisedButton(
                       child: Text("Bild hinzufügen"),
                       onPressed: () async {
-                        // if (errorVorhanden == true) {
-                        //   zeigeSnackBarNachricht(
-                        //       nachricht: errorNachricht,
-                        //       context: currentContext);
-                        //   return;
-                        // }
-
                         await zeigeBilderAuswahl(
                           currentContext: currentContext,
-                          pfadZumBild: setzePfadZumBild,
+                          pfadZumBild: (String pfad) => setzePfadZumBild(pfad),
                           controller: kameraController,
                           bildAusGallerieAuswaehlen: bildAusGallerieAuswaehlen,
                         );

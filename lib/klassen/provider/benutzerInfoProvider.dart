@@ -1,6 +1,7 @@
 // benutzerInfoProvider.dart
 import "../../imports.dart";
 import "package:http/http.dart" as http;
+import 'package:crypto/crypto.dart';
 
 // für eine Erklärung der Provider siehe Dokumentation/Provider.md
 class BenutzerInfoProvider with ChangeNotifier {
@@ -75,12 +76,13 @@ class BenutzerInfoProvider with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     bool istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
     String passwort = sharedPreferences.getString("passwort") ?? "";
+    var tokenInFunction = sha256.convert(utf8.encode(passwort));
     // schickt eine Anfrage mit den folgenden Informationen an den Server:
     // - ob der Benutzer Fehlermelder ist
     // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
     String url =
-        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelder.toString()}&passwort=${passwort.toString()}";
-    http.Response response = await http.get(url);
+        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelder.toString()}&token=${tokenInFunction.toString()}";
+    http.Response response = await http.get(Uri.parse(url));
     // überprüft die Ausgabe des Scripts
     if (response.body == "1") {
       authentifizierungSink.add(true);
@@ -103,7 +105,7 @@ class BenutzerInfoProvider with ChangeNotifier {
     // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
     String url =
         "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelderInFunktion.toString()}&passwort=$passwortInFunktion";
-    http.Response response = await http.get(url);
+    http.Response response = await http.get(Uri.parse(url));
     print("response: " + response.body);
     // überprüft die Ausgabe des Scripts
     // TODO: warum wird hier von authentifizierung.php immer ein s mit ausgegeben

@@ -42,11 +42,12 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
           "Fehler Detailansicht",
           style: thema.textTheme.headline1,
         ),
+        backgroundColor: thema.colorScheme.primary,
         actions: <Widget>[
           IconButton(
               icon: Icon(
                 Icons.delete,
-                color: thema.iconTheme.color,
+                color: thema.colorScheme.onPrimary,
               ),
               tooltip: "Fehler löschen",
               onPressed: () {
