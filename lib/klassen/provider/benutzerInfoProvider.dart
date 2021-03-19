@@ -76,12 +76,12 @@ class BenutzerInfoProvider with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     bool istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
     String passwort = sharedPreferences.getString("passwort") ?? "";
-    var tokenInFunction = sha256.convert(utf8.encode(passwort));
+    var tokenInFunktion = sha256.convert(utf8.encode(passwort));
     // schickt eine Anfrage mit den folgenden Informationen an den Server:
     // - ob der Benutzer Fehlermelder ist
     // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
     String url =
-        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelder.toString()}&token=${tokenInFunction.toString()}";
+        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelder.toString()}&token=${tokenInFunktion.toString()}";
     http.Response response = await http.get(Uri.parse(url));
     // überprüft die Ausgabe des Scripts
     if (response.body == "1") {
@@ -100,11 +100,12 @@ class BenutzerInfoProvider with ChangeNotifier {
     @required String passwortInFunktion,
   }) async {
     print(istFehlermelderInFunktion.toString());
+    var token = sha256.convert(utf8.encode(passwortInFunktion));
     // schickt eine Anfrage mit den folgenden Informationen an den Server:
     // - ob der Benutzer Fehlermelder ist
     // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
     String url =
-        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelderInFunktion.toString()}&passwort=$passwortInFunktion";
+        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelderInFunktion.toString()}&token=$token";
     http.Response response = await http.get(Uri.parse(url));
     print("response: " + response.body);
     // überprüft die Ausgabe des Scripts
