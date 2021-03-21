@@ -82,3 +82,4 @@ pubspec.lock
 **/ios/Flutter/flutter_export_environment.sh
 android/key.jks
 android/app/key.jks
+ios/Flutter/Flutter.podspec
