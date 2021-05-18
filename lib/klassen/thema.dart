@@ -53,11 +53,11 @@ ThemeData thema = ThemeData(
       fontWeight: FontWeight.bold,
     ),
     // 14, weiß, fett
-    headline6: TextStyle(
-      fontSize: 14.0,
-      color: Colors.white,
-      fontWeight: FontWeight.bold,
-    ),
+    // headline6: TextStyle(
+    //   fontSize: 14.0,
+    //   color: Colors.white,
+    //   fontWeight: FontWeight.bold,
+    // ),
 
     /// schwarzer, normaler Text
     bodyText1: TextStyle(
@@ -66,10 +66,10 @@ ThemeData thema = ThemeData(
     ),
 
     /// weißer, normaler Text
-    bodyText2: TextStyle(
-      color: Colors.white,
-      fontSize: 14.0,
-    ),
+    // bodyText2: TextStyle(
+    //   color: Colors.white,
+    //   fontSize: 14.0,
+    // ),
 
     /// dunkelgrauer, normaler Text
     subtitle1: TextStyle(
@@ -87,6 +87,7 @@ ThemeData thema = ThemeData(
     color: Colors.grey.shade600,
     space: 1,
   ),
+  appBarTheme: AppBarTheme(backgroundColor: Colors.black),
 );
 
 ThemeData dunklesThema = ThemeData(

@@ -1,4 +1,4 @@
-// seitenmenue.dart
+// seiten_menü.dart
 import '../imports.dart';
 
 // TODO: richtigen gemeldete / gefixte Fehler Counter einführen
@@ -119,17 +119,17 @@ class Seitenmenue extends StatelessWidget {
           //   },
           // ),
           // Divider(),
-          // ListTile(
-          //     title: Text("Einstellungen"),
-          //     onTap: () {
-          //       if (aktuelleSeite == "/einstellungen") {
-          //         Navigator.pop(context);
-          //       } else {
-          //         Navigator.pop(context);
-          //         Navigator.pushReplacementNamed(context, "/einstellungen");
-          //       }
-          //     }),
-          // Divider(),
+          ListTile(
+              title: Text("Einstellungen"),
+              onTap: () {
+                if (aktuelleSeite == "/einstellungen") {
+                  Navigator.pop(context);
+                } else {
+                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, "/einstellungen");
+                }
+              }),
+          Divider(),
           ListTile(
             title: Text("Über uns"),
             onTap: () {

@@ -40,56 +40,59 @@ class _FehlerlisteState extends State<Fehlerliste> {
         AsyncSnapshot snapshot,
       ) {
         // Widget für den Scrollbalken am Rand
-        return Scrollbar(
-          child: RefreshIndicator(
-            onRefresh: () => refresh(),
-            color: thema.colorScheme.primary,
-            child: ListView(
-              children:
-                  // überprüft, ob die Fehlerliste schon vollständig heruntergeladen wurde
-                  snapshot.hasData
-                      ? (snapshot.data.length == 0 || snapshot.data == [])
-                          // wird ausgegeben, wenn die Fehlerliste leer ist
-                          ? [
-                              Container(
-                                height: mediaQueryData.size.height -
-                                    widget.appBarHoehe,
-                                child: Center(
-                                  child: Text(
-                                    "Noch keine Fehler gemeldet",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
+        var page = RefreshIndicator(
+          onRefresh: () => refresh(),
+          color: thema.colorScheme.primary,
+          child: ListView(
+            children:
+                // überprüft, ob die Fehlerliste schon vollständig heruntergeladen wurde
+                snapshot.hasData
+                    ? (snapshot.data.length == 0 || snapshot.data == [])
+                        // wird ausgegeben, wenn die Fehlerliste leer ist
+                        ? [
+                            Container(
+                              height: mediaQueryData.size.height -
+                                  widget.appBarHoehe,
+                              child: Center(
+                                child: Text(
+                                  "Noch keine Fehler gemeldet",
+                                  style: TextStyle(
+                                    color: Colors.black,
                                   ),
                                 ),
                               ),
-                            ]
-                          : snapshot.data.map<Widget>(
-                              (Fehler fehler) {
-                                return FehlerlisteEintrag(
-                                  fehler: fehler,
-                                );
-                              },
-                            ).toList()
-                      // zeigt einen Ladedonut an, während die Fehlerliste fertig heruntergeladen wird
-                      : [
-                          Container(
-                            height: mediaQueryData.size.height -
-                                widget.appBarHoehe -
-                                mediaQueryData.padding.top -
-                                mediaQueryData.padding.bottom,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  thema.colorScheme.primary,
-                                ),
+                            ),
+                          ]
+                        : snapshot.data.map<Widget>(
+                            (Fehler fehler) {
+                              return FehlerlisteEintrag(
+                                fehler: fehler,
+                              );
+                            },
+                          ).toList()
+                    // zeigt einen Ladedonut an, während die Fehlerliste fertig heruntergeladen wird
+                    : [
+                        Container(
+                          height: mediaQueryData.size.height -
+                              widget.appBarHoehe -
+                              mediaQueryData.padding.top -
+                              mediaQueryData.padding.bottom,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                thema.colorScheme.primary,
                               ),
                             ),
                           ),
-                        ],
-            ),
+                        ),
+                      ],
           ),
         );
+        return snapshot.data.length == 0
+            ? page
+            : Scrollbar(
+                child: page,
+              );
       },
     );
   }

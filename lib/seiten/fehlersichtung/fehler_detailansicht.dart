@@ -50,11 +50,40 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                 color: thema.colorScheme.onPrimary,
               ),
               tooltip: "Fehler löschen",
-              onPressed: () {
-                fehlerlisteProvider.fehlerGeloescht(
-                  fehler: widget.fehler,
-                );
-                Navigator.pop(context);
+              onPressed: () async {
+                await showDialog<bool>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SimpleDialog(
+                        title: Text("Fehler wirklich löschen?"),
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SimpleDialogOption(
+                                child: Text(
+                                  "Bestätigen",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                onPressed: () {
+                                  fehlerlisteProvider.fehlerGeloescht(
+                                    fehler: widget.fehler,
+                                  );
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              SimpleDialogOption(
+                                child: Text("Abbrechen"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    });
               }),
         ],
       ),

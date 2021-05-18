@@ -41,7 +41,42 @@ class FehlerlisteEintrag extends StatelessWidget {
             Icons.delete,
             color: Colors.red,
           ),
-          onDismissed: (DismissDirection direction) {
+          confirmDismiss: (_) async {
+            bool returnValue;
+            await showDialog<bool>(
+                context: context,
+                builder: (BuildContext context) {
+                  return SimpleDialog(
+                    title: Text("Fehler wirklich löschen?"),
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SimpleDialogOption(
+                            child: Text(
+                              "Bestätigen",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              returnValue = true;
+                            },
+                          ),
+                          SimpleDialogOption(
+                            child: Text("Abbrechen"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              returnValue = false;
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                });
+            return returnValue;
+          },
+          onDismissed: (DismissDirection direction) async {
             fehlerlisteProvider.fehlerGeloescht(
               fehler: fehler,
             );

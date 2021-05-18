@@ -55,9 +55,38 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
             color: thema.colorScheme.onPrimary,
           ),
           tooltip: "Fehler beheben",
-          onPressed: () {
-            widget.fehlerBehoben(fehler: widget.fehler);
-            Navigator.pop(context);
+          onPressed: () async {
+            await showDialog<bool>(
+                context: context,
+                builder: (BuildContext context) {
+                  return SimpleDialog(
+                    title: Text("Fehler wirklich löschen?"),
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SimpleDialogOption(
+                            child: Text(
+                              "Bestätigen",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            onPressed: () {
+                              widget.fehlerBehoben(fehler: widget.fehler);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                          ),
+                          SimpleDialogOption(
+                            child: Text("Abbrechen"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                });
           },
         ),
       ],

@@ -278,6 +278,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                             "K",
                             "N",
                             "Z",
+                            "T",
                           ].map((value) {
                             return DropdownMenuItem(
                               child: Text(value),

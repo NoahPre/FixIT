@@ -1,6 +1,7 @@
 // ueberUns.dart
 import '../imports.dart';
 import "package:url_launcher/url_launcher.dart";
+import "package:package_info/package_info.dart";
 
 class UeberUns extends StatelessWidget {
   static const String danksagungText =
@@ -166,6 +167,27 @@ class UeberUns extends StatelessWidget {
                       Icons.arrow_forward_ios,
                     ),
                     onTap: () => _oeffneGitHubSeite(),
+                  ),
+                  Divider(),
+                  ListTile(
+                    title: Text(
+                      "Lizenzen",
+                      style: thema.textTheme.bodyText1,
+                    ),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                    onTap: () async {
+                      var packageInfo = await PackageInfo.fromPlatform();
+                      showLicensePage(
+                        context: context,
+                        applicationName: "FixIT",
+                        applicationIcon: Image.asset(
+                          "assets/app_icon.png",
+                          height: 50.0,
+                          width: 50.0,
+                        ),
+                        applicationVersion: packageInfo.version,
+                      );
+                    },
                   ),
                   Divider(),
                   ListTile(
