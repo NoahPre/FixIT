@@ -121,7 +121,7 @@ Widget zeigeAusgewaehltesBild(
         );
       } else {
         return const Text(
-          'No Image Selected',
+          'Kein Bild ausgewählt',
           textAlign: TextAlign.center,
         );
       }

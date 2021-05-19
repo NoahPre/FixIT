@@ -181,7 +181,7 @@ class UeberUns extends StatelessWidget {
                         context: context,
                         applicationName: "FixIT",
                         applicationIcon: Image.asset(
-                          "assets/app_icon.png",
+                          "assets/fixit_icon.png",
                           height: 50.0,
                           width: 50.0,
                         ),
@@ -193,6 +193,13 @@ class UeberUns extends StatelessWidget {
                   ListTile(
                     title: Text(
                       "entwickelt von Noah und Martin",
+                      style: thema.textTheme.bodyText1,
+                    ),
+                  ),
+                  Divider(),
+                  ListTile(
+                    title: Text(
+                      "Teile des App Icons sind von Freepik",
                       style: thema.textTheme.bodyText1,
                     ),
                   ),
