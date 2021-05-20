@@ -9,10 +9,10 @@ import "package:image_picker/image_picker.dart";
 
 /// zeigt je nach Betriebssystem einen Bilderauswahldialog
 Future<void> zeigeBilderAuswahl({
-  @required BuildContext currentContext,
-  @required Function pfadZumBild,
-  @required CameraController controller,
-  @required Function bildAusGallerieAuswaehlen,
+  required BuildContext currentContext,
+  required Function pfadZumBild,
+  required CameraController? controller,
+  required Function bildAusGallerieAuswaehlen,
 }) async {
   showModalBottomSheet(
     isDismissible: true,
@@ -74,9 +74,9 @@ Future<void> zeigeBilderAuswahl({
 
 /// lässt den Benutzer ein Bild aufnehmen
 void bildAufnehmen({
-  @required BuildContext context,
-  @required Function pfadZumBild,
-  @required CameraController controller,
+  required BuildContext context,
+  required Function pfadZumBild,
+  required CameraController? controller,
 }) {
   Navigator.push(
     context,
@@ -94,14 +94,14 @@ void bildAufnehmen({
 
 /// zeigt das ausgewählte Bild
 Widget zeigeAusgewaehltesBild(
-    {@required Future<PickedFile> ausgewaehltesBild,
-    @required Function setzeBildWerte}) {
-  return FutureBuilder<PickedFile>(
+    {required Future<PickedFile?>? ausgewaehltesBild,
+    required Function setzeBildWerte}) {
+  return FutureBuilder<PickedFile?>(
     future: ausgewaehltesBild,
-    builder: (BuildContext context, AsyncSnapshot<PickedFile> snapshot) {
+    builder: (BuildContext context, AsyncSnapshot<PickedFile?> snapshot) {
       if (snapshot.connectionState == ConnectionState.done &&
           null != snapshot.data) {
-        File bild = File(snapshot.data.path);
+        File bild = File(snapshot.data!.path);
         // TODO: das hier besser lösen, das nicht hier machen sondern in irgendeiner anderen Funktion
         setzeBildWerte(
           temporaeresBild: snapshot.data,

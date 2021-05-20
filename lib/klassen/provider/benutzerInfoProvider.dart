@@ -13,7 +13,7 @@ class BenutzerInfoProvider with ChangeNotifier {
   bool istFehlermelder = true;
 
   /// ob die Authentifizierung mit den in SharedPreferences gespeicherten Werten erfolgreich war
-  bool istAuthentifiziert;
+  bool? istAuthentifiziert;
 
   /// StreamController zum Verwalten der Authentifizierung des Benutzers:
   StreamController authentifizierungController =
@@ -34,8 +34,8 @@ class BenutzerInfoProvider with ChangeNotifier {
   /// setzt istAuthentifiziert auf true &
   /// aktualisiert authentifizierungStream
   Future<void> benutzerRegistriertSich({
-    @required bool istFehlermelderInFunktion,
-    @required String passwortInFunktion,
+    required bool istFehlermelderInFunktion,
+    required String passwortInFunktion,
   }) async {
     await ueberschreibeUserInformation(
       istFehlermelderInFunktion: istFehlermelderInFunktion,
@@ -48,8 +48,8 @@ class BenutzerInfoProvider with ChangeNotifier {
 
   /// überschreibt die gespeicherten Werte in sharedPreferences mit den gegebenen Werten
   Future<void> ueberschreibeUserInformation({
-    @required bool istFehlermelderInFunktion,
-    @required String passwortInFunktion,
+    required bool istFehlermelderInFunktion,
+    required String passwortInFunktion,
   }) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     // sharedPreferences.setBool(
@@ -96,8 +96,8 @@ class BenutzerInfoProvider with ChangeNotifier {
   /// authentifiziert den Benutzer mit den gegebenen Werten
   // wird in registrierung.dart benutzt, um anfangs das eingegebene Passwort zu überprüfen
   Future<bool> authentifizierungMitWerten({
-    @required bool istFehlermelderInFunktion,
-    @required String passwortInFunktion,
+    required bool istFehlermelderInFunktion,
+    required String passwortInFunktion,
   }) async {
     print(istFehlermelderInFunktion.toString());
     var token = sha256.convert(utf8.encode(passwortInFunktion));

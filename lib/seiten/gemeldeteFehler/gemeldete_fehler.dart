@@ -27,7 +27,7 @@ class GemeldeteFehler extends StatelessWidget {
     }
 
     Future<bool> _ueberpruefeInternetVerbindung(
-        {@required BuildContext currentContext}) async {
+        {required BuildContext currentContext}) async {
       try {
         final result = await InternetAddress.lookup("google.com");
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -62,7 +62,7 @@ class GemeldeteFehler extends StatelessWidget {
     }
 
     return StreamBuilder<bool>(
-      stream: benutzerInfoProvider.authentifizierungStream,
+      stream: benutzerInfoProvider.authentifizierungStream as Stream<bool>?,
       initialData: benutzerInfoProvider.istAuthentifiziert,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.data == false) {

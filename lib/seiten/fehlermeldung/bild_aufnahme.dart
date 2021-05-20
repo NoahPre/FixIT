@@ -5,10 +5,10 @@ import "package:path_provider/path_provider.dart";
 
 class BildAufnahme extends StatelessWidget {
   final Function pfadZumBild;
-  final CameraController controller;
+  final CameraController? controller;
   BildAufnahme({
-    @required this.pfadZumBild,
-    @required this.controller,
+    required this.pfadZumBild,
+    required this.controller,
   });
 
   @override
@@ -37,7 +37,7 @@ class BildAufnahme extends StatelessWidget {
               );
 
               // Attempt to take a picture and log where it's been saved.
-              XFile photo = await controller.takePicture();
+              XFile photo = await controller!.takePicture();
               photo.saveTo(path);
 
               Navigator.pop(context);
@@ -60,8 +60,8 @@ class BildAufnahme extends StatelessWidget {
         children: [
           Expanded(
             child: AspectRatio(
-              aspectRatio: controller.value.aspectRatio,
-              child: CameraPreview(controller),
+              aspectRatio: controller!.value.aspectRatio,
+              child: CameraPreview(controller!),
             ),
           ),
         ],

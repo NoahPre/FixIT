@@ -13,7 +13,7 @@ class _RegistrierungState extends State<Registrierung> {
   final _formKey = GlobalKey<FormState>();
 
   /// GroupValue für die Radio-Buttons
-  int _radioGroupValue = 0;
+  int? _radioGroupValue = 0;
 
   /// TextEditingController für das Passwort Textfeld
   final TextEditingController _passwortController = TextEditingController();
@@ -30,7 +30,7 @@ class _RegistrierungState extends State<Registrierung> {
   );
 
   /// GestureRecognizer für den Link zu der Datenschutz Erklärung
-  TapGestureRecognizer _datenschutzErklaerungRecognizer;
+  TapGestureRecognizer? _datenschutzErklaerungRecognizer;
 
   @override
   void initState() {
@@ -41,21 +41,21 @@ class _RegistrierungState extends State<Registrierung> {
 
   @override
   void dispose() {
-    _datenschutzErklaerungRecognizer.dispose();
+    _datenschutzErklaerungRecognizer!.dispose();
     super.dispose();
   }
 
   /// wird ausgeführt, wenn man einen anderen RadioButton auswählt
-  void _radioButtonChanged(int value) {
+  void _radioButtonChanged(int? value) {
     setState(() {
       _radioGroupValue = value;
     });
   }
 
   /// Validator für das Passwort Textfeld
-  String _validierePasswortTextfeld({
-    @required bool istFehlermelder,
-    @required String passwort,
+  String? _validierePasswortTextfeld({
+    required bool istFehlermelder,
+    required String? passwort,
   }) {
     if (passwort == "") {
       return "Bitte das Passwort eingeben";
@@ -66,7 +66,7 @@ class _RegistrierungState extends State<Registrierung> {
 
   /// zeigt eine Alert Dialog mit Hilfe zum Passwort
   Future<void> _zeigePasswortHilfe(
-      {@required BuildContext currentContext}) async {
+      {required BuildContext currentContext}) async {
     await showDialog(
       context: currentContext,
       builder: (context) => AlertDialog(
@@ -84,7 +84,7 @@ class _RegistrierungState extends State<Registrierung> {
   }
 
   Future<void> _passwortIstFalsch(
-      {@required BuildContext currentContext}) async {
+      {required BuildContext currentContext}) async {
     await showDialog(
       context: currentContext,
       builder: (context) => AlertDialog(
@@ -121,8 +121,8 @@ class _RegistrierungState extends State<Registrierung> {
     // diese beiden Funktionen müssen in build() stehen, da sie auf benutzerInfoProvider zugreifen
     /// überprüft das gegebene Passwort
     Future<bool> _ueberpruefePasswort({
-      @required bool istFehlermelderInFunktion,
-      @required String passwortInFunktion,
+      required bool istFehlermelderInFunktion,
+      required String passwortInFunktion,
     }) async {
       // sendet eine Anfrage mit den eingegebenen Informationen an den Server
       bool istAuthentifiziert =
@@ -137,7 +137,7 @@ class _RegistrierungState extends State<Registrierung> {
     /// wird ausgeführt, wenn das eingegebene Passwort erfolgreich von _ueberpruefePasswort() geprüft wurde
     Future<void> _userRegistriertSich() async {
       // macht eine Anfangsüberprüfung
-      if (_formKey.currentState.validate()) {
+      if (_formKey.currentState!.validate()) {
         bool istFehlermelderInFunktion;
         String passwortInFunktion = _passwortController.text;
 
@@ -197,7 +197,7 @@ class _RegistrierungState extends State<Registrierung> {
                         value: 0,
                         groupValue: _radioGroupValue,
                         activeColor: thema.colorScheme.primary,
-                        onChanged: (value) {
+                        onChanged: (dynamic value) {
                           _radioButtonChanged(value);
                         },
                       ),
@@ -209,7 +209,7 @@ class _RegistrierungState extends State<Registrierung> {
                         value: 1,
                         groupValue: _radioGroupValue,
                         activeColor: thema.colorScheme.primary,
-                        onChanged: (int value) {
+                        onChanged: (int? value) {
                           _radioButtonChanged(value);
                         },
                       ),

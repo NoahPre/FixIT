@@ -2,18 +2,18 @@
 import "package:flutter/material.dart";
 
 void zeigeSnackBarNachricht({
-  @required String nachricht,
-  @required BuildContext context,
-  @required bool istError,
+  required String nachricht,
+  required BuildContext context,
+  required bool istError,
 }) {
   ThemeData thema = Theme.of(context);
-  Scaffold.of(context).showSnackBar(
-    SnackBar(
+  ScaffoldMessenger(
+    child: SnackBar(
       backgroundColor: istError
           ? thema.colorScheme.error
           : thema.snackBarTheme.backgroundColor,
       content: Text(
-        nachricht ?? "",
+        nachricht,
         overflow: TextOverflow.ellipsis,
         maxLines: 4,
         style: istError

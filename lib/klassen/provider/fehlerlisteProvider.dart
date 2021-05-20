@@ -1,5 +1,4 @@
 // fehlerlisteProvider.dart
-import "dart:async";
 import "../../imports.dart";
 import "package:http/http.dart" as http;
 import "package:image_picker/image_picker.dart";
@@ -20,12 +19,13 @@ class FehlerlisteProvider with ChangeNotifier {
   String token = "";
   //StreamController für die Fehlerliste
   StreamController fehlerlisteController =
-      StreamController<List<Fehler>>.broadcast();
+      StreamController<List<Fehler>?>.broadcast();
   Sink get fehlerlisteSink => fehlerlisteController.sink;
-  Stream<List<Fehler>> get fehlerlisteStream => fehlerlisteController.stream;
+  Stream<List<Fehler>?> get fehlerlisteStream =>
+      fehlerlisteController.stream as Stream<List<Fehler>?>;
 
   // Liste der Fehler, die auf der Startseite angezeigt werden
-  List<Fehler> fehlerliste;
+  List<Fehler>? fehlerliste;
 
   // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
   Future<void> holeFehler() async {
@@ -59,19 +59,19 @@ class FehlerlisteProvider with ChangeNotifier {
   ///
   /// es kann immer nur entweder image oder pickedImage angegeben werden
   Future<void> fehlerGemeldet(
-      {@required Fehler fehler, File image, PickedFile pickedImage}) async {
+      {required Fehler fehler, File? image, PickedFile? pickedImage}) async {
     String fileName = "";
     // TODO: das hier alles ein wenig sicherer und generell besser machen
     // Bild wird hochgeladen, wenn eins aufgenommen wurde
     if (image != null) {
       print("image != null");
-      fileName = fehler.id + "." + image.path.split('/').last.split(".")[1];
+      fileName = fehler.id! + "." + image.path.split('/').last.split(".")[1];
 
       fehler.bild = fileName;
       await startUpload(
         fehler: fehler,
         base64EncodedImage: base64Encode(
-          image?.readAsBytesSync(),
+          image.readAsBytesSync(),
         ),
         path: image.path,
       );
@@ -79,13 +79,13 @@ class FehlerlisteProvider with ChangeNotifier {
     if (pickedImage != null) {
       print("pickedImage != null");
       fileName =
-          fehler.id + "." + pickedImage.path.split('/').last.split(".")[1];
+          fehler.id! + "." + pickedImage.path.split('/').last.split(".")[1];
 
       fehler.bild = fileName;
       await startUpload(
         fehler: fehler,
         base64EncodedImage: base64Encode(
-          await pickedImage?.readAsBytes(),
+          await pickedImage.readAsBytes(),
         ),
         path: pickedImage.path,
       );
@@ -99,20 +99,20 @@ class FehlerlisteProvider with ChangeNotifier {
       bild: fileName,
     );
 
-    fehlerliste.add(fehler);
+    fehlerliste!.add(fehler);
     fehlerlisteSink.add(fehlerliste);
     notifyListeners();
   }
 
   Future<void> startUpload({
-    @required Fehler fehler,
-    @required String base64EncodedImage,
-    @required String path,
+    required Fehler fehler,
+    required String base64EncodedImage,
+    required String path,
   }) async {
     if (base64EncodedImage == null) {
       return;
     }
-    String fileName = fehler.id + "." + path.split('/').last.split(".")[1];
+    String fileName = fehler.id! + "." + path.split('/').last.split(".")[1];
     upload(
       fileName: fileName,
       base64Image: base64EncodedImage,
@@ -122,7 +122,7 @@ class FehlerlisteProvider with ChangeNotifier {
     );
   }
 
-  String upload({String fileName, String base64Image}) {
+  String upload({String? fileName, String? base64Image}) {
     print("uploading");
     print(fileName);
     http.post(Uri.parse("https://www.icanfixit.eu/BildUpload.php?token=$token"),
@@ -139,15 +139,15 @@ class FehlerlisteProvider with ChangeNotifier {
     return "";
   }
 
-  void fehlerGefixt({int indexInFehlerliste}) {}
+  void fehlerGefixt({int? indexInFehlerliste}) {}
 
   // um einen alten Fehler zu löschen muss man nur diese Funktion aufrufen
-  void fehlerGeloescht({Fehler fehler}) {
+  void fehlerGeloescht({required Fehler fehler}) {
     entferneFehler(
       id: fehler.id,
       fileName: fehler.bild,
     );
-    fehlerliste
+    fehlerliste!
         .removeWhere((aktuellerFehler) => aktuellerFehler.id == fehler.id);
     fehlerlisteSink.add(fehlerliste);
     notifyListeners();
@@ -155,12 +155,12 @@ class FehlerlisteProvider with ChangeNotifier {
 
   // fügt einen Fehler mit schreibeFehler.php hinzu
   Future<void> schreibeFehler({
-    String id,
-    String datum,
-    String raum,
-    String beschreibung,
-    String gefixt,
-    String bild,
+    String? id,
+    String? datum,
+    String? raum,
+    String? beschreibung,
+    String? gefixt,
+    String? bild,
   }) async {
     // die URL, die aufgerufen werden muss (mit den Argumenten implementiert)
     var url =
@@ -173,8 +173,8 @@ class FehlerlisteProvider with ChangeNotifier {
 
   // löscht einen Fehler mit entferneFehler.php
   Future<void> entferneFehler({
-    @required String id,
-    @required String fileName,
+    required String? id,
+    required String? fileName,
   }) async {
     var url =
         "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName&token=$token";

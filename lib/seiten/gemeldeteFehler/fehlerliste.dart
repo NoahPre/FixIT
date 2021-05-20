@@ -26,7 +26,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
     // aktualisiert die Liste
     Future<void> refresh() async {
       if (fehlerlisteProvider.fehlerliste != null) {
-        fehlerlisteProvider.fehlerliste.clear();
+        fehlerlisteProvider.fehlerliste!.clear();
       }
       await fehlerlisteProvider.holeFehler();
       return null;

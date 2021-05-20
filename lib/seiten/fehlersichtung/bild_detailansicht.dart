@@ -2,7 +2,7 @@
 import '../../imports.dart';
 
 class BildDetailansicht extends StatefulWidget {
-  BildDetailansicht({@required this.urlZumBild});
+  BildDetailansicht({required this.urlZumBild});
 
   final String urlZumBild;
 
@@ -26,7 +26,7 @@ class _BildDetailansichtState extends State<BildDetailansicht> {
             loadingBuilder: (
               BuildContext context,
               Widget child,
-              ImageChunkEvent loadingProgress,
+              ImageChunkEvent? loadingProgress,
             ) {
               if (loadingProgress == null) {
                 return child;
@@ -40,7 +40,7 @@ class _BildDetailansichtState extends State<BildDetailansicht> {
               );
             },
             errorBuilder: (BuildContext context, Object exception,
-                    StackTrace stackTrace) =>
+                    StackTrace? stackTrace) =>
                 Column(
               children: [
                 Text("Bild konnte nicht geladen werden"),

@@ -27,7 +27,7 @@ export "package:fixit/seiten/soforthilfe.dart";
 export "package:fixit/seiten/tutorial.dart";
 export "package:fixit/seiten/statistiken.dart";
 export "package:fixit/seiten/einstellungen.dart";
-export "package:fixit/seiten/über_uns.dart";
+export 'package:fixit/seiten/ueber_uns.dart';
 export "package:fixit/seiten/registrierung.dart";
 export "package:fixit/seiten/fehlersichtung/fehlerbehebung.dart";
 export "package:fixit/seiten/fehlersichtung/fehler_detailansicht.dart";
@@ -35,7 +35,7 @@ export "package:fixit/seiten/fehlersichtung/bild_detailansicht.dart";
 
 // Andere Widgets:
 export "package:fixit/widgets/fertig_button.dart";
-export "package:fixit/widgets/seiten_menü.dart";
+export 'package:fixit/widgets/seiten_menue.dart';
 export "package:fixit/widgets/zeige_snackbar_nachricht.dart";
 
 // Klassen:

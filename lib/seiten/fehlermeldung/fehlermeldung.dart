@@ -5,7 +5,7 @@ import "../../main.dart";
 import "package:flutter/cupertino.dart";
 import "package:intl/intl.dart";
 import "package:image_picker/image_picker.dart";
-import "package:keyboard_visibility/keyboard_visibility.dart";
+import "package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart";
 
 import "package:uuid/uuid.dart";
 
@@ -35,7 +35,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   /// Variablen für die Raumnummerneingabe
   final TextEditingController _raumController = TextEditingController();
   final FocusNode _raumNode = FocusNode();
-  String _dropdownButtonText = "";
+  String? _dropdownButtonText = "";
 
   /// Fehler, der auf dieser Seite gemeldet wird
   Fehler neuerFehler = Fehler(
@@ -46,14 +46,14 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   );
 
   /// Variablen für das Hochladen des aufgenommenen / ausgewählten Bildes via php
-  Future<PickedFile> ausgewaehltesBild;
+  Future<PickedFile?>? ausgewaehltesBild;
   String status = '';
-  String base64Bild;
-  PickedFile temporaeresBild;
+  String? base64Bild;
+  PickedFile? temporaeresBild;
   String bildErrorNachricht = 'Error Uploading Image';
 
   // Controller für die Kamera
-  CameraController kameraController;
+  CameraController? kameraController;
   String _pfadZumBild = "";
   void setzePfadZumBild(String pfad) {
     setState(() {
@@ -66,7 +66,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     super.initState();
     try {
       kameraController = CameraController(cameras[0], ResolutionPreset.high);
-      kameraController.initialize().then((_) {
+      kameraController!.initialize().then((_) {
         if (!mounted) {
           return;
         }
@@ -77,16 +77,14 @@ class _FehlermeldungState extends State<Fehlermeldung> {
       errorVorhanden = true;
       errorNachricht = error.toString();
     }
-    // TODO: muss man diesen Listener hier entfernen?
-    //sorgt dafür, dass man weiß, wann die Tastatur zu sehen ist
-    KeyboardVisibilityNotification().addNewListener(
-      onShow: () {
-        zeigeFertigButton(context);
-      },
-      onHide: () {
+    var keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardVisibilityController.onChange.listen((bool isVisible) {
+      if (isVisible) {
+        zeigeFertigButton();
+      } else {
         entferneFertigButton();
-      },
-    );
+      }
+    });
   }
 
   @override
@@ -97,10 +95,10 @@ class _FehlermeldungState extends State<Fehlermeldung> {
 
   /// updatet die Überschrift und den Text des Dropdown Buttons
   void updateText({
-    String textInTextfield,
+    String? textInTextfield,
   }) {
     setState(() {
-      _ueberschrift = "Fehler in Raum " + textInTextfield;
+      _ueberschrift = "Fehler in Raum " + textInTextfield!;
       neuerFehler.raum = textInTextfield;
     });
   }
@@ -113,8 +111,8 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   }
 
   void setzeBildWerte({
-    @required PickedFile temporaeresBild,
-    @required String base64Bild,
+    required PickedFile temporaeresBild,
+    required String base64Bild,
   }) {
     // TODO: warum muss man hier kein setState() benutzen?
     this.temporaeresBild = temporaeresBild;
@@ -134,12 +132,12 @@ class _FehlermeldungState extends State<Fehlermeldung> {
 
   // für die Logik vom Fertig Button über der Tastatur:
   /// overlayEntry property für die Fertig Button Widget Logik
-  OverlayEntry overlayEntry;
+  OverlayEntry? overlayEntry;
 
   /// zeigt den Fertig Button über dem Zahlenfeld an (iOS bietet hier keinen Button, der die Eingabe beendet, Android schon)
-  void zeigeFertigButton(BuildContext context) {
+  void zeigeFertigButton() {
     if (overlayEntry != null) return;
-    OverlayState overlayState = Overlay.of(context);
+    OverlayState overlayState = Overlay.of(context)!;
     overlayEntry = OverlayEntry(builder: (context) {
       return Positioned(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -148,20 +146,20 @@ class _FehlermeldungState extends State<Fehlermeldung> {
           child: FertigButton());
     });
 
-    overlayState.insert(overlayEntry);
+    overlayState.insert(overlayEntry!);
   }
 
   /// entfernt den Fertig Button über dem Zahlenfeld
   void entferneFertigButton() {
     if (overlayEntry != null) {
-      overlayEntry.remove();
+      overlayEntry!.remove();
       overlayEntry = null;
     }
   }
 
   // Validatoren:
   /// Validator für die Raumnummer des Fehlers
-  String _uerberpruefeRaumnummer(String raumnummer) {
+  String? _uerberpruefeRaumnummer(String raumnummer) {
     if (raumnummer.isEmpty || raumnummer == "") {
       return "Bitte eine Raumnummer eingeben";
     } else if (raumnummer.length > 3 || int.parse(raumnummer) > 420) {
@@ -172,7 +170,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   }
 
   /// Validator für die Beschreibung des Fehlers
-  String _ueberpruefeBeschreibung(String beschreibung) {
+  String? _ueberpruefeBeschreibung(String beschreibung) {
     if (beschreibung.isEmpty || beschreibung == "") {
       return "Bitte eine Beschreibung eingeben";
     } else {
@@ -219,7 +217,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
           ],
         ),
         onPressed: () {
-          if (_formKey.currentState.validate() == false) {
+          if (_formKey.currentState!.validate() == false) {
             return;
           }
           setState(() {
@@ -285,9 +283,9 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                               value: value,
                             );
                           }).toList(),
-                          onChanged: (String value) {
+                          onChanged: (String? value) {
                             updateText(
-                              textInTextfield: value + _raumController.text,
+                              textInTextfield: value! + _raumController.text,
                             );
                             setState(() {
                               _dropdownButtonText = value;
@@ -317,10 +315,10 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                           textInputAction: TextInputAction.done,
                           onChanged: (_) => updateText(
                             textInTextfield:
-                                _dropdownButtonText + _raumController.text,
+                                _dropdownButtonText! + _raumController.text,
                           ),
-                          validator: (String raumnummer) =>
-                              _uerberpruefeRaumnummer(raumnummer),
+                          validator: (String? raumnummer) =>
+                              _uerberpruefeRaumnummer(raumnummer!),
                         ),
                       ),
                     ],
@@ -340,8 +338,8 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                     focusNode: _beschreibungNode,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    validator: (String beschreibung) =>
-                        _ueberpruefeBeschreibung(beschreibung),
+                    validator: (String? beschreibung) =>
+                        _ueberpruefeBeschreibung(beschreibung!),
                   ),
                   SizedBox(height: 10),
                   Builder(

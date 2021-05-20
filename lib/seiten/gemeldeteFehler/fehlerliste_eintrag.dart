@@ -3,15 +3,15 @@ import "package:fixit/imports.dart";
 
 class FehlerlisteEintrag extends StatelessWidget {
   final Fehler fehler;
-  FehlerlisteEintrag({@required this.fehler});
+  FehlerlisteEintrag({required this.fehler});
   // konvertiert das Datum aus dem gegebenen Fehler zu einem schönen String
   String datumInSchoen(Fehler fehler) {
-    String tag = fehler.datum.split("")[6] + fehler.datum.split("")[7];
-    String monat = fehler.datum.split("")[4] + fehler.datum.split("")[5];
-    String jahr = fehler.datum.split("")[0] +
-        fehler.datum.split("")[1] +
-        fehler.datum.split("")[2] +
-        fehler.datum.split("")[3];
+    String tag = fehler.datum!.split("")[6] + fehler.datum!.split("")[7];
+    String monat = fehler.datum!.split("")[4] + fehler.datum!.split("")[5];
+    String jahr = fehler.datum!.split("")[0] +
+        fehler.datum!.split("")[1] +
+        fehler.datum!.split("")[2] +
+        fehler.datum!.split("")[3];
     String gesamt = tag + "." + monat + "." + jahr;
     return gesamt;
   }
@@ -42,7 +42,7 @@ class FehlerlisteEintrag extends StatelessWidget {
             color: Colors.red,
           ),
           confirmDismiss: (_) async {
-            bool returnValue;
+            bool? returnValue;
             await showDialog<bool>(
                 context: context,
                 builder: (BuildContext context) {
@@ -115,7 +115,7 @@ class FehlerlisteEintrag extends StatelessWidget {
                     radius: _size.width * 0.1,
                     backgroundColor: thema.colorScheme.primary,
                     child: Text(
-                      fehler.raum,
+                      fehler.raum!,
                       style: thema.textTheme.headline4,
                     ),
                   ),
@@ -149,7 +149,7 @@ class FehlerlisteEintrag extends StatelessWidget {
                               children: [
                                 // Vorschau der Fehlerbeschreibung
                                 Text(
-                                  fehler.beschreibung,
+                                  fehler.beschreibung!,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: thema.textTheme.bodyText1,

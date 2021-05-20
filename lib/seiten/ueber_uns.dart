@@ -140,6 +140,13 @@ class UeberUns extends StatelessWidget {
                       textAlign: TextAlign.justify,
                     ),
                   ),
+                  Divider(),
+                  ListTile(
+                    title: Text(
+                      "Teile des App Icons sind von Freepik",
+                      style: thema.textTheme.bodyText1,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -193,13 +200,6 @@ class UeberUns extends StatelessWidget {
                   ListTile(
                     title: Text(
                       "entwickelt von Noah und Martin",
-                      style: thema.textTheme.bodyText1,
-                    ),
-                  ),
-                  Divider(),
-                  ListTile(
-                    title: Text(
-                      "Teile des App Icons sind von Freepik",
                       style: thema.textTheme.bodyText1,
                     ),
                   ),

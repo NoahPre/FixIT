@@ -7,8 +7,8 @@ class FehlerDetailansicht extends StatefulWidget {
     this.fehlerliste,
   });
 
-  final Fehler fehler;
-  final List<Fehler> fehlerliste;
+  final Fehler? fehler;
+  final List<Fehler>? fehlerliste;
 
   @override
   _FehlerDetailansichtState createState() => _FehlerDetailansichtState();
@@ -25,13 +25,13 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
     /// nimmt das in der Form YYYYMMDD gespeicherte Datum und formatiert es neu
     String datumInSchoen() {
       String tag =
-          widget.fehler.datum.split("")[6] + widget.fehler.datum.split("")[7];
+          widget.fehler!.datum!.split("")[6] + widget.fehler!.datum!.split("")[7];
       String monat =
-          widget.fehler.datum.split("")[4] + widget.fehler.datum.split("")[5];
-      String jahr = widget.fehler.datum.split("")[0] +
-          widget.fehler.datum.split("")[1] +
-          widget.fehler.datum.split("")[2] +
-          widget.fehler.datum.split("")[3];
+          widget.fehler!.datum!.split("")[4] + widget.fehler!.datum!.split("")[5];
+      String jahr = widget.fehler!.datum!.split("")[0] +
+          widget.fehler!.datum!.split("")[1] +
+          widget.fehler!.datum!.split("")[2] +
+          widget.fehler!.datum!.split("")[3];
       String gesamt = tag + "." + monat + "." + jahr;
       return gesamt;
     }
@@ -67,7 +67,7 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                                 ),
                                 onPressed: () {
                                   fehlerlisteProvider.fehlerGeloescht(
-                                    fehler: widget.fehler,
+                                    fehler: widget.fehler!,
                                   );
                                   Navigator.pop(context);
                                   Navigator.pop(context);
@@ -100,12 +100,12 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
               Row(
                 children: <Widget>[
                   Hero(
-                    tag: "CircleAvatar${widget.fehler.id}",
+                    tag: "CircleAvatar${widget.fehler!.id}",
                     child: CircleAvatar(
                       backgroundColor: Colors.black,
                       radius: deviceSize.width * 0.1,
                       child: Text(
-                        widget.fehler.raum,
+                        widget.fehler!.raum!,
                         style: thema.textTheme.headline4,
                       ),
                     ),
@@ -128,15 +128,15 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
               ),
 
               Text(
-                widget.fehler.beschreibung,
+                widget.fehler!.beschreibung!,
                 style: thema.textTheme.bodyText1,
               ),
 
               // TODO: bei Änderungen hier, auch den Code in FehlerDetailansicht aktualisieren
               // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
-              (widget.fehler.bild.isEmpty ||
-                      widget.fehler.bild == "" ||
-                      widget.fehler.bild == null)
+              (widget.fehler!.bild!.isEmpty ||
+                      widget.fehler!.bild == "" ||
+                      widget.fehler!.bild == null)
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -167,7 +167,7 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                                   BildDetailansicht(
                                 urlZumBild:
                                     "https://www.icanfixit.eu/fehlerBilder/" +
-                                        widget.fehler.bild,
+                                        widget.fehler!.bild!,
                               ),
                             ),
                           );
@@ -175,12 +175,12 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                         child: Center(
                           child: Image.network(
                             "https://www.icanfixit.eu/fehlerBilder/" +
-                                widget.fehler.bild,
+                                widget.fehler!.bild!,
                             fit: BoxFit.contain,
                             loadingBuilder: (
                               BuildContext context,
                               Widget child,
-                              ImageChunkEvent loadingProgress,
+                              ImageChunkEvent? loadingProgress,
                             ) {
                               // zeigt das Bild an, wenn es fertig heruntergeladen ist
                               if (loadingProgress == null) {
@@ -193,7 +193,7 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                                   );
                             },
                             errorBuilder: (BuildContext currentContext,
-                                Object exception, StackTrace stackTrace) {
+                                Object exception, StackTrace? stackTrace) {
                               return Text(
                                 "Bild konnte nicht geladen werden",
                                 style: TextStyle(

@@ -51,7 +51,7 @@ class _EinstellungenState extends State<Einstellungen> {
                       setState(() {});
                     },
                   )
-                : null,
+                : Container(),
           ],
         ),
       ),

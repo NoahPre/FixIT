@@ -5,7 +5,7 @@ import '../imports.dart';
 
 // Seitenmenü der App
 class Seitenmenue extends StatelessWidget {
-  final String aktuelleSeite;
+  final String? aktuelleSeite;
 
   const Seitenmenue({this.aktuelleSeite});
 
