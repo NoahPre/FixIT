@@ -35,6 +35,8 @@ class FixIt extends StatelessWidget {
         // wird in /klassen/thema.dart definiert
         theme: thema,
         // darkTheme: dunklesThema,
+        title: "FixIT",
+        debugShowCheckedModeBanner: false,
         initialRoute: "/",
         routes: {
           // Startseite (initialRoute) der App
