@@ -46,20 +46,21 @@ class BenutzerInfoProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Meldet den Benutzer ab.
+  Future<void> benutzerMeldetSichAb() async {
+    await ueberschreibeUserInformation(
+        istFehlermelderInFunktion: true, passwortInFunktion: "");
+    authentifizierungSink.add(false);
+    istAuthentifiziert = false;
+  }
+
   /// überschreibt die gespeicherten Werte in sharedPreferences mit den gegebenen Werten
   Future<void> ueberschreibeUserInformation({
     required bool istFehlermelderInFunktion,
     required String passwortInFunktion,
   }) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    // sharedPreferences.setBool(
-    //   "istAngemeldet",
-    //   this._istAngemeldet,
-    // );
-    // sharedPreferences.setString(
-    //   "benutzername",
-    //   this._benutzername,
-    // );
+    istFehlermelder = istFehlermelderInFunktion;
     sharedPreferences.setBool(
       "istFehlermelder",
       istFehlermelderInFunktion,
@@ -77,18 +78,24 @@ class BenutzerInfoProvider with ChangeNotifier {
     bool istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
     String passwort = sharedPreferences.getString("passwort") ?? "";
     var tokenInFunktion = sha256.convert(utf8.encode(passwort));
-    // schickt eine Anfrage mit den folgenden Informationen an den Server:
-    // - ob der Benutzer Fehlermelder ist
-    // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
-    String url =
-        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelder.toString()}&token=${tokenInFunktion.toString()}";
-    http.Response response = await http.get(Uri.parse(url));
-    // überprüft die Ausgabe des Scripts
-    if (response.body == "1") {
-      authentifizierungSink.add(true);
-      return true;
-    } else {
-      authentifizierungSink.add(false);
+    try {
+      // schickt eine Anfrage mit den folgenden Informationen an den Server:
+      // - ob der Benutzer Fehlermelder ist
+      // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
+      String url =
+          "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelder.toString()}&token=${tokenInFunktion.toString()}";
+      http.Response response = await http.get(Uri.parse(url));
+      // überprüft die Ausgabe des Scripts
+      if (response.body == "1") {
+        authentifizierungSink.add(true);
+        return true;
+      } else {
+        authentifizierungSink.add(false);
+        return false;
+      }
+    } catch (error) {
+      await Future.delayed(const Duration(seconds: 3), () {});
+      holeUserInformationUndAuthentifiziere();
       return false;
     }
   }

@@ -35,6 +35,7 @@ class GemeldeteFehler extends StatelessWidget {
             return null;
           },
           icon: Icon(Icons.refresh),
+          tooltip: "Neu laden",
         ),
         SizedBox(
           width: 10.0,

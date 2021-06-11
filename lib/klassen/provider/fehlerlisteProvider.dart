@@ -13,7 +13,7 @@ import 'package:crypto/crypto.dart';
 class FehlerlisteProvider with ChangeNotifier {
   FehlerlisteProvider() {
     holeFehler();
-    holeFehlermeldungenIDs();
+    holeFehlermeldungenIDsUndZaehler();
     berechneToken();
   }
 
@@ -38,11 +38,24 @@ class FehlerlisteProvider with ChangeNotifier {
   /// IDs der Fehlermeldungen des Benutzers
   List<String> eigeneFehlermeldungenIDs = [];
 
+  /// Zähler, der die Anzahl an abgesendeten Fehlermeldungen speichert
+  int fehlermeldungsZaehler = 0;
+
+  /// Zähler, der bei Fehlerbehebern die Anzahl an gelöschten (behobenen) Fehlermeldungen^ speichert
+  int fehlerbehebungsZaehler = 0;
+
   // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
   Future<void> holeFehler() async {
     var url = 'https://www.icanfixit.eu/gibAlleFehler.php';
-    http.Response response = await http.get(Uri.parse(url));
-    var jsonObjekt = jsonDecode(response.body) ?? [];
+    var jsonObjekt = [];
+    try {
+      http.Response response = await http.get(Uri.parse(url));
+      jsonObjekt = jsonDecode(response.body) ?? [];
+    } catch (error) {
+      await Future.delayed(const Duration(seconds: 3), () {});
+      holeFehler();
+      return;
+    }
     // überschreibt fehlerliste mit den Werten aus der Datenbank
     fehlerliste = List.generate(jsonObjekt.length, (int index) {
       // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
@@ -60,12 +73,15 @@ class FehlerlisteProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> holeFehlermeldungenIDs() async {
+  Future<void> holeFehlermeldungenIDsUndZaehler() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     eigeneFehlermeldungenIDs =
         sharedPreferences.getStringList("eigeneFehlermeldungenIDs") ?? [];
+    fehlermeldungsZaehler =
+        sharedPreferences.getInt("fehlermeldungsZaehler") ?? 0;
+    fehlerbehebungsZaehler =
+        sharedPreferences.getInt("fehlerbehebungsZaehler") ?? 0;
     notifyListeners();
-    print(eigeneFehlermeldungenIDs);
   }
 
   Future<void> berechneToken() async {
@@ -111,9 +127,11 @@ class FehlerlisteProvider with ChangeNotifier {
       );
     }
     // speichert die Fehler ID lokal
-    speichereFehlerID(neueID: fehler.id);
+    await speichereFehlerID(neueID: fehler.id);
+    // erhöht den Zähler
+    await erhoeheFehlermeldungsZaehler();
     // sendet den Fehler zum Server
-    schreibeFehler(
+    await schreibeFehler(
       id: fehler.id,
       datum: fehler.datum,
       raum: fehler.raum,
@@ -164,16 +182,15 @@ class FehlerlisteProvider with ChangeNotifier {
   void fehlerGefixt({int? indexInFehlerliste}) {}
 
   // um einen alten Fehler zu löschen muss man nur diese Funktion aufrufen
-  void fehlerGeloescht({
+  Future<void> fehlerGeloescht({
     required Fehler fehler,
     required bool istFehlermelder,
-  }) {
-    if (eigeneFehlermeldungenIDs.contains(fehler.id) == false &&
-        istFehlermelder == true) {
-      //TODO: wie macht man das hier besser?
-      throw Exception("Nur eigene Fehlermeldungen können gelöscht werden");
+  }) async {
+    if (istFehlermelder == false) {
+      await erhoeheFehlerbehebungsZaehler();
     }
-    entferneFehler(
+
+    await entferneFehler(
       id: fehler.id,
       fileName: fehler.bild,
       istFehlermelder: istFehlermelder,
@@ -197,9 +214,6 @@ class FehlerlisteProvider with ChangeNotifier {
     var url =
         "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&token=$token";
     http.Response response = await http.get(Uri.parse(url));
-    print(url);
-    print("Response body: " + response.body);
-    return;
   }
 
   /// Löscht einen Fehler mit entferneFehler.php
@@ -226,5 +240,21 @@ class FehlerlisteProvider with ChangeNotifier {
     idsList.add(neueID);
     eigeneFehlermeldungenIDs.add(neueID);
     await sharedPreferences.setStringList("eigeneFehlermeldungenIDs", idsList);
+  }
+
+  /// Erhöht den Fehlermeldung-Zähler um eins
+  Future<void> erhoeheFehlermeldungsZaehler() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    fehlermeldungsZaehler = fehlermeldungsZaehler + 1;
+    await sharedPreferences.setInt(
+        "fehlermeldungsZaehler", fehlermeldungsZaehler);
+  }
+
+  /// Erhöht den Fehlerbehebung-Zähler um eins
+  Future<void> erhoeheFehlerbehebungsZaehler() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    fehlerbehebungsZaehler = fehlerbehebungsZaehler + 1;
+    await sharedPreferences.setInt(
+        "fehlerbehebungsZaehler", fehlerbehebungsZaehler);
   }
 }

@@ -41,8 +41,9 @@ class FixIt extends StatelessWidget {
         routes: {
           // Startseite (initialRoute) der App
           "/": (context) => GemeldeteFehler(),
-          "/fehlerDetailansicht": (context) => FehlerDetailansicht(),
-          "/fehlerBehebung": (context) => Fehlerbehebung(),
+          // diese beiden Seiten werden nie durch namedRoutes aufgerufen, sind aber der Vollständigkeit halber auch hier
+          // "/fehlerDetailansicht": (context) => FehlerDetailansicht(),
+          // "/fehlerBehebung": (context) => Fehlerbehebung(),
           "/soforthilfe": (context) => Soforthilfe(),
           "/tutorial": (context) => Tutorial(),
           "/statistiken": (context) => Statistiken(),

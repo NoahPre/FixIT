@@ -17,19 +17,7 @@ class UeberUns extends StatelessWidget {
     }
   }
 
-  /// öffnet die Datenschutz Erklärung von FixIT im Standardbrowser des Benutzers
-  Future<void> _oeffneDatenschutzErklaerung() async {
-    const url = "https://www.icanfixit.eu/datenschutz.html";
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw "Could not launch: $url";
-    }
-  }
-
-  /// öffnet die GitHub Seite von FixIT im Standardbrowser des Benutzers
-  Future<void> _oeffneGitHubSeite() async {
-    const url = "https://github.com/NoahPre/FixIT";
+  Future<void> _oeffneURL({required String url}) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -100,7 +88,8 @@ class UeberUns extends StatelessWidget {
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                     ),
-                    onTap: () => _oeffneDatenschutzErklaerung(),
+                    onTap: () => _oeffneURL(
+                        url: "https://www.icanfixit.eu/datenschutz.html"),
                   ),
                   // ListTile(
                   //   title: Text(
@@ -143,9 +132,15 @@ class UeberUns extends StatelessWidget {
                   Divider(),
                   ListTile(
                     title: Text(
-                      "Teile des App Icons sind von Freepik",
+                      "Teile des App Icons sind von Freepik / Flaticon",
                       style: thema.textTheme.bodyText1,
                     ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                    ),
+                    onTap: () => _oeffneURL(
+                        url:
+                            "https://www.flaticon.com/premium-icon/hammer_2817081?term=hammer%20wrench&page=1&position=23&page=1&position=23&related_id=2817081&origin=tag"),
                   ),
                 ],
               ),
@@ -173,7 +168,8 @@ class UeberUns extends StatelessWidget {
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                     ),
-                    onTap: () => _oeffneGitHubSeite(),
+                    onTap: () =>
+                        _oeffneURL(url: "https://github.com/NoahPre/FixIT"),
                   ),
                   Divider(),
                   ListTile(

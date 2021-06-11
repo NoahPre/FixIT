@@ -15,6 +15,41 @@ class Fehlerliste extends StatefulWidget {
 }
 
 class _FehlerlisteState extends State<Fehlerliste> {
+  Future<bool> _ueberpruefeInternetVerbindung(
+      {required BuildContext currentContext}) async {
+    try {
+      final result = await InternetAddress.lookup("google.com");
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      }
+      // probably unnecessary
+      else {
+        zeigeSnackBarNachricht(
+          nachricht: "Nicht mit dem Internet verbunden",
+          context: currentContext,
+          istError: true,
+        );
+
+        return false;
+      }
+    } on SocketException catch (error) {
+      print(error.toString());
+      zeigeSnackBarNachricht(
+        nachricht: "Nicht mit dem Internet verbunden",
+        context: currentContext,
+        istError: true,
+      );
+      return false;
+    } catch (error) {
+      zeigeSnackBarNachricht(
+        nachricht: error.toString(),
+        context: currentContext,
+        istError: true,
+      );
+      return false;
+    }
+  }
+
   List<Widget> zeigeFehlerliste(
       {required dynamic fehlerliste,
       required List<String> eigeneFehlermeldungenIDs,
@@ -88,62 +123,71 @@ class _FehlerlisteState extends State<Fehlerliste> {
         AsyncSnapshot snapshot,
       ) {
         // Widget für den Scrollbalken am Rand
-        Widget screen = RefreshIndicator(
-          onRefresh: () => refresh(),
-          color: thema.colorScheme.primary,
-          child: ListView(
-            children:
-                // überprüft, ob die Fehlerliste schon vollständig heruntergeladen wurde
-                snapshot.hasData
-                    ? (snapshot.data.length == 0)
-                        // wird ausgegeben, wenn die Fehlerliste leer ist
-                        ? [
-                            Container(
-                              height: mediaQueryData.size.height -
-                                  widget.appBarHoehe,
-                              child: Center(
-                                child: Text(
-                                  "Noch keine Fehler gemeldet",
-                                  style: TextStyle(
-                                    color: Colors.black,
+        Widget screen = Builder(
+          builder: (BuildContext currentContext) => RefreshIndicator(
+            onRefresh: () async {
+              if (await _ueberpruefeInternetVerbindung(
+                    currentContext: currentContext,
+                  ) ==
+                  true) {
+                refresh();
+              }
+            },
+            color: thema.colorScheme.primary,
+            child: ListView(
+              children:
+                  // überprüft, ob die Fehlerliste schon vollständig heruntergeladen wurde
+                  snapshot.hasData
+                      ? (snapshot.data.length == 0)
+                          // wird ausgegeben, wenn die Fehlerliste leer ist
+                          ? [
+                              Container(
+                                height: mediaQueryData.size.height -
+                                    widget.appBarHoehe,
+                                child: Center(
+                                  child: Text(
+                                    "Noch keine Fehler gemeldet",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ]
-                        : zeigeFehlerliste(
-                            fehlerliste: snapshot.data,
-                            eigeneFehlermeldungenIDs:
-                                fehlerlisteProvider.eigeneFehlermeldungenIDs,
-                            thema: thema)
-                    // FutureBuilder(
-                    //     future: zeigeFehlerliste(
-                    //         fehlerliste: snapshot.data, thema: thema),
-                    //     builder: (BuildContext context,
-                    //         AsyncSnapshot snapshot) {
-                    //       if (snapshot.data == null) {
-                    //         return Container();
-                    //       } else {
-                    //         return snapshot.data;
-                    //       }
-                    //     })
+                            ]
+                          : zeigeFehlerliste(
+                              fehlerliste: snapshot.data,
+                              eigeneFehlermeldungenIDs:
+                                  fehlerlisteProvider.eigeneFehlermeldungenIDs,
+                              thema: thema)
+                      // FutureBuilder(
+                      //     future: zeigeFehlerliste(
+                      //         fehlerliste: snapshot.data, thema: thema),
+                      //     builder: (BuildContext context,
+                      //         AsyncSnapshot snapshot) {
+                      //       if (snapshot.data == null) {
+                      //         return Container();
+                      //       } else {
+                      //         return snapshot.data;
+                      //       }
+                      //     })
 
-                    // zeigt einen Ladedonut an, während die Fehlerliste fertig heruntergeladen wird
-                    : [
-                        Container(
-                          height: mediaQueryData.size.height -
-                              widget.appBarHoehe -
-                              mediaQueryData.padding.top -
-                              mediaQueryData.padding.bottom,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                thema.colorScheme.primary,
+                      // zeigt einen Ladedonut an, während die Fehlerliste fertig heruntergeladen wird
+                      : [
+                          Container(
+                            height: mediaQueryData.size.height -
+                                widget.appBarHoehe -
+                                mediaQueryData.padding.top -
+                                mediaQueryData.padding.bottom,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  thema.colorScheme.primary,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+            ),
           ),
         );
         return snapshot.data?.length == 0

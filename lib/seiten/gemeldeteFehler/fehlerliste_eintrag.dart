@@ -107,7 +107,6 @@ class FehlerlisteEintrag extends StatelessWidget {
                           fehler.gefixt == "0") {
                         return Fehlerbehebung(
                           fehler: fehler,
-                          fehlerBehoben: fehlerlisteProvider.fehlerGeloescht,
                         );
                       } else {
                         return FehlerDetailansicht(

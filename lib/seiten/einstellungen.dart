@@ -44,10 +44,7 @@ class _EinstellungenState extends State<Einstellungen> {
                     title: Text("Abmelden"),
                     trailing: Icon(Icons.arrow_forward_ios),
                     onTap: () async {
-                      await benutzerInfoProvider.ueberschreibeUserInformation(
-                          istFehlermelderInFunktion: true,
-                          passwortInFunktion: "");
-                      benutzerInfoProvider.authentifizierungSink.add(false);
+                      await benutzerInfoProvider.benutzerMeldetSichAb();
                       setState(() {});
                     },
                   )

@@ -143,8 +143,10 @@ class _RegistrierungState extends State<Registrierung> {
 
         if (_radioGroupValue == 0) {
           istFehlermelderInFunktion = true;
+          print("true");
         } else {
           istFehlermelderInFunktion = false;
+          print("false");
         }
         // überprüft das eingegebene Passwort
         if (await _ueberpruefePasswort(

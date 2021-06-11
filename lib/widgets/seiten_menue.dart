@@ -15,6 +15,8 @@ class Seitenmenue extends StatelessWidget {
 
     final BenutzerInfoProvider benutzerInfoProvider =
         Provider.of<BenutzerInfoProvider>(context);
+    final FehlerlisteProvider fehlerlisteProvider =
+        Provider.of<FehlerlisteProvider>(context);
 
     Size deviceSize = MediaQuery.of(context).size;
 
@@ -52,6 +54,41 @@ class Seitenmenue extends StatelessWidget {
                         benutzerInfoProvider.istFehlermelder
                             ? Text("Fehlermelder")
                             : Text("Fehlerbeheber"),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: 180.0,
+                              child: Text("Gemeldete Fehler:"),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                fehlerlisteProvider.fehlermeldungsZaehler
+                                    .toString(),
+                              ),
+                            )
+                          ],
+                        ),
+                        benutzerInfoProvider.istFehlermelder
+                            ? Container()
+                            : Row(
+                                children: [
+                                  Container(
+                                    width: 180.0,
+                                    child: Text("Behobene Fehler:"),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      fehlerlisteProvider.fehlerbehebungsZaehler
+                                          .toString(),
+                                    ),
+                                  ),
+                                ],
+                              ),
                       ],
                     ),
                   ],
@@ -126,7 +163,7 @@ class Seitenmenue extends StatelessWidget {
                   Navigator.pop(context);
                 } else {
                   Navigator.pop(context);
-                  Navigator.pushReplacementNamed(context, "/einstellungen");
+                  Navigator.pushNamed(context, "/einstellungen");
                 }
               }),
           Divider(),
