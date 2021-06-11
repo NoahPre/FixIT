@@ -343,7 +343,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                   ),
                   SizedBox(height: 10),
                   Builder(
-                    builder: (BuildContext currentContext) => RaisedButton(
+                    builder: (BuildContext currentContext) => ElevatedButton(
                       child: Text("Bild hinzufügen"),
                       onPressed: () async {
                         await zeigeBilderAuswahl(

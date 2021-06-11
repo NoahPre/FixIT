@@ -26,13 +26,13 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
     // TODO: evtl. das intelligenter lösen
     String datumInSchoen() {
       String tag =
-          widget.fehler!.datum!.split("")[6] + widget.fehler!.datum!.split("")[7];
+          widget.fehler!.datum.split("")[6] + widget.fehler!.datum.split("")[7];
       String monat =
-          widget.fehler!.datum!.split("")[4] + widget.fehler!.datum!.split("")[5];
-      String jahr = widget.fehler!.datum!.split("")[0] +
-          widget.fehler!.datum!.split("")[1] +
-          widget.fehler!.datum!.split("")[2] +
-          widget.fehler!.datum!.split("")[3];
+          widget.fehler!.datum.split("")[4] + widget.fehler!.datum.split("")[5];
+      String jahr = widget.fehler!.datum.split("")[0] +
+          widget.fehler!.datum.split("")[1] +
+          widget.fehler!.datum.split("")[2] +
+          widget.fehler!.datum.split("")[3];
       String gesamt = tag + "." + monat + "." + jahr;
       return gesamt;
     }
@@ -111,7 +111,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                       radius: deviceSize.width * 0.1,
                       backgroundColor: thema.colorScheme.secondary,
                       child: Text(
-                        widget.fehler!.raum!,
+                        widget.fehler!.raum,
                         style: thema.textTheme.headline4,
                       ),
                     ),
@@ -133,14 +133,12 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                 style: thema.textTheme.headline5,
               ),
               Text(
-                widget.fehler!.beschreibung ?? "",
+                widget.fehler!.beschreibung,
                 style: thema.textTheme.bodyText1,
               ),
               // TODO: bei Änderungen hier, auch den Code in FehlerDetailansicht aktualisieren
               // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
-              (widget.fehler!.bild!.isEmpty ||
-                      widget.fehler!.bild == "" ||
-                      widget.fehler!.bild == null)
+              (widget.fehler!.bild.isEmpty || widget.fehler!.bild == "")
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -173,7 +171,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                                   BildDetailansicht(
                                 urlZumBild:
                                     "https://www.icanfixit.eu/fehlerBilder/" +
-                                        widget.fehler!.bild!,
+                                        widget.fehler!.bild,
                               ),
                             ),
                           );
@@ -181,7 +179,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                         child: Center(
                           child: Image.network(
                             "https://www.icanfixit.eu/fehlerBilder/" +
-                                widget.fehler!.bild!,
+                                widget.fehler!.bild,
                             fit: BoxFit.contain,
                             loadingBuilder: (
                               BuildContext context,

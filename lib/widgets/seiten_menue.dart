@@ -38,7 +38,7 @@ class Seitenmenue extends StatelessWidget {
                       child: Icon(Icons.person),
                       backgroundColor: thema.colorScheme.primary,
                       foregroundColor: Colors.white,
-                      minRadius: deviceSize.width * 0.07,
+                      minRadius: 30.0,
                     ),
                     SizedBox(
                       width: deviceSize.width * 0.025,

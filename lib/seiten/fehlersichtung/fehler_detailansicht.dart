@@ -1,7 +1,7 @@
 // fehlerDetailansicht.dart
 import '../../imports.dart';
 
-class FehlerDetailansicht extends StatefulWidget {
+class FehlerDetailansicht extends StatelessWidget {
   FehlerDetailansicht({
     this.fehler,
     this.fehlerliste,
@@ -11,27 +11,22 @@ class FehlerDetailansicht extends StatefulWidget {
   final List<Fehler>? fehlerliste;
 
   @override
-  _FehlerDetailansichtState createState() => _FehlerDetailansichtState();
-}
-
-class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
-  @override
   Widget build(BuildContext context) {
     ThemeData thema = Theme.of(context);
     Size deviceSize = MediaQuery.of(context).size;
+    final BenutzerInfoProvider benutzerInfoProvider =
+        Provider.of<BenutzerInfoProvider>(context, listen: false);
     final FehlerlisteProvider fehlerlisteProvider =
         Provider.of<FehlerlisteProvider>(context);
 
-    /// nimmt das in der Form YYYYMMDD gespeicherte Datum und formatiert es neu
+    /// Nimmt das in der Form YYYYMMDD gespeicherte Datum und formatiert es neu
     String datumInSchoen() {
-      String tag =
-          widget.fehler!.datum!.split("")[6] + widget.fehler!.datum!.split("")[7];
-      String monat =
-          widget.fehler!.datum!.split("")[4] + widget.fehler!.datum!.split("")[5];
-      String jahr = widget.fehler!.datum!.split("")[0] +
-          widget.fehler!.datum!.split("")[1] +
-          widget.fehler!.datum!.split("")[2] +
-          widget.fehler!.datum!.split("")[3];
+      String tag = fehler!.datum.split("")[6] + fehler!.datum.split("")[7];
+      String monat = fehler!.datum.split("")[4] + fehler!.datum.split("")[5];
+      String jahr = fehler!.datum.split("")[0] +
+          fehler!.datum.split("")[1] +
+          fehler!.datum.split("")[2] +
+          fehler!.datum.split("")[3];
       String gesamt = tag + "." + monat + "." + jahr;
       return gesamt;
     }
@@ -66,11 +61,25 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                                   style: TextStyle(color: Colors.red),
                                 ),
                                 onPressed: () {
-                                  fehlerlisteProvider.fehlerGeloescht(
-                                    fehler: widget.fehler!,
-                                  );
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
+                                  try {
+                                    fehlerlisteProvider.fehlerGeloescht(
+                                      fehler: fehler!,
+                                      istFehlermelder:
+                                          benutzerInfoProvider.istFehlermelder,
+                                    );
+
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  } on Exception catch (error) {
+                                    Navigator.pop(context);
+                                    print(error);
+                                    zeigeSnackBarNachricht(
+                                      nachricht:
+                                          "Nur eigene Fehlermeldungen können gelöscht werden",
+                                      context: context,
+                                      istError: true,
+                                    );
+                                  }
                                 },
                               ),
                               SimpleDialogOption(
@@ -100,12 +109,12 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
               Row(
                 children: <Widget>[
                   Hero(
-                    tag: "CircleAvatar${widget.fehler!.id}",
+                    tag: "CircleAvatar${fehler!.id}",
                     child: CircleAvatar(
                       backgroundColor: Colors.black,
                       radius: deviceSize.width * 0.1,
                       child: Text(
-                        widget.fehler!.raum!,
+                        fehler!.raum,
                         style: thema.textTheme.headline4,
                       ),
                     ),
@@ -128,15 +137,13 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
               ),
 
               Text(
-                widget.fehler!.beschreibung!,
+                fehler!.beschreibung,
                 style: thema.textTheme.bodyText1,
               ),
 
               // TODO: bei Änderungen hier, auch den Code in FehlerDetailansicht aktualisieren
               // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
-              (widget.fehler!.bild!.isEmpty ||
-                      widget.fehler!.bild == "" ||
-                      widget.fehler!.bild == null)
+              (fehler!.bild.isEmpty || fehler!.bild == "")
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -167,7 +174,7 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                                   BildDetailansicht(
                                 urlZumBild:
                                     "https://www.icanfixit.eu/fehlerBilder/" +
-                                        widget.fehler!.bild!,
+                                        fehler!.bild,
                               ),
                             ),
                           );
@@ -175,7 +182,7 @@ class _FehlerDetailansichtState extends State<FehlerDetailansicht> {
                         child: Center(
                           child: Image.network(
                             "https://www.icanfixit.eu/fehlerBilder/" +
-                                widget.fehler!.bild!,
+                                fehler!.bild,
                             fit: BoxFit.contain,
                             loadingBuilder: (
                               BuildContext context,

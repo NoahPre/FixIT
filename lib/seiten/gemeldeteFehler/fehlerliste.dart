@@ -15,6 +15,54 @@ class Fehlerliste extends StatefulWidget {
 }
 
 class _FehlerlisteState extends State<Fehlerliste> {
+  List<Widget> zeigeFehlerliste(
+      {required dynamic fehlerliste,
+      required List<String> eigeneFehlermeldungenIDs,
+      required ThemeData thema}) {
+    List<Fehler> eigeneFehlermeldungen = [];
+    List<Fehler> sonstigeFehlermeldungen = [];
+    for (Fehler aktuellerFehler in fehlerliste) {
+      if (eigeneFehlermeldungenIDs.contains(aktuellerFehler.id)) {
+        eigeneFehlermeldungen.add(aktuellerFehler);
+      } else {
+        sonstigeFehlermeldungen.add(aktuellerFehler);
+      }
+    }
+
+    List<Widget> children = [];
+    if (eigeneFehlermeldungen.length != 0) {
+      children.add(
+        SizedBox(
+          height: 8.0,
+        ),
+      );
+      children.add(Text(
+        "Eigene Fehlermeldungen",
+        style: thema.textTheme.headline2,
+      ));
+      children.addAll(
+        eigeneFehlermeldungen.map<Widget>(
+          (Fehler fehler) => FehlerlisteEintrag(fehler: fehler),
+        ),
+      );
+      children.add(SizedBox(
+        height: 20.0,
+      ));
+      children.add(
+        Text(
+          "Sonstige Fehlermeldungen",
+          style: thema.textTheme.headline2,
+        ),
+      );
+    }
+    children.addAll(
+      sonstigeFehlermeldungen.map<Widget>(
+        (Fehler fehler) => FehlerlisteEintrag(fehler: fehler),
+      ),
+    );
+    return children;
+  }
+
   @override
   Widget build(BuildContext context) {
     // aus provider.dart und fehlerlisteProvider.dart
@@ -40,14 +88,14 @@ class _FehlerlisteState extends State<Fehlerliste> {
         AsyncSnapshot snapshot,
       ) {
         // Widget für den Scrollbalken am Rand
-        var page = RefreshIndicator(
+        Widget screen = RefreshIndicator(
           onRefresh: () => refresh(),
           color: thema.colorScheme.primary,
           child: ListView(
             children:
                 // überprüft, ob die Fehlerliste schon vollständig heruntergeladen wurde
                 snapshot.hasData
-                    ? (snapshot.data.length == 0 || snapshot.data == [])
+                    ? (snapshot.data.length == 0)
                         // wird ausgegeben, wenn die Fehlerliste leer ist
                         ? [
                             Container(
@@ -63,13 +111,23 @@ class _FehlerlisteState extends State<Fehlerliste> {
                               ),
                             ),
                           ]
-                        : snapshot.data.map<Widget>(
-                            (Fehler fehler) {
-                              return FehlerlisteEintrag(
-                                fehler: fehler,
-                              );
-                            },
-                          ).toList()
+                        : zeigeFehlerliste(
+                            fehlerliste: snapshot.data,
+                            eigeneFehlermeldungenIDs:
+                                fehlerlisteProvider.eigeneFehlermeldungenIDs,
+                            thema: thema)
+                    // FutureBuilder(
+                    //     future: zeigeFehlerliste(
+                    //         fehlerliste: snapshot.data, thema: thema),
+                    //     builder: (BuildContext context,
+                    //         AsyncSnapshot snapshot) {
+                    //       if (snapshot.data == null) {
+                    //         return Container();
+                    //       } else {
+                    //         return snapshot.data;
+                    //       }
+                    //     })
+
                     // zeigt einen Ladedonut an, während die Fehlerliste fertig heruntergeladen wird
                     : [
                         Container(
@@ -88,10 +146,10 @@ class _FehlerlisteState extends State<Fehlerliste> {
                       ],
           ),
         );
-        return snapshot.data.length == 0
-            ? page
+        return snapshot.data?.length == 0
+            ? screen
             : Scrollbar(
-                child: page,
+                child: screen,
               );
       },
     );

@@ -21,9 +21,5 @@ Im Ordner FixIT Dokumentation wird alles wichtige zur Dokumentation des Plus Kur
 ## Schreibweisen
 Dateinamen und Ordnernamen werden auf Deutsch und bei mehreren Worten mit einem _ getrennt geschrieben. Kommentare werden auf Deutsch, Variablen und Funktionen in camelCase und auch auf Deutsch geschrieben (damit wir ein bisschen einheitlich sind).
 
-## ToDo
-* Projekt auf dart Null Safety umstellen
-* Tap to Focus / Autofokus bei der Kamera unterstützen
-
 ## Mitwirken und Beitragen
 Wer einen Bug entdeckt oder ein neues Feature hinzufügen möchte, kann gerne einen Issue oder einen Pull Request aufsetzen. Wir werden diese dann zu gegebener Zeit bearbeiten.

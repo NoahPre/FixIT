@@ -33,6 +33,12 @@ ThemeData thema = ThemeData(
       fontSize: 20,
       fontWeight: FontWeight.w600,
     ),
+    // TextStyle für die zwei Überschriften der Startseite ("Eigene Fehlermeldungen" & "Sonstige Fehlermeldungen")
+    headline2: TextStyle(
+      color: Colors.black,
+      fontSize: 18.0,
+      fontWeight: FontWeight.normal,
+    ),
     // 16, schwarz, fett
     // TextStyle für kleinere, fett gedruckte Überschriften, etwa die Fehlerbeschreibung in den ListTiles in der Fehlerliste
     headline3: TextStyle(

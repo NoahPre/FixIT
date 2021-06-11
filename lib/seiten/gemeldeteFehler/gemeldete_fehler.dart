@@ -11,6 +11,11 @@ class GemeldeteFehler extends StatelessWidget {
       context,
       listen: false,
     );
+    final FehlerlisteProvider fehlerlisteProvider =
+        Provider.of<FehlerlisteProvider>(
+      context,
+      listen: false,
+    );
     MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     var appBar = AppBar(
@@ -19,6 +24,22 @@ class GemeldeteFehler extends StatelessWidget {
         style: thema.textTheme.headline1,
       ),
       backgroundColor: thema.colorScheme.primary,
+      centerTitle: true,
+      actions: [
+        IconButton(
+          onPressed: () async {
+            if (fehlerlisteProvider.fehlerliste != null) {
+              fehlerlisteProvider.fehlerliste!.clear();
+            }
+            await fehlerlisteProvider.holeFehler();
+            return null;
+          },
+          icon: Icon(Icons.refresh),
+        ),
+        SizedBox(
+          width: 10.0,
+        ),
+      ],
     );
 
     Future<void> erneutAuthentifizieren() async {
