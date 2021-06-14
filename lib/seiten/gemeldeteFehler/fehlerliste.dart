@@ -65,14 +65,14 @@ class _FehlerlisteState extends State<Fehlerliste> {
     }
 
     List<Widget> children = [];
+    children.add(
+      SizedBox(
+        height: 4.0,
+      ),
+    );
     if (eigeneFehlermeldungen.length != 0) {
-      children.add(
-        SizedBox(
-          height: 8.0,
-        ),
-      );
       children.add(Text(
-        "Eigene Fehlermeldungen",
+        "Eigene Fehlermeldungen:",
         style: thema.textTheme.headline2,
       ));
       children.addAll(
@@ -83,13 +83,13 @@ class _FehlerlisteState extends State<Fehlerliste> {
       children.add(SizedBox(
         height: 20.0,
       ));
-      children.add(
-        Text(
-          "Sonstige Fehlermeldungen",
-          style: thema.textTheme.headline2,
-        ),
-      );
     }
+    children.add(
+      Text(
+        "Andere Fehlermeldungen:",
+        style: thema.textTheme.headline2,
+      ),
+    );
     children.addAll(
       sonstigeFehlermeldungen.map<Widget>(
         (Fehler fehler) => FehlerlisteEintrag(fehler: fehler),

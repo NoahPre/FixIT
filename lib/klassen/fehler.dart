@@ -11,6 +11,20 @@ class Fehler {
     this.bild = "",
   });
 
+  factory Fehler.from(dynamic json) {
+    return Fehler(
+      id: json["id"]?.toString() ?? "",
+      datum: json["datum"]?.toString() ?? "",
+      raum: json["raum"]?.toString() ?? "",
+      beschreibung: json["beschreibung"]?.toString() ?? "",
+      gefixt: json["gefixt"]?.toString() ?? "",
+      fixer: json["fixer"]?.toString() ?? "",
+      gefixtDatum: json["gefixtDatum"]?.toString() ?? "",
+      kommentar: json["kommentar"]?.toString() ?? "",
+      bild: json["bild"]?.toString() ?? "",
+    );
+  }
+
   // was automatisch an die Fehlermeldung angehängt wird:
 
   /// wir benutzen als ID die uuid.v4() aus dem uuid Package von pub.dev

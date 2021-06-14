@@ -59,14 +59,7 @@ class FehlerlisteProvider with ChangeNotifier {
     // überschreibt fehlerliste mit den Werten aus der Datenbank
     fehlerliste = List.generate(jsonObjekt.length, (int index) {
       // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
-      return Fehler(
-        id: jsonObjekt[index]["id"],
-        datum: jsonObjekt[index]["datum"],
-        raum: jsonObjekt[index]["raum"],
-        beschreibung: jsonObjekt[index]["beschreibung"],
-        gefixt: jsonObjekt[index]["gefixt"],
-        bild: jsonObjekt[index]["bild"],
-      );
+      return Fehler.from(jsonObjekt[index]);
     });
     // fügt die geholten Fehler dem fehlerlisteController hinzu und aktualisiert damit das Widget Fehlerliste
     fehlerlisteSink.add(fehlerliste);
@@ -214,6 +207,7 @@ class FehlerlisteProvider with ChangeNotifier {
     var url =
         "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&token=$token";
     http.Response response = await http.get(Uri.parse(url));
+    print(response.body);
   }
 
   /// Löscht einen Fehler mit entferneFehler.php
