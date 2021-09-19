@@ -1,20 +1,19 @@
 // fehlerlisteProvider.dart
-import "../../imports.dart";
+import "package:fixit/imports.dart";
 import "package:http/http.dart" as http;
 import "package:image_picker/image_picker.dart";
-import 'package:crypto/crypto.dart';
 
 /// Dieser Provider enthält die Fehlerliste, die dem Benutzer angezeigt wird.
 ///
 /// Außerdem enthält er Methoden, mit denen man
 /// - neue Fehler hinzufügen kann
 /// - Fehler editieren kann
-///  - Fehler löschen kann
+/// - Fehler löschen kann
 class FehlerlisteProvider with ChangeNotifier {
   FehlerlisteProvider() {
+    holeToken();
     holeFehler();
     holeFehlermeldungenIDsUndZaehler();
-    berechneToken();
   }
 
   /// Token zur Authentifizierung
@@ -46,7 +45,7 @@ class FehlerlisteProvider with ChangeNotifier {
 
   // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
   Future<void> holeFehler() async {
-    var url = 'https://www.icanfixit.eu/gibAlleFehler.php';
+    var url = 'https://www.icanfixit.eu/gibAlleFehler.php?token=$token';
     var jsonObjekt = [];
     try {
       http.Response response = await http.get(Uri.parse(url));
@@ -77,10 +76,9 @@ class FehlerlisteProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> berechneToken() async {
+  Future<void> holeToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String passwort = sharedPreferences.getString("passwort") ?? "";
-    token = sha256.convert(utf8.encode(passwort)).toString();
+    token = sharedPreferences.getString("token") ?? "";
   }
 
   /// Sendet den übergebenen Fehler ans Backend
@@ -206,8 +204,7 @@ class FehlerlisteProvider with ChangeNotifier {
     // die URL, die aufgerufen werden muss (mit den Argumenten implementiert)
     var url =
         "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&token=$token";
-    http.Response response = await http.get(Uri.parse(url));
-    print(response.body);
+    await http.get(Uri.parse(url));
   }
 
   /// Löscht einen Fehler mit entferneFehler.php
@@ -218,7 +215,7 @@ class FehlerlisteProvider with ChangeNotifier {
   }) async {
     var url =
         "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName&token=$token";
-    http.Response response = await http.get(Uri.parse(url));
+    await http.get(Uri.parse(url));
   }
 
   void dispose() {
@@ -226,7 +223,7 @@ class FehlerlisteProvider with ChangeNotifier {
     fehlerlisteController.close();
   }
 
-  /// Speichert die ID einer Fehlermeldung, wenn ein Fehler gemeldet wurde
+  /// Speichert die ID einer Fehlermeldung lokal auf dem Gerät, wenn ein Fehler gemeldet wurde
   Future<void> speichereFehlerID({required String neueID}) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     List<String>? idsList =

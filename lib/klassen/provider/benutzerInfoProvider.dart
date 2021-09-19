@@ -3,7 +3,12 @@ import "../../imports.dart";
 import "package:http/http.dart" as http;
 import 'package:crypto/crypto.dart';
 
-// für eine Erklärung der Provider siehe Dokumentation/Provider.md
+/// Dieser Provider enthält die Informationen über den Benutzer, so etwa
+/// - ob der Benutzer Fehlermelder oder -beheber ist
+/// - das Authentifizierungstoken
+/// - bald: die Institution des Benutzers
+///
+/// für eine Erklärung der Provider siehe Dokumentation/Provider.md
 class BenutzerInfoProvider with ChangeNotifier {
   BenutzerInfoProvider() {
     holeUserInformationUndAuthentifiziere();
@@ -54,20 +59,22 @@ class BenutzerInfoProvider with ChangeNotifier {
     istAuthentifiziert = false;
   }
 
-  /// überschreibt die gespeicherten Werte in sharedPreferences mit den gegebenen Werten
+  /// überschreibt die gespeicherten Werte in sharedPreferences mit den gegebenen Werten und berechnet das Authentifizierungs Token
   Future<void> ueberschreibeUserInformation({
     required bool istFehlermelderInFunktion,
     required String passwortInFunktion,
   }) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     istFehlermelder = istFehlermelderInFunktion;
+    String tokenInFunktion =
+        sha256.convert(utf8.encode(passwortInFunktion)).toString();
     sharedPreferences.setBool(
       "istFehlermelder",
       istFehlermelderInFunktion,
     );
     sharedPreferences.setString(
-      "passwort",
-      passwortInFunktion,
+      "token",
+      tokenInFunktion,
     );
     notifyListeners();
   }
@@ -76,8 +83,7 @@ class BenutzerInfoProvider with ChangeNotifier {
   Future<bool> authentifizierung() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     bool istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
-    String passwort = sharedPreferences.getString("passwort") ?? "";
-    var tokenInFunktion = sha256.convert(utf8.encode(passwort));
+    String tokenInFunktion = sharedPreferences.getString("token") ?? "";
     try {
       // schickt eine Anfrage mit den folgenden Informationen an den Server:
       // - ob der Benutzer Fehlermelder ist
@@ -116,7 +122,6 @@ class BenutzerInfoProvider with ChangeNotifier {
     http.Response response = await http.get(Uri.parse(url));
     print("response: " + response.body);
     // überprüft die Ausgabe des Scripts
-    // TODO: warum wird hier von authentifizierung.php immer ein s mit ausgegeben
     if (response.body == "1") {
       return true;
     } else {

@@ -1,4 +1,6 @@
 // gemeldeteFehler.dart
+import 'package:flutter/material.dart';
+
 import '../../imports.dart';
 
 /// Startseite der App
@@ -105,9 +107,11 @@ class GemeldeteFehler extends StatelessWidget {
                       appBarHoehe: appBar.preferredSize.height,
                     )
                   // Ladedonut in der Mitte der Seite mit Option zum neuladen
-                  : Builder(
-                      builder: (BuildContext currentContext) =>
-                          RefreshIndicator(
+                  : Builder(builder: (BuildContext currentContext) {
+                      WidgetsBinding.instance?.addPostFrameCallback((_) =>
+                          _ueberpruefeInternetVerbindung(
+                              currentContext: currentContext));
+                      return RefreshIndicator(
                         onRefresh: () async {
                           if (await _ueberpruefeInternetVerbindung(
                                 currentContext: currentContext,
@@ -134,8 +138,8 @@ class GemeldeteFehler extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ),
-                    ),
+                      );
+                    }),
             ),
           ),
         );

@@ -78,7 +78,7 @@ class Seitenmenue extends StatelessWidget {
                                 children: [
                                   Container(
                                     width: 180.0,
-                                    child: Text("Behobene Fehler:"),
+                                    child: Text("Gefixte Fehler:"),
                                   ),
                                   Align(
                                     alignment: Alignment.centerRight,
