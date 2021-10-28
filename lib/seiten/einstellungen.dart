@@ -64,21 +64,19 @@ class _EinstellungenState extends State<Einstellungen> {
                           )
                         ],
                       )
-                    : Container()
+                    : Container(),
+                Divider(),
+                ListTile(
+                  title: Text("Abmelden"),
+                  trailing: Icon(Icons.arrow_forward_ios),
+                  onTap: () async {
+                    await benutzerInfoProvider.benutzerMeldetSichAb();
+                    Navigator.of(context).pop();
+                    setState(() {});
+                  },
+                )
               ],
             )),
-            // wird nur im Debug Modus ausgeführt
-            //TODO: machen dass das hier funktioniert
-            kDebugMode
-                ? ListTile(
-                    title: Text("Abmelden"),
-                    trailing: Icon(Icons.arrow_forward_ios),
-                    onTap: () async {
-                      await benutzerInfoProvider.benutzerMeldetSichAb();
-                      setState(() {});
-                    },
-                  )
-                : Container(),
           ],
         ),
       ),
