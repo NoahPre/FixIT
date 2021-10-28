@@ -13,6 +13,8 @@ class _EinstellungenState extends State<Einstellungen> {
     ThemeData thema = Theme.of(context);
     BenutzerInfoProvider benutzerInfoProvider =
         Provider.of<BenutzerInfoProvider>(context);
+    FehlerlisteProvider fehlerlisteProvider =
+        Provider.of<FehlerlisteProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -37,6 +39,34 @@ class _EinstellungenState extends State<Einstellungen> {
                 ),
               ),
             ),
+            Card(
+                child: Column(
+              children: [
+                ListTile(
+                  title: Text("Gemeldete Fehler Zähler zurücksetzen"),
+                  trailing: Icon(Icons.arrow_forward_ios),
+                  onTap: () async {
+                    await fehlerlisteProvider
+                        .setzeFehlermeldungsZaehlerZurueck();
+                  },
+                ),
+                benutzerInfoProvider.istFehlermelder == false
+                    ? Column(
+                        children: [
+                          Divider(),
+                          ListTile(
+                            title: Text("Gefixte Fehler Zähler zurücksetzen"),
+                            trailing: Icon(Icons.arrow_forward_ios),
+                            onTap: () async {
+                              await fehlerlisteProvider
+                                  .setzeFehlerbehebungsZaehlerZurueck();
+                            },
+                          )
+                        ],
+                      )
+                    : Container()
+              ],
+            )),
             // wird nur im Debug Modus ausgeführt
             //TODO: machen dass das hier funktioniert
             kDebugMode

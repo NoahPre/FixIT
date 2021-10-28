@@ -248,4 +248,18 @@ class FehlerlisteProvider with ChangeNotifier {
     await sharedPreferences.setInt(
         "fehlerbehebungsZaehler", fehlerbehebungsZaehler);
   }
+
+  Future<void> setzeFehlermeldungsZaehlerZurueck() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    fehlermeldungsZaehler = 0;
+    await sharedPreferences.setInt(
+        "fehlermeldungsZaehler", fehlermeldungsZaehler);
+  }
+
+  Future<void> setzeFehlerbehebungsZaehlerZurueck() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    fehlerbehebungsZaehler = 0;
+    await sharedPreferences.setInt(
+        "fehlerbehebungsZaehler", fehlerbehebungsZaehler);
+  }
 }

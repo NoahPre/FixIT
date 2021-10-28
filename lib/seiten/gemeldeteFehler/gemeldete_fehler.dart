@@ -98,49 +98,47 @@ class GemeldeteFehler extends StatelessWidget {
             aktuelleSeite: "/",
           ),
           floatingActionButton: FABHome(),
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-              child: snapshot.hasData && snapshot.data == true
-                  // Liste mit gemeldeten Fehlern
-                  ? Fehlerliste(
-                      appBarHoehe: appBar.preferredSize.height,
-                    )
-                  // Ladedonut in der Mitte der Seite mit Option zum neuladen
-                  : Builder(builder: (BuildContext currentContext) {
-                      WidgetsBinding.instance?.addPostFrameCallback((_) =>
-                          _ueberpruefeInternetVerbindung(
-                              currentContext: currentContext));
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          if (await _ueberpruefeInternetVerbindung(
-                                currentContext: currentContext,
-                              ) ==
-                              true) {
-                            erneutAuthentifizieren();
-                          }
-                        },
-                        color: thema.colorScheme.primary,
-                        child: ListView(
-                          children: <Widget>[
-                            Container(
-                              height: mediaQueryData.size.height -
-                                  appBar.preferredSize.height -
-                                  mediaQueryData.padding.top -
-                                  mediaQueryData.padding.bottom,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    thema.colorScheme.primary,
-                                  ),
+          body: Padding(
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+            child: snapshot.hasData && snapshot.data == true
+                // Liste mit gemeldeten Fehlern
+                ? Fehlerliste(
+                    appBarHoehe: appBar.preferredSize.height,
+                  )
+                // Ladedonut in der Mitte der Seite mit Option zum neuladen
+                : Builder(builder: (BuildContext currentContext) {
+                    WidgetsBinding.instance?.addPostFrameCallback((_) =>
+                        _ueberpruefeInternetVerbindung(
+                            currentContext: currentContext));
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        if (await _ueberpruefeInternetVerbindung(
+                              currentContext: currentContext,
+                            ) ==
+                            true) {
+                          erneutAuthentifizieren();
+                        }
+                      },
+                      color: thema.colorScheme.primary,
+                      child: ListView(
+                        children: <Widget>[
+                          Container(
+                            height: mediaQueryData.size.height -
+                                appBar.preferredSize.height -
+                                mediaQueryData.padding.top -
+                                mediaQueryData.padding.bottom,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  thema.colorScheme.primary,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      );
-                    }),
-            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
           ),
         );
       },

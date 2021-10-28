@@ -39,7 +39,8 @@ class UeberUns extends StatelessWidget {
       drawer: Seitenmenue(
         aktuelleSeite: "/ueberUns",
       ),
-      body: SafeArea(
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
             8.0,
