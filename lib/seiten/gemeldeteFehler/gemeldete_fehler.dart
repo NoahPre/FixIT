@@ -90,8 +90,11 @@ class GemeldeteFehler extends StatelessWidget {
       initialData: benutzerInfoProvider.istAuthentifiziert,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.data == false) {
+          fehlerlisteProvider.fehlerliste = [];
           return Registrierung();
         }
+        fehlerlisteProvider.schule = benutzerInfoProvider.schule;
+        fehlerlisteProvider.holeFehler();
         return Scaffold(
           appBar: appBar,
           drawer: const Seitenmenue(

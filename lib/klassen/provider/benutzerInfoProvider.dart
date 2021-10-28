@@ -17,6 +17,9 @@ class BenutzerInfoProvider with ChangeNotifier {
   /// ob der Benutzer als Fehlermelder oder Fehlerbeheber angemeldet ist
   bool istFehlermelder = true;
 
+  /// die Schule des Benutzers
+  String schule = "";
+
   /// ob die Authentifizierung mit den in SharedPreferences gespeicherten Werten erfolgreich war
   bool? istAuthentifiziert;
 
@@ -31,6 +34,7 @@ class BenutzerInfoProvider with ChangeNotifier {
   Future<void> holeUserInformationUndAuthentifiziere() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
+    schule = sharedPreferences.getString("schule") ?? "";
     istAuthentifiziert = await authentifizierung();
   }
 
@@ -40,10 +44,12 @@ class BenutzerInfoProvider with ChangeNotifier {
   /// aktualisiert authentifizierungStream
   Future<void> benutzerRegistriertSich({
     required bool istFehlermelderInFunktion,
+    required String schuleInFunktion,
     required String passwortInFunktion,
   }) async {
     await ueberschreibeUserInformation(
       istFehlermelderInFunktion: istFehlermelderInFunktion,
+      schuleInFunktion: schuleInFunktion,
       passwortInFunktion: passwortInFunktion,
     );
     istAuthentifiziert = true;
@@ -54,7 +60,11 @@ class BenutzerInfoProvider with ChangeNotifier {
   /// Meldet den Benutzer ab.
   Future<void> benutzerMeldetSichAb() async {
     await ueberschreibeUserInformation(
-        istFehlermelderInFunktion: true, passwortInFunktion: "");
+      istFehlermelderInFunktion: true,
+      schuleInFunktion: "",
+      passwortInFunktion: "",
+      andereWerteZuruecksetzen: true,
+    );
     authentifizierungSink.add(false);
     istAuthentifiziert = false;
   }
@@ -62,10 +72,13 @@ class BenutzerInfoProvider with ChangeNotifier {
   /// überschreibt die gespeicherten Werte in sharedPreferences mit den gegebenen Werten und berechnet das Authentifizierungs Token
   Future<void> ueberschreibeUserInformation({
     required bool istFehlermelderInFunktion,
+    required String schuleInFunktion,
     required String passwortInFunktion,
+    bool andereWerteZuruecksetzen = false,
   }) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     istFehlermelder = istFehlermelderInFunktion;
+    schule = schuleInFunktion;
     String tokenInFunktion =
         sha256.convert(utf8.encode(passwortInFunktion)).toString();
     sharedPreferences.setBool(
@@ -73,9 +86,18 @@ class BenutzerInfoProvider with ChangeNotifier {
       istFehlermelderInFunktion,
     );
     sharedPreferences.setString(
+      "schule",
+      schuleInFunktion,
+    );
+    sharedPreferences.setString(
       "token",
       tokenInFunktion,
     );
+    if (andereWerteZuruecksetzen == true) {
+      sharedPreferences.setStringList("eigeneFehlermeldungenIDs", []);
+      sharedPreferences.setInt("fehlermeldungsZaehler", 0);
+      sharedPreferences.setInt("fehlerbehebungsZaehler", 0);
+    }
     notifyListeners();
   }
 
@@ -83,13 +105,14 @@ class BenutzerInfoProvider with ChangeNotifier {
   Future<bool> authentifizierung() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     bool istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
+    String schule = sharedPreferences.getString("schule") ?? "";
     String tokenInFunktion = sharedPreferences.getString("token") ?? "";
     try {
       // schickt eine Anfrage mit den folgenden Informationen an den Server:
       // - ob der Benutzer Fehlermelder ist
       // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
       String url =
-          "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelder.toString()}&token=${tokenInFunktion.toString()}";
+          "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelder.toString()}&schule=${schule.toString()}&token=${tokenInFunktion.toString()}";
       http.Response response = await http.get(Uri.parse(url));
       // überprüft die Ausgabe des Scripts
       if (response.body == "1") {
@@ -110,15 +133,15 @@ class BenutzerInfoProvider with ChangeNotifier {
   // wird in registrierung.dart benutzt, um anfangs das eingegebene Passwort zu überprüfen
   Future<bool> authentifizierungMitWerten({
     required bool istFehlermelderInFunktion,
+    required String schuleInFunktion,
     required String passwortInFunktion,
   }) async {
-    print(istFehlermelderInFunktion.toString());
     var token = sha256.convert(utf8.encode(passwortInFunktion));
     // schickt eine Anfrage mit den folgenden Informationen an den Server:
     // - ob der Benutzer Fehlermelder ist
     // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
     String url =
-        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelderInFunktion.toString()}&token=$token";
+        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelderInFunktion.toString()}&schule=${schuleInFunktion.toString()}&token=$token";
     http.Response response = await http.get(Uri.parse(url));
     print("response: " + response.body);
     // überprüft die Ausgabe des Scripts

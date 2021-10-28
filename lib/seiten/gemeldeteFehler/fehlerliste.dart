@@ -105,7 +105,8 @@ class _FehlerlisteState extends State<Fehlerliste> {
         Provider.of<FehlerlisteProvider>(context);
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     ThemeData thema = Theme.of(context);
-
+    print("built");
+    print(fehlerlisteProvider.fehlerliste);
     // aktualisiert die Liste
     Future<void> refresh() async {
       if (fehlerlisteProvider.fehlerliste != null) {

@@ -57,6 +57,10 @@ class Seitenmenue extends StatelessWidget {
                         const SizedBox(
                           height: 5.0,
                         ),
+                        Text("Schule: " + benutzerInfoProvider.schule),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
                         Row(
                           children: [
                             Container(

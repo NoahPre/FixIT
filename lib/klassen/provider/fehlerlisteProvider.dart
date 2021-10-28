@@ -11,10 +11,13 @@ import "package:image_picker/image_picker.dart";
 /// - Fehler löschen kann
 class FehlerlisteProvider with ChangeNotifier {
   FehlerlisteProvider() {
-    holeToken();
+    holeSchuleUndToken();
     holeFehler();
     holeFehlermeldungenIDsUndZaehler();
   }
+
+  /// Schule des Benutzers
+  String schule = "";
 
   /// Token zur Authentifizierung
   String token = "";
@@ -43,9 +46,16 @@ class FehlerlisteProvider with ChangeNotifier {
   /// Zähler, der bei Fehlerbehebern die Anzahl an gelöschten (behobenen) Fehlermeldungen^ speichert
   int fehlerbehebungsZaehler = 0;
 
+  Future<void> holeSchuleUndToken() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    schule = sharedPreferences.getString("schule") ?? "";
+    token = sharedPreferences.getString("token") ?? "";
+  }
+
   // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
   Future<void> holeFehler() async {
-    var url = 'https://www.icanfixit.eu/gibAlleFehler.php?token=$token';
+    var url =
+        'https://www.icanfixit.eu/gibAlleFehler.php?schule=$schule&token=$token';
     var jsonObjekt = [];
     try {
       http.Response response = await http.get(Uri.parse(url));
@@ -74,11 +84,6 @@ class FehlerlisteProvider with ChangeNotifier {
     fehlerbehebungsZaehler =
         sharedPreferences.getInt("fehlerbehebungsZaehler") ?? 0;
     notifyListeners();
-  }
-
-  Future<void> holeToken() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    token = sharedPreferences.getString("token") ?? "";
   }
 
   /// Sendet den übergebenen Fehler ans Backend
@@ -203,7 +208,7 @@ class FehlerlisteProvider with ChangeNotifier {
   }) async {
     // die URL, die aufgerufen werden muss (mit den Argumenten implementiert)
     var url =
-        "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&token=$token";
+        "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&schule=$schule&token=$token";
     await http.get(Uri.parse(url));
   }
 
@@ -214,7 +219,7 @@ class FehlerlisteProvider with ChangeNotifier {
     required bool istFehlermelder,
   }) async {
     var url =
-        "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName&token=$token";
+        "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName&schule=$schule&token=$token";
     await http.get(Uri.parse(url));
   }
 

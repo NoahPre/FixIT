@@ -18,6 +18,10 @@ class _RegistrierungState extends State<Registrierung> {
   /// TextEditingController für das Passwort Textfeld
   final TextEditingController _passwortController = TextEditingController();
 
+  /// TextEditingController für das Schule Textfeld
+  final TextEditingController _schuleController = TextEditingController()
+    ..text = "mtg";
+
   /// boolean Wert, der speichert, ob das Passwort sichtbar oder verdeckt ist
   bool _passwortIstVerdeckt = true;
 
@@ -64,7 +68,7 @@ class _RegistrierungState extends State<Registrierung> {
     }
   }
 
-  /// zeigt eine Alert Dialog mit Hilfe zum Passwort
+  /// zeigt einen Alert Dialog mit Hilfe zum Passwort
   Future<void> _zeigePasswortHilfe(
       {required BuildContext currentContext}) async {
     await showDialog(
@@ -74,27 +78,53 @@ class _RegistrierungState extends State<Registrierung> {
         content: Text(
             "Das Passwort sollte Ihnen entweder via E-Mail oder von einem unserer Administratoren genannt worden sein"),
         actions: <Widget>[
-          FlatButton(
-            child: Text("OK"),
-            onPressed: () => Navigator.pop(context),
+          Center(
+            child: TextButton(
+              child: Text("OK"),
+              onPressed: () => Navigator.pop(context),
+            ),
           )
         ],
       ),
     );
   }
 
-  Future<void> _passwortIstFalsch(
+  /// zeigt einen Alert Dialog mit Hilfe zum Schul-Textfeld
+  Future<void> _zeigeSchuleHilfe({required BuildContext currentContext}) async {
+    await showDialog(
+      context: currentContext,
+      builder: (context) => AlertDialog(
+        title: Text("Schulauswahl Hilfe"),
+        content: Text("Geben Sie bitte das Kürzel Ihrer Schule an: \n\n" +
+            "Maria Theresia Gymnasium -> mtg"),
+        actions: <Widget>[
+          Center(
+            child: TextButton(
+              child: Text("OK"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> _registrierungFehlgeschlagen(
       {required BuildContext currentContext}) async {
     await showDialog(
       context: currentContext,
       builder: (context) => AlertDialog(
-        title: Text("Authentifizierung fehlgeschlagen"),
+        title: Text("Registrierung fehlgeschlagen"),
         content: Text(
-            "Das eingegebene Passwort für den angegebenen Benutzer ist falsch. Bitte versuchen Sie es erneut."),
+          "Das eingegebene Passwort für die angegebene Schule und die angegebene Rolle ist falsch. Bitte versuchen Sie es erneut.",
+          textAlign: TextAlign.justify,
+        ),
         actions: <Widget>[
-          FlatButton(
-            child: Text("OK"),
-            onPressed: () => Navigator.pop(context),
+          Center(
+            child: TextButton(
+              child: Text("OK"),
+              onPressed: () => Navigator.pop(context),
+            ),
           )
         ],
       ),
@@ -122,12 +152,14 @@ class _RegistrierungState extends State<Registrierung> {
     /// überprüft das gegebene Passwort
     Future<bool> _ueberpruefePasswort({
       required bool istFehlermelderInFunktion,
+      required String schuleInFunktion,
       required String passwortInFunktion,
     }) async {
       // sendet eine Anfrage mit den eingegebenen Informationen an den Server
       bool istAuthentifiziert =
           await benutzerInfoProvider.authentifizierungMitWerten(
         istFehlermelderInFunktion: istFehlermelderInFunktion,
+        schuleInFunktion: schuleInFunktion,
         passwortInFunktion: passwortInFunktion,
       );
 
@@ -135,33 +167,34 @@ class _RegistrierungState extends State<Registrierung> {
     }
 
     /// wird ausgeführt, wenn das eingegebene Passwort erfolgreich von _ueberpruefePasswort() geprüft wurde
-    Future<void> _userRegistriertSich() async {
+    Future<void> _benutzerRegistriertSich() async {
       // macht eine Anfangsüberprüfung
       if (_formKey.currentState!.validate()) {
         bool istFehlermelderInFunktion;
+        String schuleInFunktion = _schuleController.text.toLowerCase();
         String passwortInFunktion = _passwortController.text;
 
         if (_radioGroupValue == 0) {
           istFehlermelderInFunktion = true;
-          print("true");
         } else {
           istFehlermelderInFunktion = false;
-          print("false");
         }
         // überprüft das eingegebene Passwort
         if (await _ueberpruefePasswort(
           istFehlermelderInFunktion: istFehlermelderInFunktion,
+          schuleInFunktion: schuleInFunktion,
           passwortInFunktion: passwortInFunktion,
         )) {
-          print("userRegistriertSich");
+          print("benutzerRegistriertSich");
           await benutzerInfoProvider.benutzerRegistriertSich(
             istFehlermelderInFunktion: istFehlermelderInFunktion,
+            schuleInFunktion: schuleInFunktion,
             passwortInFunktion: passwortInFunktion,
           );
         }
         // informiert den Benutzer, dass sein Passwort falsch ist
         else {
-          await _passwortIstFalsch(currentContext: context);
+          await _registrierungFehlgeschlagen(currentContext: context);
         }
       }
     }
@@ -226,11 +259,45 @@ class _RegistrierungState extends State<Registrierung> {
                       Flexible(
                         child: TextFormField(
                           decoration: InputDecoration(
-                            labelText: "Masterpasswort",
+                            labelText: "Schule",
                             labelStyle: TextStyle(
                               color: thema.colorScheme.primary,
                             ),
-                            hintText: "Sollte Ihnen mitgeteilt worden sein",
+                            hintText: "Der Name Ihrer Schule",
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: thema.colorScheme.primary),
+                            ),
+                          ),
+                          autocorrect: false,
+                          maxLines: 1,
+                          controller: _schuleController,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.help,
+                          color: Colors.black,
+                        ),
+                        tooltip: "Schulauswahl Hilfe",
+                        onPressed: () => _zeigeSchuleHilfe(
+                          currentContext: context,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8.0,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "Passwort",
+                            labelStyle: TextStyle(
+                              color: thema.colorScheme.primary,
+                            ),
                             focusedBorder: UnderlineInputBorder(
                               borderSide:
                                   BorderSide(color: thema.colorScheme.primary),
@@ -273,15 +340,15 @@ class _RegistrierungState extends State<Registrierung> {
                           Icons.help,
                           color: Colors.black,
                         ),
-                        tooltip: "Masterpasswort Hilfe",
+                        tooltip: "Passwort Hilfe",
                         onPressed: () => _zeigePasswortHilfe(
                           currentContext: context,
                         ),
-                      )
+                      ),
                     ],
                   ),
                   const SizedBox(
-                    height: 20.0,
+                    height: 16.0,
                   ),
                   // Datenschutz Erklärung Disclaimer
                   RichText(
@@ -322,7 +389,7 @@ class _RegistrierungState extends State<Registrierung> {
                         borderRadius: BorderRadius.circular(18.0),
                       ),
                     ),
-                    onPressed: () => _userRegistriertSich(),
+                    onPressed: () => _benutzerRegistriertSich(),
                   ),
                 ],
               ),
