@@ -50,41 +50,6 @@ class GemeldeteFehler extends StatelessWidget {
       return;
     }
 
-    Future<bool> _ueberpruefeInternetVerbindung(
-        {required BuildContext currentContext}) async {
-      try {
-        final result = await InternetAddress.lookup("google.com");
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          return true;
-        }
-        // probably unnecessary
-        else {
-          zeigeSnackBarNachricht(
-            nachricht: "Nicht mit dem Internet verbunden",
-            context: currentContext,
-            istError: true,
-          );
-
-          return false;
-        }
-      } on SocketException catch (error) {
-        print(error.toString());
-        zeigeSnackBarNachricht(
-          nachricht: "Nicht mit dem Internet verbunden",
-          context: currentContext,
-          istError: true,
-        );
-        return false;
-      } catch (error) {
-        zeigeSnackBarNachricht(
-          nachricht: error.toString(),
-          context: currentContext,
-          istError: true,
-        );
-        return false;
-      }
-    }
-
     return StreamBuilder<bool>(
       stream: benutzerInfoProvider.authentifizierungStream as Stream<bool>?,
       initialData: benutzerInfoProvider.istAuthentifiziert,
@@ -111,11 +76,11 @@ class GemeldeteFehler extends StatelessWidget {
                 // Ladedonut in der Mitte der Seite mit Option zum neuladen
                 : Builder(builder: (BuildContext currentContext) {
                     WidgetsBinding.instance?.addPostFrameCallback((_) =>
-                        _ueberpruefeInternetVerbindung(
+                        ueberpruefeInternetVerbindung(
                             currentContext: currentContext));
                     return RefreshIndicator(
                       onRefresh: () async {
-                        if (await _ueberpruefeInternetVerbindung(
+                        if (await ueberpruefeInternetVerbindung(
                               currentContext: currentContext,
                             ) ==
                             true) {

@@ -167,7 +167,7 @@ class Seitenmenue extends StatelessWidget {
                   Navigator.pop(context);
                 } else {
                   Navigator.pop(context);
-                  Navigator.pushNamed(context, "/einstellungen");
+                  Navigator.pushReplacementNamed(context, "/einstellungen");
                 }
               }),
           Divider(),

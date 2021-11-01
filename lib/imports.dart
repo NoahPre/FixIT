@@ -37,6 +37,7 @@ export "package:fixit/seiten/fehlersichtung/bild_detailansicht.dart";
 export "package:fixit/widgets/fertig_button.dart";
 export 'package:fixit/widgets/seiten_menue.dart';
 export "package:fixit/widgets/zeige_snackbar_nachricht.dart";
+export "package:fixit/widgets/internetverbindungs_check.dart";
 
 // Klassen:
 export "package:fixit/klassen/fehler.dart";

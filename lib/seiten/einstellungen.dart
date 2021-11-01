@@ -71,7 +71,10 @@ class _EinstellungenState extends State<Einstellungen> {
                   trailing: Icon(Icons.arrow_forward_ios),
                   onTap: () async {
                     await benutzerInfoProvider.benutzerMeldetSichAb();
-                    Navigator.of(context).pop();
+
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        "/registrierung", (route) => false);
+
                     setState(() {});
                   },
                 )

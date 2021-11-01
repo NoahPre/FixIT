@@ -114,7 +114,10 @@ class _RegistrierungState extends State<Registrierung> {
     await showDialog(
       context: currentContext,
       builder: (context) => AlertDialog(
-        title: Text("Registrierung fehlgeschlagen"),
+        title: Text(
+          "Registrierung fehlgeschlagen",
+          textAlign: TextAlign.center,
+        ),
         content: Text(
           "Das eingegebene Passwort für die angegebene Schule und die angegebene Rolle ist falsch. Bitte versuchen Sie es erneut.",
           textAlign: TextAlign.justify,
@@ -150,24 +153,37 @@ class _RegistrierungState extends State<Registrierung> {
 
     // diese beiden Funktionen müssen in build() stehen, da sie auf benutzerInfoProvider zugreifen
     /// überprüft das gegebene Passwort
-    Future<bool> _ueberpruefePasswort({
+    Future<String> _ueberpruefePasswort({
       required bool istFehlermelderInFunktion,
       required String schuleInFunktion,
       required String passwortInFunktion,
+      required BuildContext currentContext,
     }) async {
-      // sendet eine Anfrage mit den eingegebenen Informationen an den Server
-      bool istAuthentifiziert =
-          await benutzerInfoProvider.authentifizierungMitWerten(
-        istFehlermelderInFunktion: istFehlermelderInFunktion,
-        schuleInFunktion: schuleInFunktion,
-        passwortInFunktion: passwortInFunktion,
-      );
-
-      return istAuthentifiziert;
+      try {
+        // sendet eine Anfrage mit den eingegebenen Informationen an den Server
+        bool istAuthentifiziert =
+            await benutzerInfoProvider.authentifizierungMitWerten(
+          istFehlermelderInFunktion: istFehlermelderInFunktion,
+          schuleInFunktion: schuleInFunktion,
+          passwortInFunktion: passwortInFunktion,
+        );
+        return istAuthentifiziert.toString();
+      } on SocketException catch (_) {
+        zeigeSnackBarNachricht(
+          nachricht: "Nicht mit dem Internet verbunden",
+          context: currentContext,
+          istError: true,
+        );
+        return "no_internet";
+      } catch (error) {
+        print(error.toString());
+        return "error";
+      }
     }
 
     /// wird ausgeführt, wenn das eingegebene Passwort erfolgreich von _ueberpruefePasswort() geprüft wurde
-    Future<void> _benutzerRegistriertSich() async {
+    Future<void> _benutzerRegistriertSich(
+        {required BuildContext currentContext}) async {
       // macht eine Anfangsüberprüfung
       if (_formKey.currentState!.validate()) {
         bool istFehlermelderInFunktion;
@@ -180,21 +196,26 @@ class _RegistrierungState extends State<Registrierung> {
           istFehlermelderInFunktion = false;
         }
         // überprüft das eingegebene Passwort
-        if (await _ueberpruefePasswort(
+        switch (await _ueberpruefePasswort(
           istFehlermelderInFunktion: istFehlermelderInFunktion,
           schuleInFunktion: schuleInFunktion,
           passwortInFunktion: passwortInFunktion,
+          currentContext: currentContext,
         )) {
-          print("benutzerRegistriertSich");
-          await benutzerInfoProvider.benutzerRegistriertSich(
-            istFehlermelderInFunktion: istFehlermelderInFunktion,
-            schuleInFunktion: schuleInFunktion,
-            passwortInFunktion: passwortInFunktion,
-          );
-        }
-        // informiert den Benutzer, dass sein Passwort falsch ist
-        else {
-          await _registrierungFehlgeschlagen(currentContext: context);
+          case "true":
+            print("benutzerRegistriertSich");
+            await benutzerInfoProvider.benutzerRegistriertSich(
+              istFehlermelderInFunktion: istFehlermelderInFunktion,
+              schuleInFunktion: schuleInFunktion,
+              passwortInFunktion: passwortInFunktion,
+            );
+            break;
+          case "false":
+            // informiert den Benutzer, dass sein Passwort falsch ist
+            await _registrierungFehlgeschlagen(currentContext: context);
+            break;
+          default:
+            break;
         }
       }
     }
@@ -373,24 +394,27 @@ class _RegistrierungState extends State<Registrierung> {
                   const SizedBox(
                     height: 20.0,
                   ),
-                  ElevatedButton(
-                    child: Text(
-                      "Registrieren",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    style: TextButton.styleFrom(
-                      backgroundColor: thema.colorScheme.primary,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: thema.colorScheme.primary,
-                        ),
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                    ),
-                    onPressed: () => _benutzerRegistriertSich(),
-                  ),
+                  Builder(
+                      builder: (BuildContext currentContext) => ElevatedButton(
+                            child: Text(
+                              "Registrieren",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            style: TextButton.styleFrom(
+                              backgroundColor: thema.colorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  color: thema.colorScheme.primary,
+                                ),
+                                borderRadius: BorderRadius.circular(18.0),
+                              ),
+                            ),
+                            onPressed: () => _benutzerRegistriertSich(
+                              currentContext: currentContext,
+                            ),
+                          )),
                 ],
               ),
             ),

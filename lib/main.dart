@@ -49,6 +49,7 @@ class FixIt extends StatelessWidget {
           "/statistiken": (context) => Statistiken(),
           "/einstellungen": (context) => Einstellungen(),
           "/ueberUns": (context) => UeberUns(),
+          "/registrierung": (context) => Registrierung(),
         },
       ),
     );
