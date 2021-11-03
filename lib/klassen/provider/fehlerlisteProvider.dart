@@ -209,7 +209,8 @@ class FehlerlisteProvider with ChangeNotifier {
     // die URL, die aufgerufen werden muss (mit den Argumenten implementiert)
     var url =
         "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&schule=$schule&token=$token";
-    await http.get(Uri.parse(url));
+    var answer = await http.get(Uri.parse(url));
+    print(answer.body.toString());
   }
 
   /// Löscht einen Fehler mit entferneFehler.php
@@ -220,7 +221,8 @@ class FehlerlisteProvider with ChangeNotifier {
   }) async {
     var url =
         "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName&schule=$schule&token=$token";
-    await http.get(Uri.parse(url));
+    var answer = await http.get(Uri.parse(url));
+    print(answer.body.toString());
   }
 
   void dispose() {

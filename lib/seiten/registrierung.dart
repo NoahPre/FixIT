@@ -109,8 +109,10 @@ class _RegistrierungState extends State<Registrierung> {
     );
   }
 
-  Future<void> _registrierungFehlgeschlagen(
-      {required BuildContext currentContext}) async {
+  Future<void> _registrierungFehlgeschlagen({
+    required BuildContext currentContext,
+    required String anzuzeigenderText,
+  }) async {
     await showDialog(
       context: currentContext,
       builder: (context) => AlertDialog(
@@ -119,7 +121,7 @@ class _RegistrierungState extends State<Registrierung> {
           textAlign: TextAlign.center,
         ),
         content: Text(
-          "Das eingegebene Passwort für die angegebene Schule und die angegebene Rolle ist falsch. Bitte versuchen Sie es erneut.",
+          anzuzeigenderText + " Bitte versuchen Sie es erneut.",
           textAlign: TextAlign.justify,
         ),
         actions: <Widget>[
@@ -161,20 +163,20 @@ class _RegistrierungState extends State<Registrierung> {
     }) async {
       try {
         // sendet eine Anfrage mit den eingegebenen Informationen an den Server
-        bool istAuthentifiziert =
+        String istAuthentifiziert =
             await benutzerInfoProvider.authentifizierungMitWerten(
           istFehlermelderInFunktion: istFehlermelderInFunktion,
           schuleInFunktion: schuleInFunktion,
           passwortInFunktion: passwortInFunktion,
         );
-        return istAuthentifiziert.toString();
+        return istAuthentifiziert;
       } on SocketException catch (_) {
         zeigeSnackBarNachricht(
           nachricht: "Nicht mit dem Internet verbunden",
           context: currentContext,
           istError: true,
         );
-        return "no_internet";
+        return "keine_internetverbindung";
       } catch (error) {
         print(error.toString());
         return "error";
@@ -210,11 +212,24 @@ class _RegistrierungState extends State<Registrierung> {
               passwortInFunktion: passwortInFunktion,
             );
             break;
-          case "false":
-            // informiert den Benutzer, dass sein Passwort falsch ist
-            await _registrierungFehlgeschlagen(currentContext: context);
+          case "falsche_schule":
+            // informiert den Benutzer darüber, dass er das falsche Schulkürzel eingegeben hat
+            await _registrierungFehlgeschlagen(
+                currentContext: currentContext,
+                anzuzeigenderText:
+                    "Die angegebene Schule ist nicht bei FixIT registriert.");
+            break;
+          case "falsches_token":
+            // informiert den Benutzer darüber, dass er das falsche Passwort eingegeben hat
+            await _registrierungFehlgeschlagen(
+                currentContext: currentContext,
+                anzuzeigenderText:
+                    "Das angegebene Passwort für die ausgewählte Rolle ist falsch.");
             break;
           default:
+            await _registrierungFehlgeschlagen(
+                currentContext: currentContext,
+                anzuzeigenderText: "Etwas ist schiefgelaufen.");
             break;
         }
       }

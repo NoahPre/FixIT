@@ -84,17 +84,19 @@ class _FehlerlisteState extends State<Fehlerliste> {
         height: 20.0,
       ));
     }
-    children.add(
-      Text(
-        "Andere Fehlermeldungen:",
-        style: thema.textTheme.headline2,
-      ),
-    );
-    children.addAll(
-      sonstigeFehlermeldungen.map<Widget>(
-        (Fehler fehler) => FehlerlisteEintrag(fehler: fehler),
-      ),
-    );
+    if (sonstigeFehlermeldungen.length != 0) {
+      children.add(
+        Text(
+          "Andere Fehlermeldungen:",
+          style: thema.textTheme.headline2,
+        ),
+      );
+      children.addAll(
+        sonstigeFehlermeldungen.map<Widget>(
+          (Fehler fehler) => FehlerlisteEintrag(fehler: fehler),
+        ),
+      );
+    }
     return children;
   }
 

@@ -131,7 +131,7 @@ class BenutzerInfoProvider with ChangeNotifier {
 
   /// authentifiziert den Benutzer mit den gegebenen Werten
   // wird in registrierung.dart benutzt, um anfangs das eingegebene Passwort zu überprüfen
-  Future<bool> authentifizierungMitWerten({
+  Future<String> authentifizierungMitWerten({
     required bool istFehlermelderInFunktion,
     required String schuleInFunktion,
     required String passwortInFunktion,
@@ -146,9 +146,13 @@ class BenutzerInfoProvider with ChangeNotifier {
     print("response: " + response.body);
     // überprüft die Ausgabe des Scripts
     if (response.body == "1") {
-      return true;
+      return "true";
+    } else if (response.body == "falsche_schule") {
+      return "falsche_schule";
+    } else if (response.body == "falsches_token") {
+      return "falsches_token";
     } else {
-      return false;
+      return "false";
     }
   }
 

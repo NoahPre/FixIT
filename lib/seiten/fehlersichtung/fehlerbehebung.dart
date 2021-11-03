@@ -25,16 +25,20 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
     // das Datum in schön
     // TODO: evtl. das intelligenter lösen
     String datumInSchoen() {
-      String tag =
-          widget.fehler.datum.split("")[6] + widget.fehler.datum.split("")[7];
-      String monat =
-          widget.fehler.datum.split("")[4] + widget.fehler.datum.split("")[5];
-      String jahr = widget.fehler.datum.split("")[0] +
-          widget.fehler.datum.split("")[1] +
-          widget.fehler.datum.split("")[2] +
-          widget.fehler.datum.split("")[3];
-      String gesamt = tag + "." + monat + "." + jahr;
-      return gesamt;
+      try {
+        String tag =
+            widget.fehler.datum.split("")[6] + widget.fehler.datum.split("")[7];
+        String monat =
+            widget.fehler.datum.split("")[4] + widget.fehler.datum.split("")[5];
+        String jahr = widget.fehler.datum.split("")[0] +
+            widget.fehler.datum.split("")[1] +
+            widget.fehler.datum.split("")[2] +
+            widget.fehler.datum.split("")[3];
+        String gesamt = tag + "." + monat + "." + jahr;
+        return gesamt;
+      } catch (error) {
+        return "";
+      }
     }
 
     // TODO: ein richtiges Beheben von Fehlern einbauen
