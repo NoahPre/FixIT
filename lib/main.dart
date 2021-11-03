@@ -18,7 +18,9 @@ List<CameraDescription> cameras = [];
 
 class FixIT extends StatelessWidget {
   Widget build(BuildContext context) {
-    BenutzerInfoProvider benutzerInfoProvider = BenutzerInfoProvider();
+    FehlerlisteProvider fehlerlisteProvider = FehlerlisteProvider();
+    BenutzerInfoProvider benutzerInfoProvider =
+        BenutzerInfoProvider(fehlerlisteProvider: fehlerlisteProvider);
     // wir benutzen hier Provider für ein besseres State Management
     // für mehr Informationen siehe: https://pub.dev/packages/provider
     return MultiProvider(
@@ -29,7 +31,7 @@ class FixIT extends StatelessWidget {
         ),
         // Provider für die Fehlerliste
         ChangeNotifierProvider<FehlerlisteProvider>.value(
-          value: FehlerlisteProvider(),
+          value: fehlerlisteProvider,
         ),
         StreamProvider<bool?>.value(
           value: benutzerInfoProvider.authentifizierungStream,

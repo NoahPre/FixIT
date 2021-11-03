@@ -1,4 +1,4 @@
-// benutzerInfoProvider.dart
+// benutzer_info_provider.dart
 import "../../imports.dart";
 import "package:http/http.dart" as http;
 import 'package:crypto/crypto.dart';
@@ -10,9 +10,12 @@ import 'package:crypto/crypto.dart';
 ///
 /// für eine Erklärung der Provider siehe Dokumentation/Provider.md
 class BenutzerInfoProvider with ChangeNotifier {
-  BenutzerInfoProvider() {
+  BenutzerInfoProvider({required this.fehlerlisteProvider}) {
     holeUserInformationUndAuthentifiziere();
   }
+
+  /// Der FehlerlisteProvider
+  final FehlerlisteProvider fehlerlisteProvider;
 
   /// ob der Benutzer als Fehlermelder oder Fehlerbeheber angemeldet ist
   bool istFehlermelder = true;
@@ -58,6 +61,8 @@ class BenutzerInfoProvider with ChangeNotifier {
       schuleInFunktion: schuleInFunktion,
       passwortInFunktion: passwortInFunktion,
     );
+    schule = schuleInFunktion;
+    schuleSink.add(schuleInFunktion);
     istAuthentifiziert = true;
     authentifizierungSink.add(true);
     notifyListeners();
@@ -73,6 +78,12 @@ class BenutzerInfoProvider with ChangeNotifier {
     );
     istAuthentifiziert = false;
     authentifizierungSink.add(false);
+    // setzt andere Werte im FehlerlisteProvider zurück
+    fehlerlisteProvider.fehlerliste = [];
+    fehlerlisteProvider.fehlerlisteSink.add(fehlerlisteProvider.fehlerliste);
+    fehlerlisteProvider.eigeneFehlermeldungenIDs = [];
+    fehlerlisteProvider.fehlermeldungsZaehler = 0;
+    fehlerlisteProvider.fehlerbehebungsZaehler = 0;
     notifyListeners();
   }
 

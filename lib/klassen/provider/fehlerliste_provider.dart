@@ -1,4 +1,4 @@
-// fehlerlisteProvider.dart
+// fehlerliste_provider.dart
 import "package:fixit/imports.dart";
 import "package:http/http.dart" as http;
 import "package:image_picker/image_picker.dart";
@@ -173,8 +173,19 @@ class FehlerlisteProvider with ChangeNotifier {
     return "";
   }
 
-  //TODO: Funktionalität einbauen
-  void fehlerGefixt({int? indexInFehlerliste}) {}
+  /// ändert den Status des Fehlers mit der angegebenen id
+  /// "0": Fehler nicht behoben
+  /// "1": Fehler behoben
+  Future<void> fehlerStatusGeaendert({
+    required String id,
+    required String gefixt,
+  }) async {
+    var url =
+        "https://www.icanfixit.eu/behebeFehler.php?id=$id&gefixt=$gefixt&schule=$schule&token=$token";
+    await http.get(Uri.parse(url));
+    holeFehler();
+    // notifyListeners();
+  }
 
   // um einen alten Fehler zu löschen muss man nur diese Funktion aufrufen
   Future<void> fehlerGeloescht({
@@ -221,7 +232,6 @@ class FehlerlisteProvider with ChangeNotifier {
     var url =
         "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName&schule=$schule&token=$token";
     var answer = await http.get(Uri.parse(url));
-    print(answer.body.toString());
   }
 
   void dispose() {

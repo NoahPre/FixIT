@@ -201,7 +201,7 @@ class FehlerlisteEintrag extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(
-                            width: 4.0,
+                            width: 8.0,
                           ),
                         ],
                       ),

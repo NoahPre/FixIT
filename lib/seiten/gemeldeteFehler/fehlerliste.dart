@@ -123,6 +123,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
         BuildContext context,
         AsyncSnapshot snapshot,
       ) {
+        print("hi" + snapshot.data.toString());
         // Widget für den Scrollbalken am Rand
         Widget screen = Builder(
           builder: (BuildContext currentContext) => RefreshIndicator(

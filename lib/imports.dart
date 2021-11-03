@@ -42,8 +42,8 @@ export "package:fixit/widgets/internetverbindungs_check.dart";
 // Klassen:
 export "package:fixit/klassen/fehler.dart";
 // Provider:
-export "package:fixit/klassen/provider/benutzerInfoProvider.dart";
-export "package:fixit/klassen/provider/fehlerlisteProvider.dart";
+export 'package:fixit/klassen/provider/benutzer_info_provider.dart';
+export 'package:fixit/klassen/provider/fehlerliste_provider.dart';
 
 // 3rd party Packages:
 // export "package:keyboard_visibility/keyboard_visibility.dart";

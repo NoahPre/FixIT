@@ -136,6 +136,7 @@ class _AnmeldungState extends State<Anmeldung> {
     );
   }
 
+  // TODO: alle "öffne diesen Link" Funktionen vereinheitlichen
   /// öffnet die Datenschutz Erklärung von FixIT im Standardbrowser des Benutzers
   void _oeffneDatenschutzErklaerung() async {
     const url = "https://www.icanfixit.eu/datenschutz.html";
