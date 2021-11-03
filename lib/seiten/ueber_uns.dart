@@ -66,20 +66,48 @@ class UeberUns extends StatelessWidget {
             Card(
               child: Column(
                 children: [
-                  ListTile(
-                    title: Text(
-                      "Feedback und Verbesserungsvorschläge",
-                      style: thema.textTheme.bodyText1,
-                    ),
-                    subtitle: Text(
-                      "via E-Mail",
-                      style: thema.textTheme.subtitle2,
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                    ),
-                    onTap: () => _erstelleMail(),
-                  ),
+                  Builder(builder: (currentContext) {
+                    return ListTile(
+                      title: Text(
+                        "Feedback und Verbesserungsvorschläge",
+                        style: thema.textTheme.bodyText1,
+                      ),
+                      subtitle: Text(
+                        "via E-Mail oder GitHub",
+                        style: thema.textTheme.subtitle2,
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                      ),
+                      onTap: () async {
+                        await showDialog(
+                          context: currentContext,
+                          builder: (context) => AlertDialog(
+                            title: Text("Feedback und Verbesserungsvorschläge"),
+                            content: Text("Vielen Dank für Ihre Mithilfe"),
+                            actions: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  TextButton(
+                                    child: Text("E-Mail"),
+                                    onPressed: () => _erstelleMail(),
+                                  ),
+                                  TextButton(
+                                    child: Text("GitHub"),
+                                    onPressed: () => _oeffneURL(
+                                        url:
+                                            "https://github.com/NoahPre/FixIT/issues"),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }),
                   Divider(),
                   ListTile(
                     title: Text(

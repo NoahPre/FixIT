@@ -28,7 +28,7 @@ export "package:fixit/seiten/tutorial.dart";
 export "package:fixit/seiten/statistiken.dart";
 export "package:fixit/seiten/einstellungen.dart";
 export 'package:fixit/seiten/ueber_uns.dart';
-export "package:fixit/seiten/registrierung.dart";
+export 'package:fixit/seiten/anmeldung.dart';
 export "package:fixit/seiten/fehlersichtung/fehlerbehebung.dart";
 export "package:fixit/seiten/fehlersichtung/fehler_detailansicht.dart";
 export "package:fixit/seiten/fehlersichtung/bild_detailansicht.dart";

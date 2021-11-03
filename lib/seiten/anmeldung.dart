@@ -1,14 +1,14 @@
-// registrierung.dart
+// anmeldung.dart
 import "../imports.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:flutter/gestures.dart";
 
-class Registrierung extends StatefulWidget {
+class Anmeldung extends StatefulWidget {
   @override
-  _RegistrierungState createState() => _RegistrierungState();
+  _AnmeldungState createState() => _AnmeldungState();
 }
 
-class _RegistrierungState extends State<Registrierung> {
+class _AnmeldungState extends State<Anmeldung> {
   /// Key für die Form (wird benötigt)
   final _formKey = GlobalKey<FormState>();
 
@@ -109,7 +109,7 @@ class _RegistrierungState extends State<Registrierung> {
     );
   }
 
-  Future<void> _registrierungFehlgeschlagen({
+  Future<void> _anmeldungFehlgeschlagen({
     required BuildContext currentContext,
     required String anzuzeigenderText,
   }) async {
@@ -117,7 +117,7 @@ class _RegistrierungState extends State<Registrierung> {
       context: currentContext,
       builder: (context) => AlertDialog(
         title: Text(
-          "Registrierung fehlgeschlagen",
+          "Anmeldung fehlgeschlagen",
           textAlign: TextAlign.center,
         ),
         content: Text(
@@ -183,8 +183,7 @@ class _RegistrierungState extends State<Registrierung> {
       }
     }
 
-    /// wird ausgeführt, wenn das eingegebene Passwort erfolgreich von _ueberpruefePasswort() geprüft wurde
-    Future<void> _benutzerRegistriertSich(
+    Future<void> _benutzerMeldetSichAn(
         {required BuildContext currentContext}) async {
       // macht eine Anfangsüberprüfung
       if (_formKey.currentState!.validate()) {
@@ -205,29 +204,29 @@ class _RegistrierungState extends State<Registrierung> {
           currentContext: currentContext,
         )) {
           case "true":
-            print("benutzerRegistriertSich");
-            await benutzerInfoProvider.benutzerRegistriertSich(
+            await benutzerInfoProvider.benutzerMeldetSichAn(
               istFehlermelderInFunktion: istFehlermelderInFunktion,
               schuleInFunktion: schuleInFunktion,
               passwortInFunktion: passwortInFunktion,
             );
+            print("benutzerRegistriertSich");
             break;
           case "falsche_schule":
             // informiert den Benutzer darüber, dass er das falsche Schulkürzel eingegeben hat
-            await _registrierungFehlgeschlagen(
+            await _anmeldungFehlgeschlagen(
                 currentContext: currentContext,
                 anzuzeigenderText:
                     "Die angegebene Schule ist nicht bei FixIT registriert.");
             break;
           case "falsches_token":
             // informiert den Benutzer darüber, dass er das falsche Passwort eingegeben hat
-            await _registrierungFehlgeschlagen(
+            await _anmeldungFehlgeschlagen(
                 currentContext: currentContext,
                 anzuzeigenderText:
                     "Das angegebene Passwort für die ausgewählte Rolle ist falsch.");
             break;
           default:
-            await _registrierungFehlgeschlagen(
+            await _anmeldungFehlgeschlagen(
                 currentContext: currentContext,
                 anzuzeigenderText: "Etwas ist schiefgelaufen.");
             break;
@@ -237,7 +236,7 @@ class _RegistrierungState extends State<Registrierung> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Registrierung bei FixIT"),
+        title: Text("Anmeldung bei FixIT"),
         // ist nur da, damit der Zurückpfeil nicht angezeigt wird
         leading: Container(
           color: thema.colorScheme.primary,
@@ -412,7 +411,7 @@ class _RegistrierungState extends State<Registrierung> {
                   Builder(
                       builder: (BuildContext currentContext) => ElevatedButton(
                             child: Text(
-                              "Registrieren",
+                              "Anmelden",
                               style: TextStyle(
                                 color: Colors.white,
                               ),
@@ -426,7 +425,7 @@ class _RegistrierungState extends State<Registrierung> {
                                 borderRadius: BorderRadius.circular(18.0),
                               ),
                             ),
-                            onPressed: () => _benutzerRegistriertSich(
+                            onPressed: () => _benutzerMeldetSichAn(
                               currentContext: currentContext,
                             ),
                           )),

@@ -6,7 +6,7 @@ Future<void> main() async {
   // wichtig für das Kamera Package
   WidgetsFlutterBinding.ensureInitialized();
   cameras = await availableCameras();
-  runApp(FixIt());
+  runApp(FixIT());
 }
 
 // TODO: alle istRegistriert in istAngemeldet umwandeln oder noch einen besseren Namen finden
@@ -16,19 +16,28 @@ Future<void> main() async {
 
 List<CameraDescription> cameras = [];
 
-class FixIt extends StatelessWidget {
+class FixIT extends StatelessWidget {
   Widget build(BuildContext context) {
+    BenutzerInfoProvider benutzerInfoProvider = BenutzerInfoProvider();
     // wir benutzen hier Provider für ein besseres State Management
     // für mehr Informationen siehe: https://pub.dev/packages/provider
     return MultiProvider(
       providers: [
         // Provider für die Anmeldung / Registrierung
         ChangeNotifierProvider<BenutzerInfoProvider>.value(
-          value: BenutzerInfoProvider(),
+          value: benutzerInfoProvider,
         ),
         // Provider für die Fehlerliste
         ChangeNotifierProvider<FehlerlisteProvider>.value(
           value: FehlerlisteProvider(),
+        ),
+        StreamProvider<bool?>.value(
+          value: benutzerInfoProvider.authentifizierungStream,
+          initialData: null,
+        ),
+        StreamProvider<String>.value(
+          value: benutzerInfoProvider.schuleStream,
+          initialData: "",
         ),
       ],
       child: MaterialApp(
@@ -49,7 +58,7 @@ class FixIt extends StatelessWidget {
           "/statistiken": (context) => Statistiken(),
           "/einstellungen": (context) => Einstellungen(),
           "/ueberUns": (context) => UeberUns(),
-          "/registrierung": (context) => Registrierung(),
+          "/registrierung": (context) => Anmeldung(),
         },
       ),
     );

@@ -1,13 +1,11 @@
-// seiten_menü.dart
-import '../imports.dart';
-
-// TODO: richtigen gemeldete / gefixte Fehler Counter einführen
+// seiten_menue.dart
+import 'package:fixit/imports.dart';
 
 // Seitenmenü der App
 class Seitenmenue extends StatelessWidget {
-  final String? aktuelleSeite;
+  final String aktuelleSeite;
 
-  const Seitenmenue({this.aktuelleSeite});
+  const Seitenmenue({required this.aktuelleSeite});
 
   @override
   Widget build(BuildContext context) {

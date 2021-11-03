@@ -31,19 +31,14 @@ class _EinstellungenState extends State<Einstellungen> {
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: [
-            Center(
-              child: Text(
-                "Hier werden später einige Einstellungen sein",
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ),
             Card(
                 child: Column(
               children: [
                 ListTile(
-                  title: Text("Gemeldete Fehler Zähler zurücksetzen"),
+                  title: Text(
+                    "Gemeldete Fehler Zähler zurücksetzen",
+                    style: thema.textTheme.bodyText1,
+                  ),
                   trailing: Icon(Icons.arrow_forward_ios),
                   onTap: () async {
                     await fehlerlisteProvider
@@ -55,7 +50,10 @@ class _EinstellungenState extends State<Einstellungen> {
                         children: [
                           Divider(),
                           ListTile(
-                            title: Text("Gefixte Fehler Zähler zurücksetzen"),
+                            title: Text(
+                              "Gefixte Fehler Zähler zurücksetzen",
+                              style: thema.textTheme.bodyText1,
+                            ),
                             trailing: Icon(Icons.arrow_forward_ios),
                             onTap: () async {
                               await fehlerlisteProvider
@@ -67,15 +65,18 @@ class _EinstellungenState extends State<Einstellungen> {
                     : Container(),
                 Divider(),
                 ListTile(
-                  title: Text("Abmelden"),
+                  title: Text(
+                    "Abmelden",
+                    style: thema.textTheme.bodyText1,
+                  ),
                   trailing: Icon(Icons.arrow_forward_ios),
                   onTap: () async {
                     await benutzerInfoProvider.benutzerMeldetSichAb();
+                    Navigator.pushReplacementNamed(context, "/");
+                    // Navigator.of(context).pushNamedAndRemoveUntil(
+                    // "/registrierung", (route) => false);
 
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        "/registrierung", (route) => false);
-
-                    setState(() {});
+                    // setState(() {});
                   },
                 )
               ],

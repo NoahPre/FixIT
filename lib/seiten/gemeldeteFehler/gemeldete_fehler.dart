@@ -7,12 +7,12 @@ import '../../imports.dart';
 class GemeldeteFehler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print("built");
     ThemeData thema = Theme.of(context);
+    final bool? istAuthentifiziert = Provider.of<bool?>(context);
+    final String schule = Provider.of<String>(context);
     final BenutzerInfoProvider benutzerInfoProvider =
-        Provider.of<BenutzerInfoProvider>(
-      context,
-      listen: false,
-    );
+        Provider.of<BenutzerInfoProvider>(context);
     final FehlerlisteProvider fehlerlisteProvider =
         Provider.of<FehlerlisteProvider>(
       context,
@@ -50,66 +50,131 @@ class GemeldeteFehler extends StatelessWidget {
       return;
     }
 
-    return StreamBuilder<bool>(
-      stream: benutzerInfoProvider.authentifizierungStream as Stream<bool>?,
-      initialData: benutzerInfoProvider.istAuthentifiziert,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.data == false) {
-          fehlerlisteProvider.fehlerliste = [];
-          return Registrierung();
-        }
-        fehlerlisteProvider.schule = benutzerInfoProvider.schule;
-        fehlerlisteProvider.holeFehler();
-        return Scaffold(
-          appBar: appBar,
-          drawer: const Seitenmenue(
-            aktuelleSeite: "/",
-          ),
-          floatingActionButton: FABHome(),
-          body: Padding(
-            padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-            child: snapshot.hasData && snapshot.data == true
-                // Liste mit gemeldeten Fehlern
-                ? Fehlerliste(
-                    appBarHoehe: appBar.preferredSize.height,
-                  )
-                // Ladedonut in der Mitte der Seite mit Option zum neuladen
-                : Builder(builder: (BuildContext currentContext) {
-                    WidgetsBinding.instance?.addPostFrameCallback((_) =>
-                        ueberpruefeInternetVerbindung(
-                            currentContext: currentContext));
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        if (await ueberpruefeInternetVerbindung(
-                              currentContext: currentContext,
-                            ) ==
-                            true) {
-                          erneutAuthentifizieren();
-                        }
-                      },
-                      color: thema.colorScheme.primary,
-                      child: ListView(
-                        children: <Widget>[
-                          Container(
-                            height: mediaQueryData.size.height -
-                                appBar.preferredSize.height -
-                                mediaQueryData.padding.top -
-                                mediaQueryData.padding.bottom,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  thema.colorScheme.primary,
-                                ),
-                              ),
+    // benutzerInfoProvider.authentifizierung();
+
+    if (istAuthentifiziert == false) {
+      fehlerlisteProvider.fehlerliste = [];
+      return Anmeldung();
+    }
+
+    if (schule != "") {
+      fehlerlisteProvider.schule = schule;
+      fehlerlisteProvider.holeFehler();
+    }
+
+    return Scaffold(
+      appBar: appBar,
+      drawer: const Seitenmenue(
+        aktuelleSeite: "/",
+      ),
+      floatingActionButton: FABHome(),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+        child: (istAuthentifiziert != null &&
+                istAuthentifiziert == true &&
+                schule != "")
+            // Liste mit gemeldeten Fehlern
+            ? Fehlerliste(
+                appBarHoehe: appBar.preferredSize.height,
+              )
+            // Ladedonut in der Mitte der Seite mit Option zum neuladen
+            : Builder(builder: (BuildContext currentContext) {
+                WidgetsBinding.instance?.addPostFrameCallback((_) =>
+                    ueberpruefeInternetVerbindung(
+                        currentContext: currentContext));
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    if (await ueberpruefeInternetVerbindung(
+                          currentContext: currentContext,
+                        ) ==
+                        true) {
+                      erneutAuthentifizieren();
+                    }
+                  },
+                  color: thema.colorScheme.primary,
+                  child: ListView(
+                    children: <Widget>[
+                      Container(
+                        height: mediaQueryData.size.height -
+                            appBar.preferredSize.height -
+                            mediaQueryData.padding.top -
+                            mediaQueryData.padding.bottom,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              thema.colorScheme.primary,
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    );
-                  }),
-          ),
-        );
-      },
+                    ],
+                  ),
+                );
+              }),
+      ),
     );
+
+    // return StreamBuilder<bool>(
+    //   stream: Provider.of<bool>(context) as Stream<bool>,
+    //   // initialData: benutzerInfoProvider.istAuthentifiziert,
+    //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+    //     print("snapshot data: " + snapshot.data.toString());
+    //     if (snapshot.data == false) {
+    //       fehlerlisteProvider.fehlerliste = [];
+    //       return Registrierung();
+    //     }
+    //     fehlerlisteProvider.schule = benutzerInfoProvider.schule;
+    //     fehlerlisteProvider.holeFehler();
+    //     return Scaffold(
+    //       appBar: appBar,
+    //       drawer: const Seitenmenue(
+    //         aktuelleSeite: "/",
+    //       ),
+    //       floatingActionButton: FABHome(),
+    //       body: Padding(
+    //         padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+    //         child: snapshot.hasData && snapshot.data == true
+    //             // Liste mit gemeldeten Fehlern
+    //             ? Fehlerliste(
+    //                 appBarHoehe: appBar.preferredSize.height,
+    //               )
+    //             // Ladedonut in der Mitte der Seite mit Option zum neuladen
+    //             : Builder(builder: (BuildContext currentContext) {
+    //                 WidgetsBinding.instance?.addPostFrameCallback((_) =>
+    //                     ueberpruefeInternetVerbindung(
+    //                         currentContext: currentContext));
+    //                 return RefreshIndicator(
+    //                   onRefresh: () async {
+    //                     if (await ueberpruefeInternetVerbindung(
+    //                           currentContext: currentContext,
+    //                         ) ==
+    //                         true) {
+    //                       erneutAuthentifizieren();
+    //                     }
+    //                   },
+    //                   color: thema.colorScheme.primary,
+    //                   child: ListView(
+    //                     children: <Widget>[
+    //                       Container(
+    //                         height: mediaQueryData.size.height -
+    //                             appBar.preferredSize.height -
+    //                             mediaQueryData.padding.top -
+    //                             mediaQueryData.padding.bottom,
+    //                         child: Center(
+    //                           child: CircularProgressIndicator(
+    //                             valueColor: AlwaysStoppedAnimation<Color>(
+    //                               thema.colorScheme.primary,
+    //                             ),
+    //                           ),
+    //                         ),
+    //                       ),
+    //                     ],
+    //                   ),
+    //                 );
+    //               }),
+    //       ),
+    //     );
+    //   },
+    // );
   }
 }

@@ -6,7 +6,7 @@ import 'package:crypto/crypto.dart';
 /// Dieser Provider enthält die Informationen über den Benutzer, so etwa
 /// - ob der Benutzer Fehlermelder oder -beheber ist
 /// - das Authentifizierungstoken
-/// - bald: die Institution des Benutzers
+/// - die Schule des Benutzers
 ///
 /// für eine Erklärung der Provider siehe Dokumentation/Provider.md
 class BenutzerInfoProvider with ChangeNotifier {
@@ -24,10 +24,15 @@ class BenutzerInfoProvider with ChangeNotifier {
   bool? istAuthentifiziert;
 
   /// StreamController zum Verwalten der Authentifizierung des Benutzers:
-  StreamController authentifizierungController =
-      StreamController<bool>.broadcast();
-  Sink get authentifizierungSink => authentifizierungController.sink;
-  Stream get authentifizierungStream => authentifizierungController.stream;
+  StreamController<bool> authentifizierungController = StreamController<bool>();
+  Sink<bool> get authentifizierungSink => authentifizierungController.sink;
+  Stream<bool> get authentifizierungStream =>
+      authentifizierungController.stream;
+
+  /// StreamController für die Schule des Benutzers
+  StreamController<String> schuleController = StreamController<String>();
+  Sink<String> get schuleSink => schuleController.sink;
+  Stream<String> get schuleStream => schuleController.stream;
 
   /// überschreibt im Constructor die Variablen mit den entsprechenden Werten aus SharedPreferences &
   /// authentifiziert den Benutzer außerdem mit den in SharedPreferences gespeicherten Credentials und aktualisiert authentifizierungStream
@@ -35,14 +40,15 @@ class BenutzerInfoProvider with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
     schule = sharedPreferences.getString("schule") ?? "";
+    schuleSink.add(schule);
     istAuthentifiziert = await authentifizierung();
   }
 
-  /// wird aufgerufen, wenn der Benutzer sich erfolgreich registriert und damit authentifiziert hat &
+  /// wird aufgerufen, wenn der Benutzer sich erfolgreich anmeldet und damit authentifiziert hat &
   /// überschreibt die gespeicherten Werte in SharedPreferences mit ueberschreibeUserInformation() &
   /// setzt istAuthentifiziert auf true &
   /// aktualisiert authentifizierungStream
-  Future<void> benutzerRegistriertSich({
+  Future<void> benutzerMeldetSichAn({
     required bool istFehlermelderInFunktion,
     required String schuleInFunktion,
     required String passwortInFunktion,
@@ -65,8 +71,9 @@ class BenutzerInfoProvider with ChangeNotifier {
       passwortInFunktion: "",
       andereWerteZuruecksetzen: true,
     );
-    authentifizierungSink.add(false);
     istAuthentifiziert = false;
+    authentifizierungSink.add(false);
+    notifyListeners();
   }
 
   /// überschreibt die gespeicherten Werte in sharedPreferences mit den gegebenen Werten und berechnet das Authentifizierungs Token
@@ -159,5 +166,6 @@ class BenutzerInfoProvider with ChangeNotifier {
   void dispose() {
     super.dispose();
     authentifizierungController.close();
+    schuleController.close();
   }
 }

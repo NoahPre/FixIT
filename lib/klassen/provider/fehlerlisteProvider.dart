@@ -11,8 +11,8 @@ import "package:image_picker/image_picker.dart";
 /// - Fehler löschen kann
 class FehlerlisteProvider with ChangeNotifier {
   FehlerlisteProvider() {
-    holeSchuleUndToken();
-    holeFehler();
+    holeToken();
+    // holeFehler();
     holeFehlermeldungenIDsUndZaehler();
   }
 
@@ -46,9 +46,8 @@ class FehlerlisteProvider with ChangeNotifier {
   /// Zähler, der bei Fehlerbehebern die Anzahl an gelöschten (behobenen) Fehlermeldungen^ speichert
   int fehlerbehebungsZaehler = 0;
 
-  Future<void> holeSchuleUndToken() async {
+  Future<void> holeToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    schule = sharedPreferences.getString("schule") ?? "";
     token = sharedPreferences.getString("token") ?? "";
   }
 

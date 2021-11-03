@@ -101,14 +101,26 @@ class FehlerlisteEintrag extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(10.0),
             onTap: () {
+              // Fehlermelder können nur eigene Meldungen sehen, Fehlerbeheber alle Meldungen
+              if (benutzerInfoProvider.istFehlermelder == true &&
+                  fehlerlisteProvider.eigeneFehlermeldungenIDs
+                          .contains(fehler.id) ==
+                      false) {
+                zeigeSnackBarNachricht(
+                  nachricht:
+                      "Nur eigene Fehlermeldungen können angeschaut werden",
+                  context: context,
+                  istError: false,
+                );
+                return;
+              }
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     fullscreenDialog: false,
                     builder: (context) {
-                      // zeigt nur Fehlerbehebung an, wenn der Benutzer ein Fehlerbeheber ist und der Fehler noch nicht behoben wurde
-                      if (benutzerInfoProvider.istFehlermelder == false &&
-                          fehler.gefixt == "0") {
+                      // zeigt nur Fehlerbehebung an, wenn der Benutzer ein Fehlerbeheber ist
+                      if (benutzerInfoProvider.istFehlermelder == false) {
                         return Fehlerbehebung(
                           fehler: fehler,
                         );
