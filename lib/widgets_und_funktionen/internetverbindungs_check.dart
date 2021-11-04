@@ -1,7 +1,7 @@
 // internetverbindungs_check.dart
-import "package:flutter/material.dart";
 import "dart:io";
-import "package:fixit/widgets/zeige_snackbar_nachricht.dart";
+import "package:flutter/material.dart";
+import "package:fixit/widgets_und_funktionen/zeige_snackbar_nachricht.dart";
 
 Future<bool> ueberpruefeInternetVerbindung(
     {required BuildContext currentContext}) async {
@@ -21,7 +21,7 @@ Future<bool> ueberpruefeInternetVerbindung(
 
       return false;
     }
-  } on SocketException catch (error) {
+  } on SocketException catch (_) {
     zeigeSnackBarNachricht(
       nachricht: "Nicht mit dem Internet verbunden",
       context: currentContext,

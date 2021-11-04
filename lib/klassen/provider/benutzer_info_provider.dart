@@ -2,6 +2,7 @@
 import "../../imports.dart";
 import "package:http/http.dart" as http;
 import 'package:crypto/crypto.dart';
+import "package:package_info/package_info.dart";
 
 /// Dieser Provider enthält die Informationen über den Benutzer, so etwa
 /// - ob der Benutzer Fehlermelder oder -beheber ist
@@ -78,8 +79,8 @@ class BenutzerInfoProvider with ChangeNotifier {
     );
     istAuthentifiziert = false;
     authentifizierungSink.add(false);
-    // setzt andere Werte im FehlerlisteProvider zurück
-    fehlerlisteProvider.fehlerliste = [];
+    // setzt andere Werte in FehlerlisteProvider zurück
+    fehlerlisteProvider.fehlerliste = null;
     fehlerlisteProvider.fehlerlisteSink.add(fehlerlisteProvider.fehlerliste);
     fehlerlisteProvider.eigeneFehlermeldungenIDs = [];
     fehlerlisteProvider.fehlermeldungsZaehler = 0;
@@ -171,6 +172,41 @@ class BenutzerInfoProvider with ChangeNotifier {
       return "falsches_token";
     } else {
       return "false";
+    }
+  }
+
+  // überprüft, ob die laufende Version der App noch von Serverseite unterstützt wird
+  // nimmt den Wert aus gibUnterstuetzteVersion.php
+  Future<bool> istUnterstuetzteVersion() async {
+    try {
+      var packageInfo = await PackageInfo.fromPlatform();
+      String version = packageInfo.version;
+      List<int> versionAsList = [];
+      versionAsList.add(int.parse(version.split(".")[0]));
+      versionAsList.add(int.parse(version.split(".")[1]));
+      versionAsList.add(int.parse(version.split(".")[2]));
+      String url = "https://www.icanfixit.eu/gibUnterstuetzteVersion.php";
+      http.Response response = await http.get(Uri.parse(url));
+      List<int> responseAsList = [];
+      responseAsList.add(int.parse(response.body.split(".")[0]));
+      responseAsList.add(int.parse(response.body.split(".")[1]));
+      responseAsList.add(int.parse(response.body.split(".")[2]));
+      if (responseAsList[0] <= versionAsList[0]) {
+        if (responseAsList[1] <= versionAsList[1]) {
+          if (responseAsList[2] <= versionAsList[2]) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (error) {
+      print(error.toString());
+      return false;
     }
   }
 

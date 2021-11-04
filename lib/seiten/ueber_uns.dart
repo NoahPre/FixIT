@@ -17,14 +17,6 @@ class UeberUns extends StatelessWidget {
     }
   }
 
-  Future<void> _oeffneURL({required String url}) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw "Could not launch: $url";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     ThemeData thema = Theme.of(context);
@@ -96,7 +88,7 @@ class UeberUns extends StatelessWidget {
                                   ),
                                   TextButton(
                                     child: Text("GitHub"),
-                                    onPressed: () => _oeffneURL(
+                                    onPressed: () => oeffneURL(
                                         url:
                                             "https://github.com/NoahPre/FixIT/issues"),
                                   ),
@@ -117,7 +109,7 @@ class UeberUns extends StatelessWidget {
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                     ),
-                    onTap: () => _oeffneURL(
+                    onTap: () => oeffneURL(
                         url: "https://www.icanfixit.eu/datenschutz.html"),
                   ),
                   // ListTile(
@@ -167,7 +159,7 @@ class UeberUns extends StatelessWidget {
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                     ),
-                    onTap: () => _oeffneURL(
+                    onTap: () => oeffneURL(
                         url:
                             "https://www.flaticon.com/premium-icon/hammer_2817081?term=hammer%20wrench&page=1&position=23&page=1&position=23&related_id=2817081&origin=tag"),
                   ),
@@ -198,7 +190,7 @@ class UeberUns extends StatelessWidget {
                       Icons.arrow_forward_ios,
                     ),
                     onTap: () =>
-                        _oeffneURL(url: "https://github.com/NoahPre/FixIT"),
+                        oeffneURL(url: "https://github.com/NoahPre/FixIT"),
                   ),
                   Divider(),
                   ListTile(

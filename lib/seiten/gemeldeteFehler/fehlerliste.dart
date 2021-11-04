@@ -1,7 +1,5 @@
 // fehlerliste.dart
 import "../../imports.dart";
-//import "package:http/http.dart" as http;
-// TODO: den Benutzer benachrichtigen, wenn keine Internetverbindung vorhanden ist
 
 // TODO: beim fixen des Fehlers Kommentar hinterlassen Funktion hinzufügen
 
@@ -123,7 +121,6 @@ class _FehlerlisteState extends State<Fehlerliste> {
         BuildContext context,
         AsyncSnapshot snapshot,
       ) {
-        print("hi" + snapshot.data.toString());
         // Widget für den Scrollbalken am Rand
         Widget screen = Builder(
           builder: (BuildContext currentContext) => RefreshIndicator(
@@ -181,10 +178,22 @@ class _FehlerlisteState extends State<Fehlerliste> {
                                 mediaQueryData.padding.top -
                                 mediaQueryData.padding.bottom,
                             child: Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  thema.colorScheme.primary,
-                                ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      thema.colorScheme.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 12.0,
+                                  ),
+                                  Text(
+                                    "Download der Fehlermeldungen",
+                                    style: thema.textTheme.bodyText1,
+                                  ),
+                                ],
                               ),
                             ),
                           ),

@@ -34,10 +34,11 @@ export "package:fixit/seiten/fehlersichtung/fehler_detailansicht.dart";
 export "package:fixit/seiten/fehlersichtung/bild_detailansicht.dart";
 
 // Andere Widgets:
-export "package:fixit/widgets/fertig_button.dart";
-export 'package:fixit/widgets/seiten_menue.dart';
-export "package:fixit/widgets/zeige_snackbar_nachricht.dart";
-export "package:fixit/widgets/internetverbindungs_check.dart";
+export "package:fixit/widgets_und_funktionen/fertig_button.dart";
+export 'package:fixit/widgets_und_funktionen/seiten_menue.dart';
+export "package:fixit/widgets_und_funktionen/zeige_snackbar_nachricht.dart";
+export "package:fixit/widgets_und_funktionen/internetverbindungs_check.dart";
+export "package:fixit/widgets_und_funktionen/oeffne_url.dart";
 
 // Klassen:
 export "package:fixit/klassen/fehler.dart";

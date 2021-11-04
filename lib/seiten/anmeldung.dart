@@ -1,6 +1,5 @@
 // anmeldung.dart
 import "../imports.dart";
-import "package:url_launcher/url_launcher.dart";
 import "package:flutter/gestures.dart";
 
 class Anmeldung extends StatefulWidget {
@@ -40,7 +39,8 @@ class _AnmeldungState extends State<Anmeldung> {
   void initState() {
     super.initState();
     _datenschutzErklaerungRecognizer = TapGestureRecognizer()
-      ..onTap = _oeffneDatenschutzErklaerung;
+      ..onTap = () async =>
+          await oeffneURL(url: "https://www.icanfixit.eu/datenschutz.html");
   }
 
   @override
@@ -134,17 +134,6 @@ class _AnmeldungState extends State<Anmeldung> {
         ],
       ),
     );
-  }
-
-  // TODO: alle "öffne diesen Link" Funktionen vereinheitlichen
-  /// öffnet die Datenschutz Erklärung von FixIT im Standardbrowser des Benutzers
-  void _oeffneDatenschutzErklaerung() async {
-    const url = "https://www.icanfixit.eu/datenschutz.html";
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw "Could not launch: $url";
-    }
   }
 
   @override

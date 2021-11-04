@@ -1,6 +1,8 @@
 // fehlerDetailansicht.dart
 import '../../imports.dart';
 
+// TODO: bei Änderungen hier, auch den Code in FehlerBehebung aktualisieren
+
 class FehlerDetailansicht extends StatelessWidget {
   FehlerDetailansicht({
     this.fehler,
@@ -145,7 +147,6 @@ class FehlerDetailansicht extends StatelessWidget {
                 style: thema.textTheme.bodyText1,
               ),
 
-              // TODO: bei Änderungen hier, auch den Code in FehlerDetailansicht aktualisieren
               // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
               (fehler!.bild.isEmpty || fehler!.bild == "")
                   ? Column(

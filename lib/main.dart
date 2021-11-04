@@ -9,10 +9,7 @@ Future<void> main() async {
   runApp(FixIT());
 }
 
-// TODO: alle istRegistriert in istAngemeldet umwandeln oder noch einen besseren Namen finden
 // TODO: schauen wie oft wir BenutzerInfoProvider benutzen
-
-// TODO: Meldung einbauen, wenn keine Internetverbindung vorhanden ist
 
 List<CameraDescription> cameras = [];
 

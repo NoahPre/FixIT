@@ -71,6 +71,10 @@ class FehlerlisteProvider with ChangeNotifier {
     });
     // fügt die geholten Fehler dem fehlerlisteController hinzu und aktualisiert damit das Widget Fehlerliste
     fehlerlisteSink.add(fehlerliste);
+    print(eigeneFehlermeldungenIDs.length);
+    // räumt die lokal gespeicherte Liste der eigenen Fehlermeldungen auf (eigeneFehlermeldungenIDs, gespeichert in SharedPreferences)
+    await entferneGeloeschteFehlermeldungenIDs();
+    print(eigeneFehlermeldungenIDs.length);
     notifyListeners();
   }
 
@@ -231,7 +235,7 @@ class FehlerlisteProvider with ChangeNotifier {
   }) async {
     var url =
         "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName&schule=$schule&token=$token";
-    var answer = await http.get(Uri.parse(url));
+    await http.get(Uri.parse(url));
   }
 
   void dispose() {
@@ -245,6 +249,12 @@ class FehlerlisteProvider with ChangeNotifier {
     List<String>? idsList =
         sharedPreferences.getStringList("eigeneFehlermeldungenIDs") ?? [];
     idsList.add(neueID);
+    // das ist der Wert, der für das automatische Löschen von Fehlermeldungen zuständig ist
+    // sobald eine Fehlermeldung als gefixt gekennzeichnet wurde, wird dieser Wert jedes Mal dann erhöht, wenn der Autor dieser
+    // Fehlermeldung die App öffnet
+    // sobald er dies 3 Mal getan hat (der Wert also auf 3 ist), wird die Fehlermeldung mit dem Schließen der App gelöscht
+    // idsList.add("0");
+
     eigeneFehlermeldungenIDs.add(neueID);
     await sharedPreferences.setStringList("eigeneFehlermeldungenIDs", idsList);
   }
@@ -277,5 +287,24 @@ class FehlerlisteProvider with ChangeNotifier {
     fehlerbehebungsZaehler = 0;
     await sharedPreferences.setInt(
         "fehlerbehebungsZaehler", fehlerbehebungsZaehler);
+  }
+
+  Future<void> entferneGeloeschteFehlermeldungenIDs() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    List<String> aktuelleFehlermeldungenIDs = [];
+    if (fehlerliste != null) {
+      aktuelleFehlermeldungenIDs =
+          fehlerliste!.map((aktuellerFehler) => aktuellerFehler.id).toList();
+    }
+    List<String> gespeicherteEigeneFehlermeldungenIDs =
+        sharedPreferences.getStringList("eigeneFehlermeldungenIDs") ?? [];
+    List<String> eigeneFehlermeldungenIDsInFunktion = [];
+    for (String i in gespeicherteEigeneFehlermeldungenIDs) {
+      if (aktuelleFehlermeldungenIDs.contains(i)) {
+        eigeneFehlermeldungenIDsInFunktion.add(i);
+      }
+    }
+    await sharedPreferences.setStringList(
+        "eigeneFehlermeldungenIDs", eigeneFehlermeldungenIDsInFunktion);
   }
 }

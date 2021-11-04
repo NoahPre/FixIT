@@ -1,5 +1,4 @@
 // fehlermeldungVorlage.dart
-import "dart:typed_data";
 import "../../imports.dart";
 import "../../main.dart";
 import "package:flutter/cupertino.dart";
@@ -122,7 +121,6 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   /// lässt den Benutzer das Bild aus der Gallerie des Geräts auswählen
   void bildAusGallerieAuswaehlen() {
     setState(() {
-      //TODO: das hier auf ImagePicker.getImage() updaten
       ausgewaehltesBild = ImagePicker().getImage(
         source: ImageSource.gallery,
       );

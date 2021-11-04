@@ -1,8 +1,8 @@
 // fehlerbehebung.dart
-import 'package:fixit/sonstiges/dummy_fehler.dart';
-
 import '../../imports.dart';
 import "package:flutter/material.dart";
+
+// TODO: bei Änderungen hier, auch den Code in FehlerDetailansicht aktualisieren
 
 class Fehlerbehebung extends StatefulWidget {
   Fehlerbehebung({
@@ -69,41 +69,6 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                   id: widget.fehler.id, gefixt: "0");
             }
             Navigator.pop(context);
-            //   await showDialog<bool>(
-            //       context: context,
-            //       builder: (BuildContext context) {
-            //         return SimpleDialog(
-            //           title: Text("Fehler wirklich löschen?"),
-            //           children: [
-            //             Row(
-            //               mainAxisAlignment: MainAxisAlignment.center,
-            //               children: [
-            //                 SimpleDialogOption(
-            //                   child: Text(
-            //                     "Bestätigen",
-            //                     style: TextStyle(color: Colors.red),
-            //                   ),
-            //                   onPressed: () {
-            //                     //TODO: richtiges Fehlerbeheben einbauen
-            //                     fehlerlisteProvider.fehlerGeloescht(
-            //                       fehler: widget.fehler,
-            //                       istFehlermelder: false,
-            //                     );
-            //                     Navigator.pop(context);
-            //                     Navigator.pop(context);
-            //                   },
-            //                 ),
-            //                 SimpleDialogOption(
-            //                   child: Text("Abbrechen"),
-            //                   onPressed: () {
-            //                     Navigator.pop(context);
-            //                   },
-            //                 ),
-            //               ],
-            //             ),
-            //           ],
-            //         );
-            //       });
           },
         ),
       ],
@@ -153,7 +118,6 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                 widget.fehler.beschreibung,
                 style: thema.textTheme.bodyText1,
               ),
-              // TODO: bei Änderungen hier, auch den Code in FehlerDetailansicht aktualisieren
               // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
               (widget.fehler.bild.isEmpty || widget.fehler.bild == "")
                   ? Column(
