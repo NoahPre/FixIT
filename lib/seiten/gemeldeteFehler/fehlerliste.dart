@@ -13,41 +13,6 @@ class Fehlerliste extends StatefulWidget {
 }
 
 class _FehlerlisteState extends State<Fehlerliste> {
-  Future<bool> _ueberpruefeInternetVerbindung(
-      {required BuildContext currentContext}) async {
-    try {
-      final result = await InternetAddress.lookup("google.com");
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
-      }
-      // probably unnecessary
-      else {
-        zeigeSnackBarNachricht(
-          nachricht: "Nicht mit dem Internet verbunden",
-          context: currentContext,
-          istError: true,
-        );
-
-        return false;
-      }
-    } on SocketException catch (error) {
-      print(error.toString());
-      zeigeSnackBarNachricht(
-        nachricht: "Nicht mit dem Internet verbunden",
-        context: currentContext,
-        istError: true,
-      );
-      return false;
-    } catch (error) {
-      zeigeSnackBarNachricht(
-        nachricht: error.toString(),
-        context: currentContext,
-        istError: true,
-      );
-      return false;
-    }
-  }
-
   List<Widget> zeigeFehlerliste(
       {required dynamic fehlerliste,
       required List<String> eigeneFehlermeldungenIDs,
@@ -125,7 +90,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
         Widget screen = Builder(
           builder: (BuildContext currentContext) => RefreshIndicator(
             onRefresh: () async {
-              if (await _ueberpruefeInternetVerbindung(
+              if (await ueberpruefeInternetVerbindung(
                     currentContext: currentContext,
                   ) ==
                   true) {

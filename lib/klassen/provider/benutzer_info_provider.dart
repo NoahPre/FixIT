@@ -177,7 +177,7 @@ class BenutzerInfoProvider with ChangeNotifier {
 
   // überprüft, ob die laufende Version der App noch von Serverseite unterstützt wird
   // nimmt den Wert aus gibUnterstuetzteVersion.php
-  Future<bool> istUnterstuetzteVersion() async {
+  Future<String> istUnterstuetzteVersion() async {
     try {
       var packageInfo = await PackageInfo.fromPlatform();
       String version = packageInfo.version;
@@ -194,19 +194,19 @@ class BenutzerInfoProvider with ChangeNotifier {
       if (responseAsList[0] <= versionAsList[0]) {
         if (responseAsList[1] <= versionAsList[1]) {
           if (responseAsList[2] <= versionAsList[2]) {
-            return true;
+            return "true";
           } else {
-            return false;
+            return "false";
           }
         } else {
-          return false;
+          return "false";
         }
       } else {
-        return false;
+        return "false";
       }
     } catch (error) {
       print(error.toString());
-      return false;
+      return "error";
     }
   }
 

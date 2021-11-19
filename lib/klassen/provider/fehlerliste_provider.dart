@@ -163,7 +163,9 @@ class FehlerlisteProvider with ChangeNotifier {
   String upload({String? dateiname, String? base64Image}) {
     print("uploading");
     print(dateiname);
-    http.post(Uri.parse("https://www.icanfixit.eu/BildUpload.php?token=$token"),
+    http.post(
+        Uri.parse(
+            "https://www.icanfixit.eu/schreibeBild.php?schule=$schule&token=$token"),
         body: {
           "image": base64Image,
           "name": dateiname,

@@ -5,11 +5,11 @@ import '../../imports.dart';
 
 class FehlerDetailansicht extends StatelessWidget {
   FehlerDetailansicht({
-    this.fehler,
+    required this.fehler,
     this.fehlerliste,
   });
 
-  final Fehler? fehler;
+  final Fehler fehler;
   final List<Fehler>? fehlerliste;
 
   @override
@@ -20,16 +20,18 @@ class FehlerDetailansicht extends StatelessWidget {
         Provider.of<BenutzerInfoProvider>(context, listen: false);
     final FehlerlisteProvider fehlerlisteProvider =
         Provider.of<FehlerlisteProvider>(context);
+    final String urlZumBild =
+        "https://www.icanfixit.eu/gibBild.php?schule=${fehlerlisteProvider.schule}&token=${fehlerlisteProvider.token}&bild=${fehler.bild}";
 
     /// Nimmt das in der Form YYYYMMDD gespeicherte Datum und formatiert es neu
     String datumInSchoen() {
       try {
-        String tag = fehler!.datum.split("")[6] + fehler!.datum.split("")[7];
-        String monat = fehler!.datum.split("")[4] + fehler!.datum.split("")[5];
-        String jahr = fehler!.datum.split("")[0] +
-            fehler!.datum.split("")[1] +
-            fehler!.datum.split("")[2] +
-            fehler!.datum.split("")[3];
+        String tag = fehler.datum.split("")[6] + fehler.datum.split("")[7];
+        String monat = fehler.datum.split("")[4] + fehler.datum.split("")[5];
+        String jahr = fehler.datum.split("")[0] +
+            fehler.datum.split("")[1] +
+            fehler.datum.split("")[2] +
+            fehler.datum.split("")[3];
         String gesamt = tag + "." + monat + "." + jahr;
         return gesamt;
       } catch (error) {
@@ -69,7 +71,7 @@ class FehlerDetailansicht extends StatelessWidget {
                                 onPressed: () {
                                   try {
                                     fehlerlisteProvider.fehlerGeloescht(
-                                      fehler: fehler!,
+                                      fehler: fehler,
                                       istFehlermelder:
                                           benutzerInfoProvider.istFehlermelder,
                                     );
@@ -115,12 +117,12 @@ class FehlerDetailansicht extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Hero(
-                    tag: "CircleAvatar${fehler!.id}",
+                    tag: "CircleAvatar${fehler.id}",
                     child: CircleAvatar(
                       backgroundColor: Colors.black,
                       radius: deviceSize.width * 0.1,
                       child: Text(
-                        fehler!.raum,
+                        fehler.raum,
                         style: thema.textTheme.headline4,
                       ),
                     ),
@@ -143,12 +145,12 @@ class FehlerDetailansicht extends StatelessWidget {
               ),
 
               Text(
-                fehler!.beschreibung,
+                fehler.beschreibung,
                 style: thema.textTheme.bodyText1,
               ),
 
               // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
-              (fehler!.bild.isEmpty || fehler!.bild == "")
+              (fehler.bild.isEmpty || fehler.bild == "")
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -177,17 +179,14 @@ class FehlerDetailansicht extends StatelessWidget {
                               fullscreenDialog: true,
                               builder: (BuildContext context) =>
                                   BildDetailansicht(
-                                urlZumBild:
-                                    "https://www.icanfixit.eu/fehlerBilder/" +
-                                        fehler!.bild,
+                                urlZumBild: urlZumBild,
                               ),
                             ),
                           );
                         },
                         child: Center(
                           child: Image.network(
-                            "https://www.icanfixit.eu/fehlerBilder/" +
-                                fehler!.bild,
+                            urlZumBild,
                             fit: BoxFit.contain,
                             loadingBuilder: (
                               BuildContext context,
@@ -206,6 +205,7 @@ class FehlerDetailansicht extends StatelessWidget {
                             },
                             errorBuilder: (BuildContext currentContext,
                                 Object exception, StackTrace? stackTrace) {
+                              print(exception.toString());
                               return Text(
                                 "Bild konnte nicht geladen werden",
                                 style: TextStyle(

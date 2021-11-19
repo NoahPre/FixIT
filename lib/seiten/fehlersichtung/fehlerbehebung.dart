@@ -23,6 +23,8 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
     final Size deviceSize = MediaQuery.of(context).size;
     final FehlerlisteProvider fehlerlisteProvider =
         Provider.of<FehlerlisteProvider>(context);
+    final String urlZumBild =
+        "https://www.icanfixit.eu/gibBild.php?schule=${fehlerlisteProvider.schule}&token=${fehlerlisteProvider.token}&bild=${widget.fehler.bild}";
 
     // das Datum in schön
     // TODO: evtl. das intelligenter lösen
@@ -150,36 +152,31 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                               fullscreenDialog: true,
                               builder: (BuildContext context) =>
                                   BildDetailansicht(
-                                urlZumBild:
-                                    "https://www.icanfixit.eu/fehlerBilder/" +
-                                        widget.fehler.bild,
+                                urlZumBild: urlZumBild,
                               ),
                             ),
                           );
                         },
                         child: Center(
-                          child: Image.network(
-                            "https://www.icanfixit.eu/fehlerBilder/" +
-                                widget.fehler.bild,
-                            fit: BoxFit.contain,
-                            loadingBuilder: (
-                              BuildContext context,
-                              Widget child,
-                              ImageChunkEvent? loadingProgress,
-                            ) {
-                              // zeigt das Bild an, wenn es fertig heruntergeladen ist
-                              if (loadingProgress == null) {
-                                return child;
-                              }
-                              return CircularProgressIndicator(
-                                  // valueColor: AlwaysStoppedAnimation<Color>(
-                                  //   thema.primaryColor,
-                                  // ),
-                                  );
-                            },
-                            errorBuilder: (BuildContext context,
-                                    Object exception, StackTrace? stackTrace) =>
-                                Column(
+                          child: Image.network(urlZumBild, fit: BoxFit.contain,
+                              loadingBuilder: (
+                            BuildContext context,
+                            Widget child,
+                            ImageChunkEvent? loadingProgress,
+                          ) {
+                            // zeigt das Bild an, wenn es fertig heruntergeladen ist
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return CircularProgressIndicator(
+                                // valueColor: AlwaysStoppedAnimation<Color>(
+                                //   thema.primaryColor,
+                                // ),
+                                );
+                          }, errorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stackTrace) {
+                            print(exception.toString());
+                            return Column(
                               children: [
                                 Text(
                                   "Bild konnte nicht geladen werden",
@@ -194,11 +191,12 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
+                            );
+                          }),
                         ),
                       ),
                     ),
+              // Informationen zum Fixer und ein Kommentar
               /*Align(
                       alignment: Alignment.bottomLeft,
                       child: Column(
