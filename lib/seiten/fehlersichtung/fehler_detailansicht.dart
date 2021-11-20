@@ -23,22 +23,6 @@ class FehlerDetailansicht extends StatelessWidget {
     final String urlZumBild =
         "https://www.icanfixit.eu/gibBild.php?schule=${fehlerlisteProvider.schule}&token=${fehlerlisteProvider.token}&bild=${fehler.bild}";
 
-    /// Nimmt das in der Form YYYYMMDD gespeicherte Datum und formatiert es neu
-    String datumInSchoen() {
-      try {
-        String tag = fehler.datum.split("")[6] + fehler.datum.split("")[7];
-        String monat = fehler.datum.split("")[4] + fehler.datum.split("")[5];
-        String jahr = fehler.datum.split("")[0] +
-            fehler.datum.split("")[1] +
-            fehler.datum.split("")[2] +
-            fehler.datum.split("")[3];
-        String gesamt = tag + "." + monat + "." + jahr;
-        return gesamt;
-      } catch (error) {
-        return "";
-      }
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -47,61 +31,76 @@ class FehlerDetailansicht extends StatelessWidget {
         ),
         backgroundColor: thema.colorScheme.primary,
         actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.delete,
-                color: thema.colorScheme.onPrimary,
-              ),
-              tooltip: "Fehler löschen",
-              onPressed: () async {
-                await showDialog<bool>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SimpleDialog(
-                        title: Text("Fehler wirklich löschen?"),
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SimpleDialogOption(
-                                child: Text(
-                                  "Bestätigen",
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                                onPressed: () {
-                                  try {
-                                    fehlerlisteProvider.fehlerGeloescht(
-                                      fehler: fehler,
-                                      istFehlermelder:
-                                          benutzerInfoProvider.istFehlermelder,
-                                    );
+          Builder(builder: (currentContext) {
+            return IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: thema.colorScheme.onPrimary,
+                ),
+                tooltip: "Fehler löschen",
+                onPressed: () async {
+                  if (await ueberpruefeInternetVerbindung(
+                          currentContext: currentContext) ==
+                      false) {
+                    return;
+                  }
+                  await showDialog<bool>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SimpleDialog(
+                          title: Text("Fehler wirklich löschen?"),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SimpleDialogOption(
+                                  child: Text(
+                                    "Bestätigen",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  onPressed: () async {
+                                    try {
+                                      String serverAntwort =
+                                          await fehlerlisteProvider
+                                              .fehlerGeloescht(
+                                        fehler: fehler,
+                                        istFehlermelder: benutzerInfoProvider
+                                            .istFehlermelder,
+                                      );
+                                      ueberpruefeServerAntwort(
+                                        antwort: serverAntwort,
+                                        currentContext: currentContext,
+                                      );
 
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    }
+                                    // TODO: braucht man das?!
+                                    on Exception catch (error) {
+                                      Navigator.pop(context);
+                                      print(error);
+                                      zeigeSnackBarNachricht(
+                                        nachricht:
+                                            "Nur eigene Fehlermeldungen können gelöscht werden",
+                                        context: context,
+                                        istError: true,
+                                      );
+                                    }
+                                  },
+                                ),
+                                SimpleDialogOption(
+                                  child: Text("Abbrechen"),
+                                  onPressed: () {
                                     Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  } on Exception catch (error) {
-                                    Navigator.pop(context);
-                                    print(error);
-                                    zeigeSnackBarNachricht(
-                                      nachricht:
-                                          "Nur eigene Fehlermeldungen können gelöscht werden",
-                                      context: context,
-                                      istError: true,
-                                    );
-                                  }
-                                },
-                              ),
-                              SimpleDialogOption(
-                                child: Text("Abbrechen"),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    });
-              }),
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      });
+                });
+          }),
         ],
       ),
       body: SafeArea(
@@ -131,7 +130,7 @@ class FehlerDetailansicht extends StatelessWidget {
                     width: deviceSize.width * 0.025,
                   ),
                   Text(
-                    "gemeldet am: " + datumInSchoen(),
+                    "gemeldet am: " + datumInSchoen(fehler: fehler),
                     style: thema.textTheme.bodyText1,
                   ),
                 ],

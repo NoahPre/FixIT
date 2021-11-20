@@ -29,17 +29,24 @@ class GemeldeteFehler extends StatelessWidget {
       backgroundColor: thema.colorScheme.primary,
       centerTitle: true,
       actions: [
-        IconButton(
-          onPressed: () async {
-            if (fehlerlisteProvider.fehlerliste != null) {
-              fehlerlisteProvider.fehlerliste!.clear();
-            }
-            await fehlerlisteProvider.holeFehler();
-            return null;
-          },
-          icon: Icon(Icons.refresh),
-          tooltip: "Neu laden",
-        ),
+        Builder(builder: (currentContext) {
+          return IconButton(
+            onPressed: () async {
+              if (await ueberpruefeInternetVerbindung(
+                      currentContext: currentContext) ==
+                  false) {
+                return;
+              }
+              if (fehlerlisteProvider.fehlerliste != null) {
+                fehlerlisteProvider.fehlerliste!.clear();
+              }
+              await fehlerlisteProvider.holeFehler();
+              return null;
+            },
+            icon: Icon(Icons.refresh),
+            tooltip: "Neu laden",
+          );
+        }),
         SizedBox(
           width: 10.0,
         ),
@@ -71,7 +78,7 @@ class GemeldeteFehler extends StatelessWidget {
       floatingActionButton: FABHome(),
       body: Builder(builder: (currentContext) {
         WidgetsBinding.instance?.addPostFrameCallback((_) async {
-          if (await benutzerInfoProvider.istUnterstuetzteVersion() == false) {
+          if (await benutzerInfoProvider.istUnterstuetzteVersion() == "false") {
             await showDialog(
               barrierDismissible: false,
               context: currentContext,

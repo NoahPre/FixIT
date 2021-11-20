@@ -7,8 +7,13 @@ import "package:image_picker/image_picker.dart";
 ///
 /// Außerdem enthält er Methoden, mit denen man
 /// - neue Fehler hinzufügen kann
-/// - Fehler editieren kann
+/// - Fehler editieren kann / Fehler als gefixt markieren kann
 /// - Fehler löschen kann
+///
+/// Jede Funktion, die mit dem Server kommuniziert, gibt den Status in Form eines Strings zurück.
+/// "1" als Status bedeutet: alles ist richtig abgelaufen
+/// "0": irgendetwas ist falsch gelaufen
+/// spezifischere Probleme haben einen eigenen Statuswert (etwa "falsches_token" für ein falsches Authentifizierungstoken)
 class FehlerlisteProvider with ChangeNotifier {
   FehlerlisteProvider() {
     holeToken();
@@ -52,17 +57,19 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
-  Future<void> holeFehler() async {
+  Future<String> holeFehler() async {
     var url =
         'https://www.icanfixit.eu/gibAlleFehler.php?schule=$schule&token=$token';
     var jsonObjekt = [];
+    String status = "";
     try {
       http.Response response = await http.get(Uri.parse(url));
       jsonObjekt = jsonDecode(response.body) ?? [];
+      status = response.body;
     } catch (error) {
       await Future.delayed(const Duration(seconds: 3), () {});
       holeFehler();
-      return;
+      return "";
     }
     // überschreibt fehlerliste mit den Werten aus der Datenbank
     fehlerliste = List.generate(jsonObjekt.length, (int index) {
@@ -76,6 +83,7 @@ class FehlerlisteProvider with ChangeNotifier {
     await entferneGeloeschteFehlermeldungenIDs();
     print(eigeneFehlermeldungenIDs.length);
     notifyListeners();
+    return status;
   }
 
   Future<void> holeFehlermeldungenIDsUndZaehler() async {
@@ -89,10 +97,10 @@ class FehlerlisteProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Sendet den übergebenen Fehler ans Backend
+  /// Sendet den übergebenen Fehler an den Server
   ///
   /// es kann immer nur entweder image oder pickedImage angegeben werden
-  Future<void> fehlerGemeldet(
+  Future<String> fehlerGemeldet(
       {required Fehler fehler, File? image, PickedFile? pickedImage}) async {
     String dateiname = "";
     // TODO: das hier alles ein wenig sicherer und generell besser machen
@@ -130,7 +138,7 @@ class FehlerlisteProvider with ChangeNotifier {
     // erhöht den Zähler
     await erhoeheFehlermeldungsZaehler();
     // sendet den Fehler zum Server
-    await schreibeFehler(
+    String status = await schreibeFehler(
       id: fehler.id,
       datum: fehler.datum,
       raum: fehler.raum,
@@ -142,16 +150,17 @@ class FehlerlisteProvider with ChangeNotifier {
     fehlerliste!.add(fehler);
     fehlerlisteSink.add(fehlerliste);
     notifyListeners();
+    return status;
   }
 
   /// Startet das Upload der übergebenen Daten
-  Future<void> starteUpload({
+  Future<String> starteUpload({
     required Fehler fehler,
     required String base64EncodedImage,
     required String pfad,
     required String dateiname,
   }) async {
-    upload(
+    return upload(
       dateiname: dateiname,
       base64Image: base64EncodedImage,
       // base64Image: base64Encode(
@@ -179,30 +188,32 @@ class FehlerlisteProvider with ChangeNotifier {
     return "";
   }
 
-  /// ändert den Status des Fehlers mit der angegebenen id
+  /// Ändert den Status des Fehlers mit der angegebenen ID
   /// "0": Fehler nicht behoben
   /// "1": Fehler behoben
-  Future<void> fehlerStatusGeaendert({
+  Future<String> fehlerStatusGeaendert({
     required String id,
     required String gefixt,
   }) async {
-    var url =
-        "https://www.icanfixit.eu/behebeFehler.php?id=$id&gefixt=$gefixt&schule=$schule&token=$token";
-    await http.get(Uri.parse(url));
-    holeFehler();
-    // notifyListeners();
-  }
-
-  // um einen alten Fehler zu löschen muss man nur diese Funktion aufrufen
-  Future<void> fehlerGeloescht({
-    required Fehler fehler,
-    required bool istFehlermelder,
-  }) async {
-    if (istFehlermelder == false) {
+    // wenn der Fehler gerade gefixt wurde, dann wird der Fehlerbehebungszähler um 1 erhöht
+    if (gefixt == "1") {
       await erhoeheFehlerbehebungsZaehler();
     }
 
-    await entferneFehler(
+    var url =
+        "https://www.icanfixit.eu/behebeFehler.php?id=$id&gefixt=$gefixt&schule=$schule&token=$token";
+    http.Response response = await http.get(Uri.parse(url));
+    holeFehler();
+    return response.body;
+    // notifyListeners();
+  }
+
+  /// Löscht den übergebenen Fehler
+  Future<String> fehlerGeloescht({
+    required Fehler fehler,
+    required bool istFehlermelder,
+  }) async {
+    String status = await entferneFehler(
       id: fehler.id,
       fileName: fehler.bild,
       istFehlermelder: istFehlermelder,
@@ -211,10 +222,11 @@ class FehlerlisteProvider with ChangeNotifier {
         .removeWhere((aktuellerFehler) => aktuellerFehler.id == fehler.id);
     fehlerlisteSink.add(fehlerliste);
     notifyListeners();
+    return status;
   }
 
   /// Fügt einen Fehler mit schreibeFehler.php hinzu
-  Future<void> schreibeFehler({
+  Future<String> schreibeFehler({
     required String id,
     required String datum,
     required String raum,
@@ -227,17 +239,19 @@ class FehlerlisteProvider with ChangeNotifier {
         "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&schule=$schule&token=$token";
     var answer = await http.get(Uri.parse(url));
     print(answer.body.toString());
+    return answer.body;
   }
 
   /// Löscht einen Fehler mit entferneFehler.php
-  Future<void> entferneFehler({
+  Future<String> entferneFehler({
     required String id,
     required String fileName,
     required bool istFehlermelder,
   }) async {
     var url =
         "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName&schule=$schule&token=$token";
-    await http.get(Uri.parse(url));
+    http.Response response = await http.get(Uri.parse(url));
+    return response.body;
   }
 
   void dispose() {

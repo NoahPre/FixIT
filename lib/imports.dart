@@ -37,8 +37,10 @@ export "package:fixit/seiten/fehlersichtung/bild_detailansicht.dart";
 export "package:fixit/widgets_und_funktionen/fertig_button.dart";
 export 'package:fixit/widgets_und_funktionen/seiten_menue.dart';
 export "package:fixit/widgets_und_funktionen/zeige_snackbar_nachricht.dart";
-export "package:fixit/widgets_und_funktionen/internetverbindungs_check.dart";
+export 'package:fixit/widgets_und_funktionen/ueberpruefe_internet_verbindung.dart';
+export "package:fixit/widgets_und_funktionen/ueberpruefe_server_antwort.dart";
 export "package:fixit/widgets_und_funktionen/oeffne_url.dart";
+export "package:fixit/widgets_und_funktionen/datum_in_schoen.dart";
 
 // Klassen:
 export "package:fixit/klassen/fehler.dart";

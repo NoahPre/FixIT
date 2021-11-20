@@ -261,9 +261,12 @@ class _AnmeldungState extends State<Anmeldung> {
                           _radioButtonChanged(value);
                         },
                       ),
-                      Text(
-                        "Fehlermelder",
-                        style: thema.textTheme.bodyText1,
+                      TextButton(
+                        child: Text(
+                          "Fehlermelder",
+                          style: thema.textTheme.bodyText1,
+                        ),
+                        onPressed: () => _radioButtonChanged(0),
                       ),
                       Radio(
                         value: 1,
@@ -273,9 +276,12 @@ class _AnmeldungState extends State<Anmeldung> {
                           _radioButtonChanged(value);
                         },
                       ),
-                      Text(
-                        "Fehlerbeheber",
-                        style: thema.textTheme.bodyText1,
+                      TextButton(
+                        child: Text(
+                          "Fehlerbeheber",
+                          style: thema.textTheme.bodyText1,
+                        ),
+                        onPressed: () => _radioButtonChanged(1),
                       ),
                     ],
                   ),

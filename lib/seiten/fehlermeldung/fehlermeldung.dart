@@ -197,48 +197,58 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     return Scaffold(
       appBar: appBar,
       // Button um den Fehler zu melden
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: "FloatingActionButton",
-        label: Row(
-          children: <Widget>[
-            Text(
-              "Senden",
-              style: TextStyle(
+      floatingActionButton: Builder(builder: (currentContext) {
+        return FloatingActionButton.extended(
+          heroTag: "FloatingActionButton",
+          label: Row(
+            children: <Widget>[
+              Text(
+                "Senden",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(width: mediaQuery.size.width * 0.01),
+              Icon(
+                Icons.send,
                 color: Colors.white,
               ),
-            ),
-            SizedBox(width: mediaQuery.size.width * 0.01),
-            Icon(
-              Icons.send,
-              color: Colors.white,
-            ),
-          ],
-        ),
-        onPressed: () {
-          if (_formKey.currentState!.validate() == false) {
-            return;
-          }
-          setState(() {
-            neuerFehler.beschreibung = _beschreibungController.text;
-          });
-          if (status == "") {
-            if (_pfadZumBild == "") {
-              fehlerlisteProvider.fehlerGemeldet(
-                fehler: neuerFehler,
-              );
-            } else {
-              fehlerlisteProvider.fehlerGemeldet(
-                fehler: neuerFehler,
-                image: File(_pfadZumBild),
-              );
+            ],
+          ),
+          onPressed: () async {
+            if (_formKey.currentState!.validate() == false ||
+                await ueberpruefeInternetVerbindung(
+                        currentContext: currentContext) ==
+                    false) {
+              return;
             }
-          } else {
-            fehlerlisteProvider.fehlerGemeldet(
-                fehler: neuerFehler, pickedImage: temporaeresBild);
-          }
-          Navigator.pop(context);
-        },
-      ),
+            setState(() {
+              neuerFehler.beschreibung = _beschreibungController.text;
+            });
+            String serverAntwort = "";
+            if (status == "") {
+              if (_pfadZumBild == "") {
+                serverAntwort = await fehlerlisteProvider.fehlerGemeldet(
+                  fehler: neuerFehler,
+                );
+              } else {
+                serverAntwort = await fehlerlisteProvider.fehlerGemeldet(
+                  fehler: neuerFehler,
+                  image: File(_pfadZumBild),
+                );
+              }
+            } else {
+              serverAntwort = await fehlerlisteProvider.fehlerGemeldet(
+                  fehler: neuerFehler, pickedImage: temporaeresBild);
+            }
+            Navigator.pop(context);
+            ueberpruefeServerAntwort(
+              antwort: serverAntwort,
+              currentContext: currentContext,
+            );
+          },
+        );
+      }),
       body: SafeArea(
         child: Container(
           //TODO: dieses Problem hier kann glaube ich noch eleganter gelöst werden

@@ -4,21 +4,6 @@ import "package:fixit/imports.dart";
 class FehlerlisteEintrag extends StatelessWidget {
   final Fehler fehler;
   FehlerlisteEintrag({required this.fehler});
-  // konvertiert das Datum aus dem gegebenen Fehler zu einem schönen String
-  String datumInSchoen(Fehler fehler) {
-    try {
-      String tag = fehler.datum.split("")[6] + fehler.datum.split("")[7];
-      String monat = fehler.datum.split("")[4] + fehler.datum.split("")[5];
-      String jahr = fehler.datum.split("")[0] +
-          fehler.datum.split("")[1] +
-          fehler.datum.split("")[2] +
-          fehler.datum.split("")[3];
-      String gesamt = tag + "." + monat + "." + jahr;
-      return gesamt;
-    } catch (error) {
-      return "";
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +31,15 @@ class FehlerlisteEintrag extends StatelessWidget {
             color: Colors.red,
           ),
           confirmDismiss: (_) async {
-            if (fehlerlisteProvider.eigeneFehlermeldungenIDs
-                        .contains(fehler.id) ==
-                    false &&
-                benutzerInfoProvider.istFehlermelder == true) {
+            // wird ausgeführt, wenn
+            // - der Fehler nicht vom Benutzer ist und der Benutzer Fehlermelder ist
+            // - das Gerät nicht mit dem Internet verbunden ist
+            if ((fehlerlisteProvider.eigeneFehlermeldungenIDs
+                            .contains(fehler.id) ==
+                        false &&
+                    benutzerInfoProvider.istFehlermelder == true) ||
+                await ueberpruefeInternetVerbindung(currentContext: context) ==
+                    false) {
               zeigeSnackBarNachricht(
                 nachricht: "Nur eigene Fehlermeldungen können gelöscht werden",
                 context: context,
@@ -93,9 +83,13 @@ class FehlerlisteEintrag extends StatelessWidget {
             return returnValue;
           },
           onDismissed: (DismissDirection direction) async {
-            fehlerlisteProvider.fehlerGeloescht(
+            String serverAntwort = await fehlerlisteProvider.fehlerGeloescht(
               fehler: fehler,
               istFehlermelder: benutzerInfoProvider.istFehlermelder,
+            );
+            ueberpruefeServerAntwort(
+              antwort: serverAntwort,
+              currentContext: context,
             );
           },
           child: InkWell(
@@ -185,7 +179,7 @@ class FehlerlisteEintrag extends StatelessWidget {
 
                                 // Datumsangabe der Fehlermeldung
                                 Text(
-                                  datumInSchoen(fehler),
+                                  datumInSchoen(fehler: fehler),
                                   maxLines: 1,
                                   style: thema.textTheme.bodyText1,
                                 ),

@@ -95,7 +95,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
                   ) ==
                   true) {
                 refresh();
-              }
+              } else {}
             },
             color: thema.colorScheme.primary,
             child: ListView(

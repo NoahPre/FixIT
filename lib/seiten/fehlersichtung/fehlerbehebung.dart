@@ -26,25 +26,6 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
     final String urlZumBild =
         "https://www.icanfixit.eu/gibBild.php?schule=${fehlerlisteProvider.schule}&token=${fehlerlisteProvider.token}&bild=${widget.fehler.bild}";
 
-    // das Datum in schön
-    // TODO: evtl. das intelligenter lösen
-    String datumInSchoen() {
-      try {
-        String tag =
-            widget.fehler.datum.split("")[6] + widget.fehler.datum.split("")[7];
-        String monat =
-            widget.fehler.datum.split("")[4] + widget.fehler.datum.split("")[5];
-        String jahr = widget.fehler.datum.split("")[0] +
-            widget.fehler.datum.split("")[1] +
-            widget.fehler.datum.split("")[2] +
-            widget.fehler.datum.split("")[3];
-        String gesamt = tag + "." + monat + "." + jahr;
-        return gesamt;
-      } catch (error) {
-        return "";
-      }
-    }
-
     var appBar = AppBar(
       title: Text(
         "Fehlerbehebung",
@@ -52,27 +33,39 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
       ),
       backgroundColor: thema.colorScheme.primary,
       actions: <Widget>[
-        IconButton(
-          icon: Icon(
-            widget.fehler.gefixt == "0" ? Icons.done : Icons.undo,
-            color: thema.colorScheme.onPrimary,
-          ),
-          tooltip: widget.fehler.gefixt == "0"
-              ? "Fehler beheben"
-              : '"Fehler behoben" zurücknehmen',
-          onPressed: () async {
-            if (widget.fehler.gefixt == "0") {
-              await fehlerlisteProvider.fehlerStatusGeaendert(
-                id: widget.fehler.id,
-                gefixt: "1",
+        Builder(builder: (currentContext) {
+          return IconButton(
+            icon: Icon(
+              widget.fehler.gefixt == "0" ? Icons.done : Icons.undo,
+              color: thema.colorScheme.onPrimary,
+            ),
+            tooltip: widget.fehler.gefixt == "0"
+                ? "Fehler beheben"
+                : '"Fehler behoben" zurücknehmen',
+            onPressed: () async {
+              if (await ueberpruefeInternetVerbindung(
+                      currentContext: currentContext) ==
+                  false) {
+                return;
+              }
+              String serverAntwort = "";
+              if (widget.fehler.gefixt == "0") {
+                serverAntwort = await fehlerlisteProvider.fehlerStatusGeaendert(
+                  id: widget.fehler.id,
+                  gefixt: "1",
+                );
+              } else {
+                serverAntwort = await fehlerlisteProvider.fehlerStatusGeaendert(
+                    id: widget.fehler.id, gefixt: "0");
+              }
+              ueberpruefeServerAntwort(
+                antwort: serverAntwort,
+                currentContext: currentContext,
               );
-            } else {
-              await fehlerlisteProvider.fehlerStatusGeaendert(
-                  id: widget.fehler.id, gefixt: "0");
-            }
-            Navigator.pop(context);
-          },
-        ),
+              Navigator.pop(context);
+            },
+          );
+        }),
       ],
     );
     return Scaffold(
@@ -104,7 +97,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                     width: 5.0,
                   ),
                   Text(
-                    "gemeldet am: " + datumInSchoen(),
+                    "gemeldet am: " + datumInSchoen(fehler: widget.fehler),
                     style: thema.textTheme.bodyText1,
                   ),
                 ],

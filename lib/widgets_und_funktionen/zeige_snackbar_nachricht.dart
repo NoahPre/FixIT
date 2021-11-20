@@ -11,19 +11,22 @@ void zeigeSnackBarNachricht({
   required bool istError,
 }) {
   ThemeData thema = Theme.of(context);
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      backgroundColor: istError
-          ? thema.colorScheme.error
-          : thema.snackBarTheme.backgroundColor,
-      content: Text(
-        nachricht,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 4,
-        style: istError
-            ? TextStyle(color: thema.colorScheme.onError)
-            : thema.snackBarTheme.contentTextStyle,
-      ),
-    ),
-  );
+  ScaffoldMessenger.of(context)
+      .showSnackBar(
+        SnackBar(
+          backgroundColor: istError
+              ? thema.colorScheme.error
+              : thema.snackBarTheme.backgroundColor,
+          content: Text(
+            nachricht,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 4,
+            style: istError
+                ? TextStyle(color: thema.colorScheme.onError)
+                : thema.snackBarTheme.contentTextStyle,
+          ),
+        ),
+      )
+      .closed
+      .then((value) => ScaffoldMessenger.of(context).clearSnackBars());
 }

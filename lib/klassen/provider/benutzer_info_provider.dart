@@ -43,9 +43,23 @@ class BenutzerInfoProvider with ChangeNotifier {
   Future<void> holeUserInformationUndAuthentifiziere() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
-    schule = sharedPreferences.getString("schule") ?? "";
+    schule = sharedPreferences.getString("schule") ?? "mtg";
+    print("schule: " + schule);
     schuleSink.add(schule);
+    // TODO: bald entfernen!
+    await setztSchuleGleichMTG();
     istAuthentifiziert = await authentifizierung();
+  }
+
+  // Übergangsfunktion
+  // setzt den Wert "schule" in SharedPreferences auf "mtg"
+  // wird benötigt, damit sich nicht jeder erneut anmelden muss
+  Future<void> setztSchuleGleichMTG() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? schuleInFunktion = sharedPreferences.getString("schule");
+    if (schuleInFunktion == null) {
+      sharedPreferences.setString("schule", "mtg");
+    }
   }
 
   /// wird aufgerufen, wenn der Benutzer sich erfolgreich anmeldet und damit authentifiziert hat &
