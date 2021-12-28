@@ -32,6 +32,8 @@ class Fehler {
 
   /// wir benutzen als ID die uuid.v4() aus dem uuid Package von pub.dev
   String id;
+
+  /// das Datum des Fehlers im Format YYYYMMDD
   String datum;
 
   // was der User eingibt

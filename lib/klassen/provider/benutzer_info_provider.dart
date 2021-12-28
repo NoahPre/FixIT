@@ -106,8 +106,10 @@ class BenutzerInfoProvider with ChangeNotifier {
     istAuthentifiziert = false;
     authentifizierungSink.add(false);
     // setzt andere Werte in FehlerlisteProvider zurück
-    fehlerlisteProvider.fehlerliste = null;
-    fehlerlisteProvider.fehlerlisteSink.add(fehlerlisteProvider.fehlerliste);
+    fehlerlisteProvider.fehlerliste = [];
+    fehlerlisteProvider.angezeigteFehlerliste = [];
+    fehlerlisteProvider.fehlerlisteSink
+        .add(fehlerlisteProvider.angezeigteFehlerliste);
     fehlerlisteProvider.eigeneFehlermeldungenIDs = [];
     fehlerlisteProvider.fehlermeldungsZaehler = 0;
     fehlerlisteProvider.fehlerbehebungsZaehler = 0;

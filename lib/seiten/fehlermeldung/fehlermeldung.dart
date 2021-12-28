@@ -98,7 +98,6 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   }) {
     setState(() {
       _ueberschrift = "Fehler in Raum " + textInTextfield!;
-      neuerFehler.raum = textInTextfield;
     });
   }
 
@@ -237,9 +236,11 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                     false) {
               return;
             }
-            setState(() {
-              neuerFehler.beschreibung = _beschreibungController.text;
-            });
+            // setState(() {
+            neuerFehler.raum =
+                (_dropdownButtonText ?? "") + _raumController.text;
+            neuerFehler.beschreibung = _beschreibungController.text;
+            // });
             String serverAntwort = "";
             if (status == "") {
               if (_pfadZumBild == "") {
@@ -296,7 +297,6 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                                     ),
                                     elevation: 8,
                                     value: _dropdownButtonText,
-                                    hint: Text("Präfix"),
                                     items: praefixe.map((String value) {
                                       return DropdownMenuItem<String>(
                                         child: Text(value),

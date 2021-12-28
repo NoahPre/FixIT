@@ -74,13 +74,13 @@ class _FehlerlisteState extends State<Fehlerliste> {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     ThemeData thema = Theme.of(context);
     // aktualisiert die Liste
-    Future<void> refresh() async {
-      if (fehlerlisteProvider.fehlerliste != null) {
-        fehlerlisteProvider.fehlerliste!.clear();
-      }
+    Future<void> aktualisieren() async {
+      fehlerlisteProvider.fehlerliste.clear();
       await fehlerlisteProvider.holeFehler();
       return null;
     }
+
+    print("build");
 
     // schaut, ob auf dem Server irgendwelche neuen Nachrichten sind
     // TODO: das hier auslagern
@@ -146,12 +146,11 @@ class _FehlerlisteState extends State<Fehlerliste> {
     });
     return StreamBuilder(
       stream: fehlerlisteProvider.fehlerlisteStream,
-      initialData: fehlerlisteProvider.fehlerliste,
+      initialData: fehlerlisteProvider.angezeigteFehlerliste,
       builder: (
         BuildContext context,
         AsyncSnapshot snapshot,
       ) {
-        // Widget für den Scrollbalken am Rand
         Widget screen = Builder(
           builder: (BuildContext currentContext) => RefreshIndicator(
             onRefresh: () async {
@@ -159,7 +158,8 @@ class _FehlerlisteState extends State<Fehlerliste> {
                     currentContext: currentContext,
                   ) ==
                   true) {
-                refresh();
+                print("Aktualisieren");
+                aktualisieren();
               } else {}
             },
             color: thema.colorScheme.primary,
@@ -188,18 +188,6 @@ class _FehlerlisteState extends State<Fehlerliste> {
                               eigeneFehlermeldungenIDs:
                                   fehlerlisteProvider.eigeneFehlermeldungenIDs,
                               thema: thema)
-                      // FutureBuilder(
-                      //     future: zeigeFehlerliste(
-                      //         fehlerliste: snapshot.data, thema: thema),
-                      //     builder: (BuildContext context,
-                      //         AsyncSnapshot snapshot) {
-                      //       if (snapshot.data == null) {
-                      //         return Container();
-                      //       } else {
-                      //         return snapshot.data;
-                      //       }
-                      //     })
-
                       // zeigt einen Ladedonut an, während die Fehlerliste fertig heruntergeladen wird
                       : [
                           Container(
@@ -233,7 +221,9 @@ class _FehlerlisteState extends State<Fehlerliste> {
         );
         return snapshot.data?.length == 0
             ? screen
-            : Scrollbar(
+            :
+            // Widget für den Scrollbalken am Rand
+            Scrollbar(
                 child: screen,
               );
       },

@@ -41,6 +41,7 @@ export 'package:fixit/widgets_und_funktionen/ueberpruefe_internet_verbindung.dar
 export "package:fixit/widgets_und_funktionen/ueberpruefe_server_antwort.dart";
 export "package:fixit/widgets_und_funktionen/oeffne_url.dart";
 export "package:fixit/widgets_und_funktionen/datum_in_schoen.dart";
+export "package:fixit/widgets_und_funktionen/sortiere_fehlerliste.dart";
 
 // Klassen:
 export "package:fixit/klassen/fehler.dart";

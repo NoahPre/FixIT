@@ -1,12 +1,24 @@
 // gemeldeteFehler.dart
-import 'package:flutter/material.dart';
-
 import '../../imports.dart';
 
 // TODO: intelligente Weise einbauen, gefixte Fehler nach bestimmter Zeit wieder zu löschen
 
 /// Startseite der App
-class GemeldeteFehler extends StatelessWidget {
+class GemeldeteFehler extends StatefulWidget {
+  @override
+  State<GemeldeteFehler> createState() => _GemeldeteFehlerState();
+}
+
+class _GemeldeteFehlerState extends State<GemeldeteFehler> {
+  Sortierung _dropdownButtonValue = Sortierung.datum_absteigend;
+
+  List<List> sortierungsmoeglichkeiten = [
+    [Sortierung.datum_absteigend, "Datum Absteigend"],
+    [Sortierung.datum_aufsteigend, "Datum Aufsteigend"],
+    [Sortierung.nicht_gefixt, "Nicht Gefixt"],
+    // [Sortierung.raume_aufsteigend, "Räume"],
+  ];
+
   @override
   Widget build(BuildContext context) {
     ThemeData thema = Theme.of(context);
@@ -29,6 +41,42 @@ class GemeldeteFehler extends StatelessWidget {
       backgroundColor: thema.colorScheme.primary,
       centerTitle: true,
       actions: [
+        Tooltip(
+          message: "Filter",
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<Sortierung>(
+              icon: Icon(
+                Icons.sort,
+                color: thema.colorScheme.onPrimary,
+              ),
+              items: sortierungsmoeglichkeiten.map((List eintrag) {
+                return DropdownMenuItem<Sortierung>(
+                    value: eintrag[0],
+                    alignment: Alignment.centerLeft,
+                    // TODO: herausfinden, warum man hier anstatt des fettgedruckten Texts KEINEN kleinen Haken rechts neben die Schrift machen kann
+                    // übliches Problem mit Column/Row ohne festgelegte Höhe/Breite und Expanded/Flexible Widgets
+                    child: Text(eintrag[1],
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: _dropdownButtonValue == eintrag[0]
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: _dropdownButtonValue == eintrag[0]
+                              ? thema.highlightColor
+                              : thema.colorScheme.primary,
+                        )));
+              }).toList(),
+              onChanged: (Sortierung? value) {
+                fehlerlisteProvider.sortierung =
+                    value ?? Sortierung.datum_absteigend;
+                setState(() {
+                  _dropdownButtonValue =
+                      value ?? sortierungsmoeglichkeiten[0][0];
+                });
+              },
+            ),
+          ),
+        ),
         Builder(builder: (currentContext) {
           return IconButton(
             onPressed: () async {
@@ -37,9 +85,7 @@ class GemeldeteFehler extends StatelessWidget {
                   false) {
                 return;
               }
-              if (fehlerlisteProvider.fehlerliste != null) {
-                fehlerlisteProvider.fehlerliste!.clear();
-              }
+              fehlerlisteProvider.fehlerliste.clear();
               await fehlerlisteProvider.holeFehler();
               return null;
             },
@@ -47,9 +93,6 @@ class GemeldeteFehler extends StatelessWidget {
             tooltip: "Neu laden",
           );
         }),
-        SizedBox(
-          width: 10.0,
-        ),
       ],
     );
 

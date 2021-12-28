@@ -26,6 +26,7 @@ ThemeData thema = ThemeData(
     surface: Colors.white,
     onSurface: Colors.black,
   ),
+  highlightColor: Colors.blue,
   textTheme: TextTheme(
     // TextStyle für die Titel von AppBars
     headline1: TextStyle(

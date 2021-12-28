@@ -21,6 +21,9 @@ class FehlerlisteProvider with ChangeNotifier {
     holeLokaleDaten();
   }
 
+  /// ob der Benutzer als Fehlermelder oder Fehlerbeheber angemeldet ist
+  bool istFehlermelder = true;
+
   /// Schule des Benutzers
   String schule = "";
 
@@ -40,8 +43,26 @@ class FehlerlisteProvider with ChangeNotifier {
   Stream<List<Fehler>?> get fehlerlisteStream =>
       fehlerlisteController.stream as Stream<List<Fehler>?>;
 
-  /// Liste der Fehler, die auf der Startseite angezeigt werden
-  List<Fehler>? fehlerliste;
+  /// Liste aller Fehler, die vom Server für die Institution des Benutzers empfangen wurden
+  List<Fehler> fehlerliste = [];
+
+  /// Sortierte Liste der Fehler, die dem Benutzer auf der Startseite angezeigt werden
+  List<Fehler> angezeigteFehlerliste = [];
+
+  /// Sortierung der angezeigten Fehler
+  Sortierung _sortierung = Sortierung.datum_absteigend;
+
+  Sortierung get sortierung {
+    return _sortierung;
+  }
+
+  set sortierung(Sortierung sortierungInFunktion) {
+    _sortierung = sortierungInFunktion;
+    sortiereFehlerliste(
+        sortierung: sortierungInFunktion,
+        zuSortierendeListe: angezeigteFehlerliste);
+    fehlerlisteSink.add(angezeigteFehlerliste);
+  }
 
   /// IDs der Fehlermeldungen des Benutzers
   List<String> eigeneFehlermeldungenIDs = [];
@@ -80,8 +101,12 @@ class FehlerlisteProvider with ChangeNotifier {
       // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
       return Fehler.from(jsonObjekt[index]);
     });
+    angezeigteFehlerliste = [];
+    sortiereGefixteFehlerAus();
+    sortiereFehlerliste(
+        sortierung: _sortierung, zuSortierendeListe: angezeigteFehlerliste);
     // fügt die geholten Fehler dem fehlerlisteController hinzu und aktualisiert damit das Widget Fehlerliste
-    fehlerlisteSink.add(fehlerliste);
+    fehlerlisteSink.add(angezeigteFehlerliste);
     // räumt die lokal gespeicherte Liste der eigenen Fehlermeldungen auf (eigeneFehlermeldungenIDs, gespeichert in SharedPreferences)
     await entferneGeloeschteFehlermeldungenIDs();
     notifyListeners();
@@ -91,6 +116,7 @@ class FehlerlisteProvider with ChangeNotifier {
   /// ruft lokale Daten aus dem Speicher ab, z.B. eigeneFehlermeldungenIDs, die Werte der verschiedenen Zähler und die Schuldaten
   Future<void> holeLokaleDaten() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
     eigeneFehlermeldungenIDs =
         sharedPreferences.getStringList("eigeneFehlermeldungenIDs") ?? [];
     fehlermeldungsZaehler =
@@ -99,6 +125,20 @@ class FehlerlisteProvider with ChangeNotifier {
         sharedPreferences.getInt("fehlerbehebungsZaehler") ?? 0;
     schuldaten = await lokaleDatenbank.holeLokaleSchuldaten();
     notifyListeners();
+  }
+
+  void sortiereGefixteFehlerAus() {
+    if (istFehlermelder == true) {
+      //TODO: kann man das hier noch eleganter oder sparsamer lösen (sodass das nicht jedes Mal wiederholt wird)?
+      for (Fehler aktuellerFehler in fehlerliste) {
+        if (aktuellerFehler.gefixt == "0" ||
+            eigeneFehlermeldungenIDs.contains(aktuellerFehler.id)) {
+          angezeigteFehlerliste.add(aktuellerFehler);
+        }
+      }
+    } else {
+      angezeigteFehlerliste = fehlerliste;
+    }
   }
 
   /// Sendet den übergebenen Fehler an den Server
@@ -151,8 +191,9 @@ class FehlerlisteProvider with ChangeNotifier {
       bild: dateiname,
     );
 
-    fehlerliste!.add(fehler);
-    fehlerlisteSink.add(fehlerliste);
+    fehlerliste.add(fehler);
+    angezeigteFehlerliste.insert(0, fehler);
+    fehlerlisteSink.add(angezeigteFehlerliste);
     notifyListeners();
     return status;
   }
@@ -222,9 +263,11 @@ class FehlerlisteProvider with ChangeNotifier {
       fileName: fehler.bild,
       istFehlermelder: istFehlermelder,
     );
-    fehlerliste!
-        .removeWhere((aktuellerFehler) => aktuellerFehler.id == fehler.id);
-    fehlerlisteSink.add(fehlerliste);
+    fehlerliste.removeWhere(
+        (Fehler aktuellerFehler) => aktuellerFehler.id == fehler.id);
+    angezeigteFehlerliste.removeWhere(
+        (Fehler aktuellerFehler) => aktuellerFehler.id == fehler.id);
+    fehlerlisteSink.add(angezeigteFehlerliste);
     notifyListeners();
     return status;
   }
@@ -311,10 +354,8 @@ class FehlerlisteProvider with ChangeNotifier {
   Future<void> entferneGeloeschteFehlermeldungenIDs() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     List<String> aktuelleFehlermeldungenIDs = [];
-    if (fehlerliste != null) {
-      aktuelleFehlermeldungenIDs =
-          fehlerliste!.map((aktuellerFehler) => aktuellerFehler.id).toList();
-    }
+    aktuelleFehlermeldungenIDs =
+        fehlerliste.map((aktuellerFehler) => aktuellerFehler.id).toList();
     List<String> gespeicherteEigeneFehlermeldungenIDs =
         sharedPreferences.getStringList("eigeneFehlermeldungenIDs") ?? [];
     List<String> eigeneFehlermeldungenIDsInFunktion = [];
