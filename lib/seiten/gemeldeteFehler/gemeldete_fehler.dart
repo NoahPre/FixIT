@@ -104,6 +104,7 @@ class GemeldeteFehler extends StatelessWidget {
               // Liste mit gemeldeten Fehlern
               ? Fehlerliste(
                   appBarHoehe: appBar.preferredSize.height,
+                  nachrichtVomServer: benutzerInfoProvider.nachrichtVomServer,
                 )
               // Ladedonut in der Mitte der Seite mit Option zum neuladen
               : Builder(builder: (BuildContext currentContext) {

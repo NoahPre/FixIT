@@ -9,7 +9,7 @@ Future<void> main() async {
   runApp(FixIT());
 }
 
-// TODO: schauen wie oft wir BenutzerInfoProvider benutzen
+// TODO: schauen wie oft wir BenutzerInfoProvider benutzen (und ihn möglichst wenig benutzen wegen der Performance)
 
 List<CameraDescription> cameras = [];
 
@@ -30,10 +30,12 @@ class FixIT extends StatelessWidget {
         ChangeNotifierProvider<FehlerlisteProvider>.value(
           value: fehlerlisteProvider,
         ),
+        // Provider für den Authentifizierungs Status des Benutzers
         StreamProvider<bool?>.value(
           value: benutzerInfoProvider.authentifizierungStream,
           initialData: null,
         ),
+        // Provider für die Schule des Benutzers
         StreamProvider<String>.value(
           value: benutzerInfoProvider.schuleStream,
           initialData: "",

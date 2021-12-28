@@ -95,12 +95,18 @@ class _AnmeldungState extends State<Anmeldung> {
       context: currentContext,
       builder: (context) => AlertDialog(
         title: Text("Schulauswahl Hilfe"),
-        content: Text("Geben Sie bitte das Kürzel Ihrer Schule an: \n\n" +
-            "Maria Theresia Gymnasium -> mtg"),
+        content: Text(
+          "Geben Sie bitte das Kürzel Ihrer Schule an: \n\n" +
+              "Maria Theresia Gymnasium -> mtg",
+          style: Theme.of(currentContext).textTheme.bodyText1,
+        ),
         actions: <Widget>[
           Center(
             child: TextButton(
-              child: Text("OK"),
+              child: Text(
+                "OK",
+                style: Theme.of(currentContext).textTheme.bodyText1,
+              ),
               onPressed: () => Navigator.pop(context),
             ),
           )
@@ -123,11 +129,15 @@ class _AnmeldungState extends State<Anmeldung> {
         content: Text(
           anzuzeigenderText + " Bitte versuchen Sie es erneut.",
           textAlign: TextAlign.justify,
+          style: Theme.of(currentContext).textTheme.bodyText1,
         ),
         actions: <Widget>[
           Center(
             child: TextButton(
-              child: Text("OK"),
+              child: Text(
+                "OK",
+                style: Theme.of(currentContext).textTheme.bodyText1,
+              ),
               onPressed: () => Navigator.pop(context),
             ),
           )
@@ -199,7 +209,7 @@ class _AnmeldungState extends State<Anmeldung> {
               schuleInFunktion: schuleInFunktion,
               passwortInFunktion: passwortInFunktion,
             );
-            print("benutzerRegistriertSich");
+            print("benutzerMeldetSichAn");
             break;
           case "falsche_schule":
             // informiert den Benutzer darüber, dass er das falsche Schulkürzel eingegeben hat

@@ -11,8 +11,8 @@ FixIt startet mit dem Home Widget. Zur Navigation gibt es ein Seitenmenü, über
 
 ## Projekt Aufbau
 - seiten: alle Seiten der App
-- klasse: sowohl alle Provider als auch andere Modelle, wie die Klasse Fehler
-- widgets: alle Widgets, die auf mehreren Seiten verwendet werden
+- klassen: sowohl alle Provider als auch andere Modelle, wie die Klasse Fehler
+- widgets_und_funktionen: alle Widgets und Funktionen, die auf mehreren Seiten verwendet werden
 - sonstiges: selbsterklärend
 
 ## Widgets Aufbau

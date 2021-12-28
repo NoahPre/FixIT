@@ -93,7 +93,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   }
 
   /// updatet die Überschrift und den Text des Dropdown Buttons
-  void updateText({
+  void aktualisiereText({
     String? textInTextfield,
   }) {
     setState(() {
@@ -157,11 +157,20 @@ class _FehlermeldungState extends State<Fehlermeldung> {
 
   // Validatoren:
   /// Validator für die Raumnummer des Fehlers
-  String? _uerberpruefeRaumnummer(String raumnummer) {
-    if (raumnummer.isEmpty || raumnummer == "") {
-      return "Bitte eine Raumnummer eingeben";
-    } else if (raumnummer.length > 3 || int.parse(raumnummer) > 420) {
-      return "Bitte eine gültige Raumnummer eingeben";
+  String? _uerberpruefeRaumnummer(
+    String raumnummer,
+    List<dynamic> raumnummernBereich,
+    String raumnummernArt,
+  ) {
+    if (raumnummernArt == "zahl") {
+      if (raumnummer.isEmpty || raumnummer == "") {
+        return "Bitte eine Raumnummer eingeben";
+      } else if (int.parse(raumnummer) < raumnummernBereich[0] ||
+          int.parse(raumnummer) > raumnummernBereich[1]) {
+        return "Bitte eine gültige Raumnummer eingeben";
+      } else {
+        return null;
+      }
     } else {
       return null;
     }
@@ -186,6 +195,12 @@ class _FehlermeldungState extends State<Fehlermeldung> {
       context,
       listen: false,
     );
+    // TODO: das hier eleganter lösen
+    List<dynamic> praefixeDaten =
+        jsonDecode(fehlerlisteProvider.schuldaten["praefixe"] ?? "[]");
+    List<String> praefixe = praefixeDaten
+        .map((dynamic item) => item.toString())
+        .toList() as List<String>;
 
     var appBar = AppBar(
       title: Text(
@@ -265,45 +280,46 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.grey.shade100,
-                        ),
-                        padding: EdgeInsets.all(4.0),
-                        child: DropdownButton<String>(
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
-                          elevation: 8,
-                          value: _dropdownButtonText,
-                          hint: Text("Präfix"),
-                          items: [
-                            "",
-                            "K",
-                            "N",
-                            "Z",
-                            "T",
-                          ].map((value) {
-                            return DropdownMenuItem(
-                              child: Text(value),
-                              value: value,
-                            );
-                          }).toList(),
-                          onChanged: (String? value) {
-                            updateText(
-                              textInTextfield: value! + _raumController.text,
-                            );
-                            setState(() {
-                              _dropdownButtonText = value;
-                            });
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        width: mediaQuery.size.width * 0.04,
-                      ),
+                      praefixe.length > 1
+                          ? Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: Colors.grey.shade100,
+                                  ),
+                                  padding: EdgeInsets.all(4.0),
+                                  child: DropdownButton<String>(
+                                    icon: Icon(
+                                      Icons.arrow_drop_down,
+                                      color: Colors.black,
+                                    ),
+                                    elevation: 8,
+                                    value: _dropdownButtonText,
+                                    hint: Text("Präfix"),
+                                    items: praefixe.map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        child: Text(value),
+                                        value: value,
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? value) {
+                                      aktualisiereText(
+                                        textInTextfield:
+                                            value! + _raumController.text,
+                                      );
+                                      setState(() {
+                                        _dropdownButtonText = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: mediaQuery.size.width * 0.04,
+                                ),
+                              ],
+                            )
+                          : Container(),
                       Flexible(
                         child: TextFormField(
                           controller: _raumController,
@@ -318,15 +334,29 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                             ),
                           ),
                           focusNode: _raumNode,
-                          keyboardType: TextInputType.number,
+                          // schaut die Schuldaten des Benutzers an und zeigt eine entsprechende Tastatur an
+                          keyboardType: fehlerlisteProvider
+                                      .schuldaten["raumnummern_art"] ==
+                                  "zahl"
+                              ? TextInputType.number
+                              : TextInputType.text,
                           maxLines: 1,
                           textInputAction: TextInputAction.done,
-                          onChanged: (_) => updateText(
+                          onChanged: (_) => aktualisiereText(
                             textInTextfield:
                                 _dropdownButtonText! + _raumController.text,
                           ),
                           validator: (String? raumnummer) =>
-                              _uerberpruefeRaumnummer(raumnummer!),
+                              // übergibt der Validatorfunktion den Bereich der gültigen Raumnummern aus den Schuldaten
+                              _uerberpruefeRaumnummer(
+                                  raumnummer!,
+                                  jsonDecode(fehlerlisteProvider.schuldaten[
+                                              "raumnummern_bereich"] ??
+                                          []) ??
+                                      [],
+                                  fehlerlisteProvider
+                                          .schuldaten["raumnummern_art"] ??
+                                      ""),
                         ),
                       ),
                     ],

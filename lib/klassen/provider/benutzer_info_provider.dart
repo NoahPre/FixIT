@@ -21,8 +21,11 @@ class BenutzerInfoProvider with ChangeNotifier {
   /// ob der Benutzer als Fehlermelder oder Fehlerbeheber angemeldet ist
   bool istFehlermelder = true;
 
-  /// die Schule des Benutzers
+  /// Schule des Benutzers
   String schule = "";
+
+  /// Token zur Authentifizierung
+  String token = "";
 
   /// ob die Authentifizierung mit den in SharedPreferences gespeicherten Werten erfolgreich war
   bool? istAuthentifiziert;
@@ -44,17 +47,17 @@ class BenutzerInfoProvider with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
     schule = sharedPreferences.getString("schule") ?? "mtg";
-    print("schule: " + schule);
+    token = sharedPreferences.getString("token") ?? "";
     schuleSink.add(schule);
     // TODO: bald entfernen!
-    await setztSchuleGleichMTG();
+    await setzeSchuleGleichMTG();
     istAuthentifiziert = await authentifizierung();
   }
 
   // Übergangsfunktion
   // setzt den Wert "schule" in SharedPreferences auf "mtg"
   // wird benötigt, damit sich nicht jeder erneut anmelden muss
-  Future<void> setztSchuleGleichMTG() async {
+  Future<void> setzeSchuleGleichMTG() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? schuleInFunktion = sharedPreferences.getString("schule");
     if (schuleInFunktion == null) {
@@ -78,6 +81,15 @@ class BenutzerInfoProvider with ChangeNotifier {
     );
     schule = schuleInFunktion;
     schuleSink.add(schuleInFunktion);
+    // holt die spezifischen Schuldaten von gibSchuldaten.php
+    Map<String, dynamic> schuldaten =
+        await holeSchuldaten(schule: schuleInFunktion);
+    LokaleDatenbank lokaleDatenbank = LokaleDatenbank();
+    await lokaleDatenbank.schreibeLokaleSchuldaten(schuldaten);
+    // aktualisiert fehlerlisteProvider
+    await fehlerlisteProvider.holeToken();
+    await fehlerlisteProvider.holeLokaleDaten();
+    print("snons");
     istAuthentifiziert = true;
     authentifizierungSink.add(true);
     notifyListeners();
@@ -136,16 +148,16 @@ class BenutzerInfoProvider with ChangeNotifier {
 
   /// authentifiziert den Benutzer mit den in SharedPreferences gespeicherten Werten
   Future<bool> authentifizierung() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    bool istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
-    String schule = sharedPreferences.getString("schule") ?? "";
-    String tokenInFunktion = sharedPreferences.getString("token") ?? "";
+    // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    // bool istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
+    // String schule = sharedPreferences.getString("schule") ?? "";
+    // String tokenInFunktion = sharedPreferences.getString("token") ?? "";
     try {
       // schickt eine Anfrage mit den folgenden Informationen an den Server:
       // - ob der Benutzer Fehlermelder ist
       // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
       String url =
-          "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelder.toString()}&schule=${schule.toString()}&token=${tokenInFunktion.toString()}";
+          "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=$istFehlermelder&schule=$schule&token=$token";
       http.Response response = await http.get(Uri.parse(url));
       // überprüft die Ausgabe des Scripts
       if (response.body == "1") {
@@ -176,7 +188,6 @@ class BenutzerInfoProvider with ChangeNotifier {
     String url =
         "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelderInFunktion.toString()}&schule=${schuleInFunktion.toString()}&token=$token";
     http.Response response = await http.get(Uri.parse(url));
-    print("response: " + response.body);
     // überprüft die Ausgabe des Scripts
     if (response.body == "1") {
       return "true";
@@ -186,6 +197,23 @@ class BenutzerInfoProvider with ChangeNotifier {
       return "falsches_token";
     } else {
       return "false";
+    }
+  }
+
+  Future<Map<String, dynamic>> holeSchuldaten({required String schule}) async {
+    String url = "https://www.icanfixit.eu/gibSchuldaten.php?schule=$schule";
+    http.Response response = await http.get(Uri.parse(url));
+    if ((response.body == "") ||
+        (response.body == "falsche_schule") ||
+        (response.body == "falsches_token")) {
+      return {};
+    } else {
+      try {
+        return jsonDecode(response.body)[0];
+      } catch (error) {
+        print(error.toString());
+        return {};
+      }
     }
   }
 
@@ -221,6 +249,25 @@ class BenutzerInfoProvider with ChangeNotifier {
     } catch (error) {
       print(error.toString());
       return "error";
+    }
+  }
+
+  // schaut, ob es eine neue Nachricht für die Benutzer auf dem Server gibt
+  Future<Map<String, dynamic>?> nachrichtVomServer() async {
+    String url =
+        "https://www.icanfixit.eu/gibNachrichtVomServer.php?schule=$schule&token=$token";
+    http.Response response = await http.get(Uri.parse(url));
+    if ((response.body == "") ||
+        (response.body == "falsche_schule") ||
+        (response.body == "falsches_token")) {
+      return null;
+    } else {
+      try {
+        return jsonDecode(response.body);
+      } catch (error) {
+        print(error.toString());
+        return {};
+      }
     }
   }
 

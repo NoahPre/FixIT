@@ -18,7 +18,7 @@ class FehlerlisteProvider with ChangeNotifier {
   FehlerlisteProvider() {
     holeToken();
     // holeFehler();
-    holeFehlermeldungenIDsUndZaehler();
+    holeLokaleDaten();
   }
 
   /// Schule des Benutzers
@@ -31,6 +31,7 @@ class FehlerlisteProvider with ChangeNotifier {
   ///
   /// Existiert schon in BenutzerInfoProvider, ist hier aber der Bequemlichkeit halber nocheinmal.
   // bool istFehlermelder;
+  Map<String, dynamic> schuldaten = {};
 
   /// StreamController für die Fehlerliste
   StreamController fehlerlisteController =
@@ -48,8 +49,11 @@ class FehlerlisteProvider with ChangeNotifier {
   /// Zähler, der die Anzahl an abgesendeten Fehlermeldungen speichert
   int fehlermeldungsZaehler = 0;
 
-  /// Zähler, der bei Fehlerbehebern die Anzahl an gelöschten (behobenen) Fehlermeldungen^ speichert
+  /// Zähler, der bei Fehlerbehebern die Anzahl an gelöschten (behobenen) Fehlermeldungen speichert
   int fehlerbehebungsZaehler = 0;
+
+  /// Instanz von LokaleDatenbank zum Zugreifen auf lokal gespeicherte Daten
+  LokaleDatenbank lokaleDatenbank = LokaleDatenbank();
 
   Future<void> holeToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -78,15 +82,14 @@ class FehlerlisteProvider with ChangeNotifier {
     });
     // fügt die geholten Fehler dem fehlerlisteController hinzu und aktualisiert damit das Widget Fehlerliste
     fehlerlisteSink.add(fehlerliste);
-    print(eigeneFehlermeldungenIDs.length);
     // räumt die lokal gespeicherte Liste der eigenen Fehlermeldungen auf (eigeneFehlermeldungenIDs, gespeichert in SharedPreferences)
     await entferneGeloeschteFehlermeldungenIDs();
-    print(eigeneFehlermeldungenIDs.length);
     notifyListeners();
     return status;
   }
 
-  Future<void> holeFehlermeldungenIDsUndZaehler() async {
+  /// ruft lokale Daten aus dem Speicher ab, z.B. eigeneFehlermeldungenIDs, die Werte der verschiedenen Zähler und die Schuldaten
+  Future<void> holeLokaleDaten() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     eigeneFehlermeldungenIDs =
         sharedPreferences.getStringList("eigeneFehlermeldungenIDs") ?? [];
@@ -94,6 +97,7 @@ class FehlerlisteProvider with ChangeNotifier {
         sharedPreferences.getInt("fehlermeldungsZaehler") ?? 0;
     fehlerbehebungsZaehler =
         sharedPreferences.getInt("fehlerbehebungsZaehler") ?? 0;
+    schuldaten = await lokaleDatenbank.holeLokaleSchuldaten();
     notifyListeners();
   }
 
@@ -238,7 +242,6 @@ class FehlerlisteProvider with ChangeNotifier {
     var url =
         "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&schule=$schule&token=$token";
     var answer = await http.get(Uri.parse(url));
-    print(answer.body.toString());
     return answer.body;
   }
 
@@ -322,5 +325,6 @@ class FehlerlisteProvider with ChangeNotifier {
     }
     await sharedPreferences.setStringList(
         "eigeneFehlermeldungenIDs", eigeneFehlermeldungenIDsInFunktion);
+    eigeneFehlermeldungenIDs = eigeneFehlermeldungenIDsInFunktion;
   }
 }

@@ -1,3 +1,6 @@
+// fehler.dart
+
+/// Datenmodell für die Fehler
 class Fehler {
   Fehler({
     this.id = "",

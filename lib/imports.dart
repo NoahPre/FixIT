@@ -44,6 +44,7 @@ export "package:fixit/widgets_und_funktionen/datum_in_schoen.dart";
 
 // Klassen:
 export "package:fixit/klassen/fehler.dart";
+export "package:fixit/klassen/lokale_datenbank.dart";
 // Provider:
 export 'package:fixit/klassen/provider/benutzer_info_provider.dart';
 export 'package:fixit/klassen/provider/fehlerliste_provider.dart';
