@@ -116,7 +116,9 @@ class BenutzerInfoProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// überschreibt die gespeicherten Werte in sharedPreferences mit den gegebenen Werten und berechnet das Authentifizierungs Token
+  /// Überschreibt die gespeicherten Werte in sharedPreferences mit den gegebenen Werten und berechnet das Authentifizierungs Token
+  ///
+  /// entfernt außerdem alle lokal gespeicherten Daten in LokaleDatenbank
   Future<void> ueberschreibeUserInformation({
     required bool istFehlermelderInFunktion,
     required String schuleInFunktion,
@@ -141,9 +143,12 @@ class BenutzerInfoProvider with ChangeNotifier {
       tokenInFunktion,
     );
     if (andereWerteZuruecksetzen == true) {
-      sharedPreferences.setStringList("eigeneFehlermeldungenIDs", []);
       sharedPreferences.setInt("fehlermeldungsZaehler", 0);
       sharedPreferences.setInt("fehlerbehebungsZaehler", 0);
+      LokaleDatenbank lokaleDatenbank = LokaleDatenbank();
+      await lokaleDatenbank.schreibeLokaleFehlerdaten({});
+      await lokaleDatenbank.schreibeLokaleSchuldaten({});
+      await lokaleDatenbank.schreibeLokaleServerNachrichtenDaten({});
     }
     notifyListeners();
   }

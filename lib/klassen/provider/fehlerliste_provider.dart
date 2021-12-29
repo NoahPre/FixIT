@@ -1,5 +1,6 @@
 // fehlerliste_provider.dart
 import "package:fixit/imports.dart";
+import 'package:fixit/klassen/thema.dart';
 import "package:http/http.dart" as http;
 import "package:image_picker/image_picker.dart";
 
@@ -64,17 +65,22 @@ class FehlerlisteProvider with ChangeNotifier {
     fehlerlisteSink.add(angezeigteFehlerliste);
   }
 
+  /// Instanz von LokaleDatenbank zum Zugreifen auf lokal gespeicherte Daten
+  LokaleDatenbank lokaleDatenbank = LokaleDatenbank();
+
+  Map<String, dynamic> lokaleFehlerdaten = {
+    "eigene_gefixte_fehlermeldungen": [],
+    "eigene_fehlermeldungen_ids": [],
+  };
+
   /// IDs der Fehlermeldungen des Benutzers
-  List<String> eigeneFehlermeldungenIDs = [];
+  List<dynamic> eigeneFehlermeldungenIDs = [];
 
   /// Zähler, der die Anzahl an abgesendeten Fehlermeldungen speichert
   int fehlermeldungsZaehler = 0;
 
   /// Zähler, der bei Fehlerbehebern die Anzahl an gelöschten (behobenen) Fehlermeldungen speichert
   int fehlerbehebungsZaehler = 0;
-
-  /// Instanz von LokaleDatenbank zum Zugreifen auf lokal gespeicherte Daten
-  LokaleDatenbank lokaleDatenbank = LokaleDatenbank();
 
   Future<void> holeToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -117,8 +123,9 @@ class FehlerlisteProvider with ChangeNotifier {
   Future<void> holeLokaleDaten() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
+    lokaleFehlerdaten = await lokaleDatenbank.holeLokaleFehlerdaten();
     eigeneFehlermeldungenIDs =
-        sharedPreferences.getStringList("eigeneFehlermeldungenIDs") ?? [];
+        lokaleFehlerdaten["eigene_fehlermeldungen_ids"] ?? [];
     fehlermeldungsZaehler =
         sharedPreferences.getInt("fehlermeldungsZaehler") ?? 0;
     fehlerbehebungsZaehler =
@@ -137,13 +144,13 @@ class FehlerlisteProvider with ChangeNotifier {
         }
       }
     } else {
-      angezeigteFehlerliste = fehlerliste;
+      angezeigteFehlerliste = List.from(fehlerliste);
     }
   }
 
   /// Sendet den übergebenen Fehler an den Server
   ///
-  /// es kann immer nur entweder image oder pickedImage angegeben werden
+  /// Es kann immer nur entweder image oder pickedImage angegeben werden
   Future<String> fehlerGemeldet(
       {required Fehler fehler, File? image, PickedFile? pickedImage}) async {
     String dateiname = "";
@@ -163,7 +170,6 @@ class FehlerlisteProvider with ChangeNotifier {
       );
     }
     if (pickedImage != null) {
-      print("pickedImage != null");
       dateiname =
           fehler.id + "." + pickedImage.path.split('/').last.split(".")[1];
 
@@ -285,6 +291,7 @@ class FehlerlisteProvider with ChangeNotifier {
     var url =
         "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&schule=$schule&token=$token";
     var answer = await http.get(Uri.parse(url));
+    print(url);
     return answer.body;
   }
 
@@ -307,18 +314,10 @@ class FehlerlisteProvider with ChangeNotifier {
 
   /// Speichert die ID einer Fehlermeldung lokal auf dem Gerät, wenn ein Fehler gemeldet wurde
   Future<void> speichereFehlerID({required String neueID}) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    List<String>? idsList =
-        sharedPreferences.getStringList("eigeneFehlermeldungenIDs") ?? [];
-    idsList.add(neueID);
-    // das ist der Wert, der für das automatische Löschen von Fehlermeldungen zuständig ist
-    // sobald eine Fehlermeldung als gefixt gekennzeichnet wurde, wird dieser Wert jedes Mal dann erhöht, wenn der Autor dieser
-    // Fehlermeldung die App öffnet
-    // sobald er dies 3 Mal getan hat (der Wert also auf 3 ist), wird die Fehlermeldung mit dem Schließen der App gelöscht
-    // idsList.add("0");
-
     eigeneFehlermeldungenIDs.add(neueID);
-    await sharedPreferences.setStringList("eigeneFehlermeldungenIDs", idsList);
+    lokaleFehlerdaten["eigene_fehlermeldungen_ids"] = eigeneFehlermeldungenIDs;
+    await lokaleDatenbank.schreibeLokaleFehlerdaten(lokaleFehlerdaten);
+    notifyListeners();
   }
 
   /// Erhöht den Fehlermeldung-Zähler um eins
@@ -352,20 +351,66 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   Future<void> entferneGeloeschteFehlermeldungenIDs() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     List<String> aktuelleFehlermeldungenIDs = [];
     aktuelleFehlermeldungenIDs =
         fehlerliste.map((aktuellerFehler) => aktuellerFehler.id).toList();
-    List<String> gespeicherteEigeneFehlermeldungenIDs =
-        sharedPreferences.getStringList("eigeneFehlermeldungenIDs") ?? [];
+    List<dynamic> gespeicherteEigeneFehlermeldungenIDs =
+        lokaleFehlerdaten["eigene_fehlermeldungen_ids"] ?? [];
     List<String> eigeneFehlermeldungenIDsInFunktion = [];
     for (String i in gespeicherteEigeneFehlermeldungenIDs) {
       if (aktuelleFehlermeldungenIDs.contains(i)) {
         eigeneFehlermeldungenIDsInFunktion.add(i);
       }
     }
-    await sharedPreferences.setStringList(
-        "eigeneFehlermeldungenIDs", eigeneFehlermeldungenIDsInFunktion);
     eigeneFehlermeldungenIDs = eigeneFehlermeldungenIDsInFunktion;
+    lokaleFehlerdaten["eigene_fehlermeldungen_ids"] =
+        eigeneFehlermeldungenIDsInFunktion;
+    await lokaleDatenbank.schreibeLokaleFehlerdaten(lokaleFehlerdaten);
+  }
+
+  Future<void> automatischesEntfernenVonGefixtenMeldungen() async {
+    List<String> gefixteEigeneFehlermeldungenIDs = [];
+    for (Fehler aktuellerFehler in fehlerliste) {
+      if (eigeneFehlermeldungenIDs.contains(aktuellerFehler.id) &&
+          aktuellerFehler.gefixt == "1") {
+        gefixteEigeneFehlermeldungenIDs.add(aktuellerFehler.id);
+      }
+    }
+    List<dynamic> eigeneGefixteFehlermeldungen =
+        lokaleFehlerdaten["eigene_gefixte_fehlermeldungen"] ?? [];
+    List<String> alteEintraege = [];
+    List<Map<String, dynamic>> zuEntfernendeEintraege = [];
+    for (Map<String, dynamic> eintrag in eigeneGefixteFehlermeldungen) {
+      if (gefixteEigeneFehlermeldungenIDs.contains(eintrag["id"])) {
+        alteEintraege.add(eintrag["id"]);
+        eintrag["anzahl"] = eintrag["anzahl"] + 1;
+        print(eintrag["anzahl"]);
+        if (eintrag["anzahl"] > 1) {
+          fehlerGeloescht(
+              fehler: fehlerliste
+                  .singleWhere((fehler) => fehler.id == eintrag["id"]),
+              istFehlermelder: istFehlermelder);
+          zuEntfernendeEintraege.add(eintrag);
+        }
+      }
+    }
+    // muss so sein
+    for (Map<String, dynamic> eintrag in zuEntfernendeEintraege) {
+      eigeneGefixteFehlermeldungen.remove(eintrag);
+    }
+    for (String aktuelleID in gefixteEigeneFehlermeldungenIDs) {
+      if (alteEintraege.contains(aktuelleID) == false) {
+        eigeneGefixteFehlermeldungen.add({"id": aktuelleID, "anzahl": 0});
+        showSimpleNotification(
+          Text("Ihre Fehlermeldung wurde gefixt!"),
+          background: thema.colorScheme.secondary,
+          duration: Duration(seconds: 6),
+          slideDismissDirection: DismissDirection.up,
+        );
+      }
+    }
+    lokaleFehlerdaten["eigene_gefixte_fehlermeldungen"] =
+        eigeneGefixteFehlermeldungen;
+    await lokaleDatenbank.schreibeLokaleFehlerdaten(lokaleFehlerdaten);
   }
 }

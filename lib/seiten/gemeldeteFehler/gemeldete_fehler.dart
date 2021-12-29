@@ -1,8 +1,6 @@
 // gemeldeteFehler.dart
 import '../../imports.dart';
 
-// TODO: intelligente Weise einbauen, gefixte Fehler nach bestimmter Zeit wieder zu löschen
-
 /// Startseite der App
 class GemeldeteFehler extends StatefulWidget {
   @override
@@ -10,7 +8,7 @@ class GemeldeteFehler extends StatefulWidget {
 }
 
 class _GemeldeteFehlerState extends State<GemeldeteFehler> {
-  Sortierung _dropdownButtonValue = Sortierung.datum_absteigend;
+  Sortierung _popupMenuButtonValue = Sortierung.datum_absteigend;
 
   List<List> sortierungsmoeglichkeiten = [
     [Sortierung.datum_absteigend, "Datum Absteigend"],
@@ -41,41 +39,45 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler> {
       backgroundColor: thema.colorScheme.primary,
       centerTitle: true,
       actions: [
-        Tooltip(
-          message: "Filter",
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<Sortierung>(
-              icon: Icon(
-                Icons.sort,
-                color: thema.colorScheme.onPrimary,
-              ),
-              items: sortierungsmoeglichkeiten.map((List eintrag) {
-                return DropdownMenuItem<Sortierung>(
-                    value: eintrag[0],
-                    alignment: Alignment.centerLeft,
-                    // TODO: herausfinden, warum man hier anstatt des fettgedruckten Texts KEINEN kleinen Haken rechts neben die Schrift machen kann
-                    // übliches Problem mit Column/Row ohne festgelegte Höhe/Breite und Expanded/Flexible Widgets
-                    child: Text(eintrag[1],
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: _dropdownButtonValue == eintrag[0]
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          color: _dropdownButtonValue == eintrag[0]
-                              ? thema.highlightColor
-                              : thema.colorScheme.primary,
-                        )));
-              }).toList(),
-              onChanged: (Sortierung? value) {
-                fehlerlisteProvider.sortierung =
-                    value ?? Sortierung.datum_absteigend;
-                setState(() {
-                  _dropdownButtonValue =
-                      value ?? sortierungsmoeglichkeiten[0][0];
-                });
-              },
-            ),
-          ),
+        PopupMenuButton<Sortierung>(
+          tooltip: "Filter",
+          icon: Icon(Icons.sort),
+          color: thema.colorScheme.background,
+          itemBuilder: (context) =>
+              sortierungsmoeglichkeiten.map((List eintrag) {
+            return PopupMenuItem<Sortierung>(
+                value: eintrag[0],
+                // padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                child: Row(
+                  children: [
+                    Text(
+                      eintrag[1],
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        // fontWeight: ,
+                        color: thema.colorScheme.primary,
+                      ),
+                    ),
+                    _popupMenuButtonValue == eintrag[0]
+                        ? Expanded(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Icon(
+                                Icons.check,
+                                color: thema.colorScheme.primary,
+                              ),
+                            ),
+                          )
+                        : Container(),
+                  ],
+                ));
+          }).toList(),
+          onSelected: (Sortierung value) {
+            fehlerlisteProvider.sortierung = value;
+            setState(() {
+              _popupMenuButtonValue = value;
+            });
+          },
         ),
         Builder(builder: (currentContext) {
           return IconButton(
@@ -119,7 +121,9 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler> {
         aktuelleSeite: "/",
       ),
       floatingActionButton: FABHome(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       body: Builder(builder: (currentContext) {
+        // überprüft, ob die laufende Version der App noch von Serverseite aus unterstützt wird
         WidgetsBinding.instance?.addPostFrameCallback((_) async {
           if (await benutzerInfoProvider.istUnterstuetzteVersion() == "false") {
             await showDialog(
@@ -148,6 +152,9 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler> {
               ? Fehlerliste(
                   appBarHoehe: appBar.preferredSize.height,
                   nachrichtVomServer: benutzerInfoProvider.nachrichtVomServer,
+                  automatischesEntfernenVonGefixtenMeldungen:
+                      fehlerlisteProvider
+                          .automatischesEntfernenVonGefixtenMeldungen,
                 )
               // Ladedonut in der Mitte der Seite mit Option zum neuladen
               : Builder(builder: (BuildContext currentContext) {

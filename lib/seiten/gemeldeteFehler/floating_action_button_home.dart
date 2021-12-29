@@ -12,7 +12,7 @@ class FABHome extends StatelessWidget {
         Icons.add,
         color: thema.colorScheme.onSecondary,
       ),
-      backgroundColor: thema.colorScheme.secondary,
+      backgroundColor: thema.colorScheme.primary,
       tooltip: "Fehler melden",
       onPressed: () {
         Navigator.push(

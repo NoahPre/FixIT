@@ -118,7 +118,7 @@ class FehlerDetailansicht extends StatelessWidget {
                   Hero(
                     tag: "CircleAvatar${fehler.id}",
                     child: CircleAvatar(
-                      backgroundColor: Colors.black,
+                      backgroundColor: thema.colorScheme.primary,
                       radius: deviceSize.width * 0.1,
                       child: Text(
                         fehler.raum,
@@ -135,8 +135,8 @@ class FehlerDetailansicht extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
-                height: deviceSize.height * 0.025,
+              const SizedBox(
+                height: 10.0,
               ),
               Text(
                 "Beschreibung:",
@@ -146,6 +146,9 @@ class FehlerDetailansicht extends StatelessWidget {
               Text(
                 fehler.beschreibung,
                 style: thema.textTheme.bodyText1,
+              ),
+              const SizedBox(
+                height: 10.0,
               ),
 
               // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
@@ -175,7 +178,7 @@ class FehlerDetailansicht extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              fullscreenDialog: true,
+                              fullscreenDialog: false,
                               builder: (BuildContext context) =>
                                   BildDetailansicht(
                                 urlZumBild: urlZumBild,
@@ -184,34 +187,37 @@ class FehlerDetailansicht extends StatelessWidget {
                           );
                         },
                         child: Center(
-                          child: Image.network(
-                            urlZumBild,
-                            fit: BoxFit.contain,
-                            loadingBuilder: (
-                              BuildContext context,
-                              Widget child,
-                              ImageChunkEvent? loadingProgress,
-                            ) {
-                              // zeigt das Bild an, wenn es fertig heruntergeladen ist
-                              if (loadingProgress == null) {
-                                return child;
-                              }
-                              return CircularProgressIndicator(
-                                  // valueColor: AlwaysStoppedAnimation<Color>(
-                                  //   thema.primaryColor,
-                                  // ),
-                                  );
-                            },
-                            errorBuilder: (BuildContext currentContext,
-                                Object exception, StackTrace? stackTrace) {
-                              print(exception.toString());
-                              return Text(
-                                "Bild konnte nicht geladen werden",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              );
-                            },
+                          child: Hero(
+                            tag: urlZumBild,
+                            child: Image.network(
+                              urlZumBild,
+                              fit: BoxFit.contain,
+                              loadingBuilder: (
+                                BuildContext context,
+                                Widget child,
+                                ImageChunkEvent? loadingProgress,
+                              ) {
+                                // zeigt das Bild an, wenn es fertig heruntergeladen ist
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return CircularProgressIndicator(
+                                    // valueColor: AlwaysStoppedAnimation<Color>(
+                                    //   thema.primaryColor,
+                                    // ),
+                                    );
+                              },
+                              errorBuilder: (BuildContext currentContext,
+                                  Object exception, StackTrace? stackTrace) {
+                                print(exception.toString());
+                                return Text(
+                                  "Bild konnte nicht geladen werden",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),

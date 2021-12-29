@@ -70,87 +70,91 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
     );
     return Scaffold(
       appBar: appBar,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(
-                height: 5.0,
-              ),
-              Row(
-                children: <Widget>[
-                  Hero(
-                    tag: "CircleAvatar${widget.fehler.id}",
-                    child: CircleAvatar(
-                      radius: deviceSize.width * 0.1,
-                      backgroundColor: thema.colorScheme.secondary,
-                      child: Text(
-                        widget.fehler.raum,
-                        style: thema.textTheme.headline4,
-                      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(
+              height: 5.0,
+            ),
+            Row(
+              children: <Widget>[
+                Hero(
+                  tag: "CircleAvatar${widget.fehler.id}",
+                  child: CircleAvatar(
+                    radius: deviceSize.width * 0.1,
+                    backgroundColor: thema.colorScheme.primary,
+                    child: Text(
+                      widget.fehler.raum,
+                      style: thema.textTheme.headline4,
                     ),
                   ),
-                  const SizedBox(
-                    width: 5.0,
-                  ),
-                  Text(
-                    "gemeldet am: " + datumInSchoen(fehler: widget.fehler),
-                    style: thema.textTheme.bodyText1,
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                "Beschreibung:",
-                style: thema.textTheme.headline5,
-              ),
-              Text(
-                widget.fehler.beschreibung,
-                style: thema.textTheme.bodyText1,
-              ),
-              // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
-              (widget.fehler.bild.isEmpty || widget.fehler.bild == "")
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          height: 5.0,
+                ),
+                const SizedBox(
+                  width: 5.0,
+                ),
+                Text(
+                  "gemeldet am: " + datumInSchoen(fehler: widget.fehler),
+                  style: thema.textTheme.bodyText1,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            Text(
+              "Beschreibung:",
+              style: thema.textTheme.headline5,
+            ),
+            Text(
+              widget.fehler.beschreibung,
+              style: thema.textTheme.bodyText1,
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            // überprüft, ob der Fehler ein Bild hat und lädt dieses im entsprechenden Fall
+            (widget.fehler.bild.isEmpty || widget.fehler.bild == "")
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 5.0,
+                      ),
+                      Text(
+                        "Kein Bild gemeldet",
+                        style: TextStyle(
+                          color: Colors.black,
                         ),
-                        Text(
-                          "Kein Bild gemeldet",
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5.0,
-                        ),
-                      ],
-                    )
+                      ),
+                      const SizedBox(
+                        height: 5.0,
+                      ),
+                    ],
+                  )
 
-                  // lädt das Bild und gibt beim Fehlschlagen einen Error aus
-                  : Flexible(
-                      fit: FlexFit.loose,
-                      child: GestureDetector(
-                        onTap: () {
-                          // zeigt nach Tippen das Bild im Vollbild an
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              fullscreenDialog: true,
-                              builder: (BuildContext context) =>
-                                  BildDetailansicht(
-                                urlZumBild: urlZumBild,
-                              ),
+                // lädt das Bild und gibt beim Fehlschlagen einen Error aus
+                : Flexible(
+                    fit: FlexFit.loose,
+                    child: GestureDetector(
+                      onTap: () {
+                        // zeigt nach Tippen das Bild im Vollbild an
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            fullscreenDialog: false,
+                            builder: (BuildContext context) =>
+                                BildDetailansicht(
+                              urlZumBild: urlZumBild,
                             ),
-                          );
-                        },
-                        child: Center(
+                          ),
+                        );
+                      },
+                      child: Center(
+                        child: Hero(
+                          tag: urlZumBild,
                           child: Image.network(urlZumBild, fit: BoxFit.contain,
                               loadingBuilder: (
                             BuildContext context,
@@ -189,8 +193,9 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                         ),
                       ),
                     ),
-              // Informationen zum Fixer und ein Kommentar
-              /*Align(
+                  ),
+            // Informationen zum Fixer und ein Kommentar
+            /*Align(
                       alignment: Alignment.bottomLeft,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,8 +216,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                         ],
                       ),
                     ), */
-            ],
-          ),
+          ],
         ),
       ),
     );

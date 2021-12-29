@@ -21,10 +21,17 @@ class _BildDetailansichtState extends State<BildDetailansicht> {
     return Scaffold(
       // TODO: AppBar entfernen und nur einen kleinen weißen Button oben links machen, mit dem man die Seite schließen kann (denn mit der AppBar ist das Bild im Portrait Modus nach unten verschoben)
       appBar: AppBar(),
+      backgroundColor: thema.colorScheme.background,
 
       body: Center(
         child: PhotoView(
+          heroAttributes: PhotoViewHeroAttributes(
+            tag: widget.urlZumBild,
+          ),
+          backgroundDecoration:
+              BoxDecoration(color: thema.colorScheme.background),
           maxScale: 5.0,
+          minScale: PhotoViewComputedScale.contained,
           imageProvider: NetworkImage(
             widget.urlZumBild,
           ),

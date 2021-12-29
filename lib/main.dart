@@ -1,6 +1,6 @@
 //main.dart
-import "./imports.dart";
-import "./klassen/thema.dart";
+import "package:fixit/imports.dart";
+import "package:fixit/klassen/thema.dart";
 
 Future<void> main() async {
   // wichtig für das Kamera Package
@@ -41,26 +41,28 @@ class FixIT extends StatelessWidget {
           initialData: "",
         ),
       ],
-      child: MaterialApp(
-        // wird in /klassen/thema.dart definiert
-        theme: thema,
-        // darkTheme: dunklesThema,
-        title: "FixIT",
-        debugShowCheckedModeBanner: false,
-        initialRoute: "/",
-        routes: {
-          // Startseite (initialRoute) der App
-          "/": (context) => GemeldeteFehler(),
-          // diese beiden Seiten werden nie durch namedRoutes aufgerufen, sind aber der Vollständigkeit halber auch hier
-          // "/fehlerDetailansicht": (context) => FehlerDetailansicht(),
-          // "/fehlerBehebung": (context) => Fehlerbehebung(),
-          "/soforthilfe": (context) => Soforthilfe(),
-          "/tutorial": (context) => Tutorial(),
-          "/statistiken": (context) => Statistiken(),
-          "/einstellungen": (context) => Einstellungen(),
-          "/ueberUns": (context) => UeberUns(),
-          "/registrierung": (context) => Anmeldung(),
-        },
+      child: OverlaySupport(
+        child: MaterialApp(
+          // wird in /klassen/thema.dart definiert
+          theme: thema,
+          // darkTheme: dunklesThema,
+          title: "FixIT",
+          debugShowCheckedModeBanner: false,
+          initialRoute: "/",
+          routes: {
+            // Startseite (initialRoute) der App
+            "/": (context) => GemeldeteFehler(),
+            // diese beiden Seiten werden nie durch namedRoutes aufgerufen, sind aber der Vollständigkeit halber auch hier
+            // "/fehlerDetailansicht": (context) => FehlerDetailansicht(),
+            // "/fehlerBehebung": (context) => Fehlerbehebung(),
+            "/soforthilfe": (context) => Soforthilfe(),
+            "/tutorial": (context) => Tutorial(),
+            "/statistiken": (context) => Statistiken(),
+            "/einstellungen": (context) => Einstellungen(),
+            "/ueberUns": (context) => UeberUns(),
+            "/registrierung": (context) => Anmeldung(),
+          },
+        ),
       ),
     );
   }

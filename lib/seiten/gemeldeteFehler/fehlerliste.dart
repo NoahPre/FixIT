@@ -6,10 +6,15 @@ import 'package:flutter/rendering.dart';
 // TODO: beim fixen des Fehlers Kommentar hinterlassen Funktion hinzufügen
 
 class Fehlerliste extends StatefulWidget {
-  Fehlerliste({this.appBarHoehe = 0.0, required this.nachrichtVomServer});
+  Fehlerliste({
+    this.appBarHoehe = 0.0,
+    required this.nachrichtVomServer,
+    required this.automatischesEntfernenVonGefixtenMeldungen,
+  });
 
   final double appBarHoehe;
   final Function nachrichtVomServer;
+  final Function automatischesEntfernenVonGefixtenMeldungen;
 
   @override
   _FehlerlisteState createState() => _FehlerlisteState();
@@ -18,7 +23,7 @@ class Fehlerliste extends StatefulWidget {
 class _FehlerlisteState extends State<Fehlerliste> {
   List<Widget> zeigeFehlerliste(
       {required dynamic fehlerliste,
-      required List<String> eigeneFehlermeldungenIDs,
+      required List<dynamic> eigeneFehlermeldungenIDs,
       required ThemeData thema}) {
     List<Fehler> eigeneFehlermeldungen = [];
     List<Fehler> sonstigeFehlermeldungen = [];
@@ -67,6 +72,13 @@ class _FehlerlisteState extends State<Fehlerliste> {
   }
 
   @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback(
+        (timeStamp) => widget.automatischesEntfernenVonGefixtenMeldungen());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // aus provider.dart und fehlerlisteProvider.dart
     final FehlerlisteProvider fehlerlisteProvider =
@@ -76,6 +88,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
     // aktualisiert die Liste
     Future<void> aktualisieren() async {
       fehlerlisteProvider.fehlerliste.clear();
+      fehlerlisteProvider.angezeigteFehlerliste.clear();
       await fehlerlisteProvider.holeFehler();
       return null;
     }

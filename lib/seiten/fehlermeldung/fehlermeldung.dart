@@ -214,6 +214,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
       floatingActionButton: Builder(builder: (currentContext) {
         return FloatingActionButton.extended(
           heroTag: "FloatingActionButton",
+          backgroundColor: thema.colorScheme.primary,
           label: Row(
             children: <Widget>[
               Text(
@@ -258,6 +259,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                   fehler: neuerFehler, pickedImage: temporaeresBild);
             }
             Navigator.pop(context);
+            print(serverAntwort);
             ueberpruefeServerAntwort(
               antwort: serverAntwort,
               currentContext: currentContext,

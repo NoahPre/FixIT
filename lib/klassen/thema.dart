@@ -15,7 +15,7 @@ ThemeData thema = ThemeData(
     primary: Colors.black,
     onPrimary: Colors.white,
     primaryVariant: Colors.black,
-    secondary: Colors.black,
+    secondary: Colors.indigoAccent.shade700,
     onSecondary: Colors.white,
     secondaryVariant: Colors.black,
     background: Colors.white,
@@ -26,7 +26,7 @@ ThemeData thema = ThemeData(
     surface: Colors.white,
     onSurface: Colors.black,
   ),
-  highlightColor: Colors.blue,
+  highlightColor: Colors.indigoAccent.shade400,
   textTheme: TextTheme(
     // TextStyle für die Titel von AppBars
     headline1: TextStyle(

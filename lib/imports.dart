@@ -51,8 +51,7 @@ export 'package:fixit/klassen/provider/benutzer_info_provider.dart';
 export 'package:fixit/klassen/provider/fehlerliste_provider.dart';
 
 // 3rd party Packages:
-// export "package:keyboard_visibility/keyboard_visibility.dart";
 export "package:shared_preferences/shared_preferences.dart";
 export "package:provider/provider.dart";
 export "package:camera/camera.dart";
-export "package:after_layout/after_layout.dart";
+export "package:overlay_support/overlay_support.dart";

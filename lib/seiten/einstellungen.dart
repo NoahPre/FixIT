@@ -28,7 +28,7 @@ class _EinstellungenState extends State<Einstellungen> {
         aktuelleSeite: "/einstellungen",
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
         child: ListView(
           children: [
             Card(

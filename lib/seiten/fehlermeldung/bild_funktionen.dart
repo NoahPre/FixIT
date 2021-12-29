@@ -1,5 +1,5 @@
 // bildFunktionen.dart
-import '../../imports.dart';
+import 'package:fixit/imports.dart';
 // für den Typ PickedFile
 import "package:image_picker/image_picker.dart";
 
@@ -14,6 +14,7 @@ Future<void> zeigeBilderAuswahl({
   required CameraController? controller,
   required Function bildAusGallerieAuswaehlen,
 }) async {
+  ThemeData thema = Theme.of(currentContext);
   showModalBottomSheet(
     isDismissible: true,
     context: currentContext,
@@ -29,6 +30,7 @@ Future<void> zeigeBilderAuswahl({
                 child: Container(
                   height: 100.0,
                   child: IconButton(
+                    tooltip: "Kamera",
                     icon: Icon(
                       Icons.photo_camera,
                       color: Colors.black,
@@ -53,6 +55,7 @@ Future<void> zeigeBilderAuswahl({
                 child: Container(
                   height: 100.0,
                   child: IconButton(
+                    tooltip: "Bildergalerie",
                     icon: Icon(
                       Icons.collections,
                       color: Colors.black,

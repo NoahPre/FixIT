@@ -5,6 +5,7 @@ import "package:path_provider/path_provider.dart";
 
 /// Klasse, die das Speichern von Daten lokal auf dem Gerät in Form von Json String koordiniert
 class LokaleDatenbank {
+  String fehlerdatenFileName = "fehlerdaten.json";
   String schuldatenFileName = "schuldaten.json";
   String serverNachrichtenFileName = "server_nachrichten.json";
 
@@ -45,6 +46,23 @@ class LokaleDatenbank {
     return file.writeAsString('$jsonString');
   }
 
+  Future<Map<String, dynamic>> holeLokaleFehlerdaten() async {
+    String jsonString = await leseFileAlsString(
+      fileName: fehlerdatenFileName,
+      defaultJsonString:
+          "{'eigene_fehlermeldungen_ids': [], 'eigene_gefixte_fehlermeldungen': [],}",
+    );
+    return jsonDecode(jsonString);
+  }
+
+  Future<void> schreibeLokaleFehlerdaten(Map<String, dynamic> daten) async {
+    String jsonString = jsonEncode(daten);
+    await schreibeFile(
+      fileName: fehlerdatenFileName,
+      jsonString: jsonString,
+    );
+  }
+
   Future<Map<String, dynamic>> holeLokaleServerNachrichtenDaten() async {
     String jsonString = await leseFileAlsString(
         fileName: serverNachrichtenFileName,
@@ -56,17 +74,24 @@ class LokaleDatenbank {
       Map<String, dynamic> daten) async {
     String jsonString = jsonEncode(daten);
     await schreibeFile(
-        fileName: serverNachrichtenFileName, jsonString: jsonString);
+      fileName: serverNachrichtenFileName,
+      jsonString: jsonString,
+    );
   }
 
   Future<Map<String, dynamic>> holeLokaleSchuldaten() async {
     String jsonString = await leseFileAlsString(
-        fileName: schuldatenFileName, defaultJsonString: "{}");
+      fileName: schuldatenFileName,
+      defaultJsonString: "{}",
+    );
     return jsonDecode(jsonString);
   }
 
   Future<void> schreibeLokaleSchuldaten(Map<String, dynamic> daten) async {
     String jsonString = jsonEncode(daten);
-    await schreibeFile(fileName: schuldatenFileName, jsonString: jsonString);
+    await schreibeFile(
+      fileName: schuldatenFileName,
+      jsonString: jsonString,
+    );
   }
 }
