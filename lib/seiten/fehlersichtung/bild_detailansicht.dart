@@ -17,7 +17,7 @@ class _BildDetailansichtState extends State<BildDetailansicht> {
     ThemeData thema = Theme.of(context);
 
     //TODO: hier das Bild nicht extra nochmal runterladen
-    // evtl ist das mit dem erneut das Bild runterladen gar nicht so schlimm, Flutter is irgendwie schlau genug, das einfach nochmal zu benutzen
+    // evtl ist das mit dem erneut das Bild runterladen gar nicht so schlimm, Flutter ist vielleicht irgendwie schlau genug, das einfach nochmal zu benutzen
     return Scaffold(
       // TODO: AppBar entfernen und nur einen kleinen weißen Button oben links machen, mit dem man die Seite schließen kann (denn mit der AppBar ist das Bild im Portrait Modus nach unten verschoben)
       appBar: AppBar(),

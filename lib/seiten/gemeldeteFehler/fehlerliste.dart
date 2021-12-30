@@ -1,7 +1,6 @@
 // fehlerliste.dart
 import "package:fixit/imports.dart";
 import "package:crypto/crypto.dart";
-import 'package:flutter/rendering.dart';
 
 // TODO: beim fixen des Fehlers Kommentar hinterlassen Funktion hinzufügen
 
@@ -9,11 +8,13 @@ class Fehlerliste extends StatefulWidget {
   Fehlerliste({
     this.appBarHoehe = 0.0,
     required this.nachrichtVomServer,
+    required this.fehlerlisteProvider,
     required this.automatischesEntfernenVonGefixtenMeldungen,
   });
 
   final double appBarHoehe;
   final Function nachrichtVomServer;
+  final FehlerlisteProvider fehlerlisteProvider;
   final Function automatischesEntfernenVonGefixtenMeldungen;
 
   @override
@@ -73,8 +74,9 @@ class _FehlerlisteState extends State<Fehlerliste> {
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback(
-        (timeStamp) => widget.automatischesEntfernenVonGefixtenMeldungen());
+    // widget.fehlerlisteProvider.holeFehler();
+    // WidgetsBinding.instance?.addPostFrameCallback(
+    //     (timeStamp) => widget.automatischesEntfernenVonGefixtenMeldungen());
     super.initState();
   }
 
@@ -92,8 +94,6 @@ class _FehlerlisteState extends State<Fehlerliste> {
       await fehlerlisteProvider.holeFehler();
       return null;
     }
-
-    print("build");
 
     // schaut, ob auf dem Server irgendwelche neuen Nachrichten sind
     // TODO: das hier auslagern

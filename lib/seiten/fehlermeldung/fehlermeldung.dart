@@ -1,7 +1,6 @@
 // fehlermeldungVorlage.dart
 import "../../imports.dart";
 import "../../main.dart";
-import "package:flutter/cupertino.dart";
 import "package:intl/intl.dart";
 import "package:image_picker/image_picker.dart";
 import "package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart";
@@ -213,6 +212,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
       // Button um den Fehler zu melden
       floatingActionButton: Builder(builder: (currentContext) {
         return FloatingActionButton.extended(
+          tooltip: "Fehlermeldung senden",
           heroTag: "FloatingActionButton",
           backgroundColor: thema.colorScheme.primary,
           label: Row(

@@ -5,9 +5,10 @@ import "package:path_provider/path_provider.dart";
 
 /// Klasse, die das Speichern von Daten lokal auf dem Gerät in Form von Json String koordiniert
 class LokaleDatenbank {
-  String fehlerdatenFileName = "fehlerdaten.json";
-  String schuldatenFileName = "schuldaten.json";
-  String serverNachrichtenFileName = "server_nachrichten.json";
+  String eigeneFehlermeldungenDatenFilename =
+      "eigene_fehlermeldungen_daten.json";
+  String schuleDatenFilename = "schule_daten.json";
+  String serverNachrichtenDatenFilename = "server_nachrichten_daten.json";
 
   /// holt den lokalen Pfad
   Future<String> get _lokalerPfad async {
@@ -48,7 +49,7 @@ class LokaleDatenbank {
 
   Future<Map<String, dynamic>> holeLokaleFehlerdaten() async {
     String jsonString = await leseFileAlsString(
-      fileName: fehlerdatenFileName,
+      fileName: eigeneFehlermeldungenDatenFilename,
       defaultJsonString:
           "{'eigene_fehlermeldungen_ids': [], 'eigene_gefixte_fehlermeldungen': [],}",
     );
@@ -58,14 +59,14 @@ class LokaleDatenbank {
   Future<void> schreibeLokaleFehlerdaten(Map<String, dynamic> daten) async {
     String jsonString = jsonEncode(daten);
     await schreibeFile(
-      fileName: fehlerdatenFileName,
+      fileName: eigeneFehlermeldungenDatenFilename,
       jsonString: jsonString,
     );
   }
 
   Future<Map<String, dynamic>> holeLokaleServerNachrichtenDaten() async {
     String jsonString = await leseFileAlsString(
-        fileName: serverNachrichtenFileName,
+        fileName: serverNachrichtenDatenFilename,
         defaultJsonString: '{"letzteNachrichtSHA1": ""}');
     return jsonDecode(jsonString);
   }
@@ -74,14 +75,14 @@ class LokaleDatenbank {
       Map<String, dynamic> daten) async {
     String jsonString = jsonEncode(daten);
     await schreibeFile(
-      fileName: serverNachrichtenFileName,
+      fileName: serverNachrichtenDatenFilename,
       jsonString: jsonString,
     );
   }
 
   Future<Map<String, dynamic>> holeLokaleSchuldaten() async {
     String jsonString = await leseFileAlsString(
-      fileName: schuldatenFileName,
+      fileName: schuleDatenFilename,
       defaultJsonString: "{}",
     );
     return jsonDecode(jsonString);
@@ -90,7 +91,7 @@ class LokaleDatenbank {
   Future<void> schreibeLokaleSchuldaten(Map<String, dynamic> daten) async {
     String jsonString = jsonEncode(daten);
     await schreibeFile(
-      fileName: schuldatenFileName,
+      fileName: schuleDatenFilename,
       jsonString: jsonString,
     );
   }

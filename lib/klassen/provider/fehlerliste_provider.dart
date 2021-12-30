@@ -82,6 +82,9 @@ class FehlerlisteProvider with ChangeNotifier {
   /// Zähler, der bei Fehlerbehebern die Anzahl an gelöschten (behobenen) Fehlermeldungen speichert
   int fehlerbehebungsZaehler = 0;
 
+  /// Liste an Fehlern, die beim Schließen der App entfernt werden
+  List<Fehler> zuEntfernendeFehlermeldungen = [];
+
   Future<void> holeToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     token = sharedPreferences.getString("token") ?? "";
@@ -89,6 +92,7 @@ class FehlerlisteProvider with ChangeNotifier {
 
   // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
   Future<String> holeFehler() async {
+    print("hole Fehler");
     var url =
         'https://www.icanfixit.eu/gibAlleFehler.php?schule=$schule&token=$token';
     var jsonObjekt = [];
@@ -221,8 +225,6 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   String upload({String? dateiname, String? base64Image}) {
-    print("uploading");
-    print(dateiname);
     http.post(
         Uri.parse(
             "https://www.icanfixit.eu/schreibeBild.php?schule=$schule&token=$token"),
@@ -230,7 +232,6 @@ class FehlerlisteProvider with ChangeNotifier {
           "image": base64Image,
           "name": dateiname,
         }).then((result) {
-      print(result.body);
       return result.statusCode == 200 ? result.body : "";
     }).catchError((error) {
       print(error.toString());
@@ -291,7 +292,6 @@ class FehlerlisteProvider with ChangeNotifier {
     var url =
         "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&schule=$schule&token=$token";
     var answer = await http.get(Uri.parse(url));
-    print(url);
     return answer.body;
   }
 
@@ -308,8 +308,20 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   void dispose() {
+    print("dispose");
     super.dispose();
     fehlerlisteController.close();
+    // entferneZuEntfernendeFehlermeldungen();
+  }
+
+  Future<void> entferneZuEntfernendeFehlermeldungen() async {
+    for (Fehler zuEntfernenderFehler in zuEntfernendeFehlermeldungen) {
+      fehlerGeloescht(
+        fehler: zuEntfernenderFehler,
+        istFehlermelder: istFehlermelder,
+      );
+    }
+    zuEntfernendeFehlermeldungen.clear();
   }
 
   /// Speichert die ID einer Fehlermeldung lokal auf dem Gerät, wenn ein Fehler gemeldet wurde
@@ -350,6 +362,8 @@ class FehlerlisteProvider with ChangeNotifier {
         "fehlerbehebungsZaehler", fehlerbehebungsZaehler);
   }
 
+  /// Entfernt die IDs der Fehlermeldungen des Benutzers, die von ihm oder von Fehlerbehebern gelöscht wurden
+  /// aus fehlerdaten.json (sowohl aus "eigene_gefixte_fehlermeldungen" und "eigene_fehlermeldungen_ids")
   Future<void> entferneGeloeschteFehlermeldungenIDs() async {
     List<String> aktuelleFehlermeldungenIDs = [];
     aktuelleFehlermeldungenIDs =
@@ -365,15 +379,28 @@ class FehlerlisteProvider with ChangeNotifier {
     eigeneFehlermeldungenIDs = eigeneFehlermeldungenIDsInFunktion;
     lokaleFehlerdaten["eigene_fehlermeldungen_ids"] =
         eigeneFehlermeldungenIDsInFunktion;
+    List<Map<String, dynamic>> eigeneGefixteFehlermeldungenInFunktion = [];
+    for (Map<String, dynamic> eintrag
+        in lokaleFehlerdaten["eigene_gefixte_fehlermeldungen"] ?? {}) {
+      if (aktuelleFehlermeldungenIDs.contains(eintrag["id"] ?? "") == true) {
+        eigeneGefixteFehlermeldungenInFunktion.add(eintrag);
+      }
+    }
+    lokaleFehlerdaten["eigene_gefixte_fehlermeldungen"] =
+        eigeneGefixteFehlermeldungenInFunktion;
     await lokaleDatenbank.schreibeLokaleFehlerdaten(lokaleFehlerdaten);
   }
 
-  Future<void> automatischesEntfernenVonGefixtenMeldungen() async {
-    List<String> gefixteEigeneFehlermeldungenIDs = [];
+  /// Diese Funktion entfernt (löscht) automatisch als gefixt markierte Fehlermeldungen des Benutzers nach einer bestimmten Zeit
+  Future<void> holeFehlerUndEntferneAutomatischGefixteMeldungen() async {
+    await holeFehler();
+    List<String> eigeneGefixteFehlermeldungenIDs = [];
+    print(fehlerliste);
     for (Fehler aktuellerFehler in fehlerliste) {
       if (eigeneFehlermeldungenIDs.contains(aktuellerFehler.id) &&
           aktuellerFehler.gefixt == "1") {
-        gefixteEigeneFehlermeldungenIDs.add(aktuellerFehler.id);
+        print("add");
+        eigeneGefixteFehlermeldungenIDs.add(aktuellerFehler.id);
       }
     }
     List<dynamic> eigeneGefixteFehlermeldungen =
@@ -381,25 +408,31 @@ class FehlerlisteProvider with ChangeNotifier {
     List<String> alteEintraege = [];
     List<Map<String, dynamic>> zuEntfernendeEintraege = [];
     for (Map<String, dynamic> eintrag in eigeneGefixteFehlermeldungen) {
-      if (gefixteEigeneFehlermeldungenIDs.contains(eintrag["id"])) {
+      print("fort");
+      print(eintrag["id"].runtimeType);
+      print(eigeneGefixteFehlermeldungenIDs);
+      if (eigeneGefixteFehlermeldungenIDs.contains(eintrag["id"].toString())) {
+        print("alter Eintrag");
         alteEintraege.add(eintrag["id"]);
+        // erhöht den Anzahl Wert um 1
         eintrag["anzahl"] = eintrag["anzahl"] + 1;
-        print(eintrag["anzahl"]);
+        // löscht Fehlermeldungen, deren Anzahl größer als 1 ist
         if (eintrag["anzahl"] > 1) {
-          fehlerGeloescht(
-              fehler: fehlerliste
-                  .singleWhere((fehler) => fehler.id == eintrag["id"]),
-              istFehlermelder: istFehlermelder);
+          zuEntfernendeFehlermeldungen.add(fehlerliste.singleWhere(
+              (Fehler fehler) => fehler.id == eintrag["id"].toString()));
           zuEntfernendeEintraege.add(eintrag);
         }
       }
     }
-    // muss so sein
+    // TODO: Einträge aus dem JSON hier auch entfernen, wenn der Benutzer eine eigene gefixte Fehlermeldung löscht
+    // muss so sein, da man, wenn man die Einträge im for loop oben entfernen würde, die geloopte Liste während des Loops verändern würde
     for (Map<String, dynamic> eintrag in zuEntfernendeEintraege) {
       eigeneGefixteFehlermeldungen.remove(eintrag);
     }
-    for (String aktuelleID in gefixteEigeneFehlermeldungenIDs) {
+
+    for (String aktuelleID in eigeneGefixteFehlermeldungenIDs) {
       if (alteEintraege.contains(aktuelleID) == false) {
+        print("show");
         eigeneGefixteFehlermeldungen.add({"id": aktuelleID, "anzahl": 0});
         showSimpleNotification(
           Text("Ihre Fehlermeldung wurde gefixt!"),

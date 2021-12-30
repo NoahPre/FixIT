@@ -1,5 +1,5 @@
 // benutzer_info_provider.dart
-import "../../imports.dart";
+import "package:fixit/imports.dart";
 import "package:http/http.dart" as http;
 import 'package:crypto/crypto.dart';
 import "package:package_info/package_info.dart";
@@ -226,7 +226,8 @@ class BenutzerInfoProvider with ChangeNotifier {
 
   // überprüft, ob die laufende Version der App noch von Serverseite unterstützt wird
   // nimmt den Wert aus gibUnterstuetzteVersion.php
-  Future<String> istUnterstuetzteVersion() async {
+  Future<bool> istUnterstuetzteVersion(
+      {required BuildContext currentContext}) async {
     try {
       var packageInfo = await PackageInfo.fromPlatform();
       String version = packageInfo.version;
@@ -240,22 +241,27 @@ class BenutzerInfoProvider with ChangeNotifier {
       responseAsList.add(int.parse(response.body.split(".")[0]));
       responseAsList.add(int.parse(response.body.split(".")[1]));
       responseAsList.add(int.parse(response.body.split(".")[2]));
-      if (responseAsList[0] <= versionAsList[0]) {
-        if (responseAsList[1] <= versionAsList[1]) {
-          if (responseAsList[2] <= versionAsList[2]) {
-            return "true";
-          } else {
-            return "false";
-          }
-        } else {
-          return "false";
-        }
+      if (responseAsList[0] < versionAsList[0]) {
+        return true;
       } else {
-        return "false";
+        if (responseAsList[1] < versionAsList[1]) {
+          return true;
+        } else {
+          if (responseAsList[2] < versionAsList[2]) {
+            return true;
+          } else {
+            return false;
+          }
+        }
       }
     } catch (error) {
       print(error.toString());
-      return "error";
+      zeigeSnackBarNachricht(
+        nachricht: error.toString(),
+        context: currentContext,
+        istError: true,
+      );
+      return true;
     }
   }
 

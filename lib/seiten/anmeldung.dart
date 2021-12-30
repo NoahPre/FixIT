@@ -402,7 +402,7 @@ class _AnmeldungState extends State<Anmeldung> {
                         ),
                         children: [
                           TextSpan(
-                            text: "Datenschutz Erklärung",
+                            text: "Datenschutzerklärung",
                             style: TextStyle(
                               color: Colors.blue,
                             ),
@@ -415,26 +415,27 @@ class _AnmeldungState extends State<Anmeldung> {
                     height: 20.0,
                   ),
                   Builder(
-                      builder: (BuildContext currentContext) => ElevatedButton(
-                            child: Text(
-                              "Anmelden",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            style: TextButton.styleFrom(
-                              backgroundColor: thema.colorScheme.primary,
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                  color: thema.colorScheme.primary,
-                                ),
-                                borderRadius: BorderRadius.circular(18.0),
-                              ),
-                            ),
-                            onPressed: () => _benutzerMeldetSichAn(
-                              currentContext: currentContext,
-                            ),
-                          )),
+                    builder: (BuildContext currentContext) => ElevatedButton(
+                      child: Text(
+                        "Anmelden",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: thema.colorScheme.primary,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: thema.colorScheme.primary,
+                          ),
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                      ),
+                      onPressed: () => _benutzerMeldetSichAn(
+                        currentContext: currentContext,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

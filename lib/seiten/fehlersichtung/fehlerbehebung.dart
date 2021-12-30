@@ -155,41 +155,45 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                       child: Center(
                         child: Hero(
                           tag: urlZumBild,
-                          child: Image.network(urlZumBild, fit: BoxFit.contain,
-                              loadingBuilder: (
-                            BuildContext context,
-                            Widget child,
-                            ImageChunkEvent? loadingProgress,
-                          ) {
-                            // zeigt das Bild an, wenn es fertig heruntergeladen ist
-                            if (loadingProgress == null) {
-                              return child;
-                            }
-                            return CircularProgressIndicator(
-                                // valueColor: AlwaysStoppedAnimation<Color>(
-                                //   thema.primaryColor,
-                                // ),
-                                );
-                          }, errorBuilder: (BuildContext context,
-                                  Object exception, StackTrace? stackTrace) {
-                            print(exception.toString());
-                            return Column(
-                              children: [
-                                Text(
-                                  "Bild konnte nicht geladen werden",
-                                  style: TextStyle(
-                                    color: Colors.black,
+                          child: Image.network(
+                            urlZumBild,
+                            fit: BoxFit.contain,
+                            loadingBuilder: (
+                              BuildContext context,
+                              Widget child,
+                              ImageChunkEvent? loadingProgress,
+                            ) {
+                              // zeigt das Bild an, wenn es fertig heruntergeladen ist
+                              if (loadingProgress == null) {
+                                return child;
+                              }
+                              return CircularProgressIndicator(
+                                  // valueColor: AlwaysStoppedAnimation<Color>(
+                                  //   thema.primaryColor,
+                                  // ),
+                                  );
+                            },
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+                              print(exception.toString());
+                              return Column(
+                                children: [
+                                  Text(
+                                    "Bild konnte nicht geladen werden",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  exception.toString(),
-                                  style: TextStyle(
-                                    color: Colors.black,
+                                  Text(
+                                    exception.toString(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            );
-                          }),
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),

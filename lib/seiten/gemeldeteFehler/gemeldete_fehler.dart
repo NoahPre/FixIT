@@ -3,11 +3,16 @@ import '../../imports.dart';
 
 /// Startseite der App
 class GemeldeteFehler extends StatefulWidget {
+  GemeldeteFehler({required this.fehlerlisteProvider});
+  final FehlerlisteProvider fehlerlisteProvider;
+
   @override
   State<GemeldeteFehler> createState() => _GemeldeteFehlerState();
 }
 
-class _GemeldeteFehlerState extends State<GemeldeteFehler> {
+class _GemeldeteFehlerState extends State<GemeldeteFehler>
+    with WidgetsBindingObserver {
+  bool fehlerGeholt = false;
   Sortierung _popupMenuButtonValue = Sortierung.datum_absteigend;
 
   List<List> sortierungsmoeglichkeiten = [
@@ -18,7 +23,37 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler> {
   ];
 
   @override
+  void initState() {
+    WidgetsBinding.instance?.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // löscht die zu entfernenden Fehler, wenn der Benutzer die App schließt
+    if (state == AppLifecycleState.paused) {
+      widget.fehlerlisteProvider.entferneZuEntfernendeFehlermeldungen();
+    }
+  }
+
+  // @override
+  // void initState() {
+  //   widget.fehlerlisteProvider.holeFehler();
+  //   WidgetsBinding.instance?.addPostFrameCallback((timeStamp) => widget
+  //       .fehlerlisteProvider
+  //       .automatischesEntfernenVonGefixtenMeldungen());
+  //   super.initState();
+  // }
+
+  @override
   Widget build(BuildContext context) {
+    print("gemeldete fehler");
     ThemeData thema = Theme.of(context);
     final bool? istAuthentifiziert = Provider.of<bool?>(context);
     final String schule = Provider.of<String>(context);
@@ -110,9 +145,17 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler> {
       return Anmeldung();
     }
 
-    if (schule != "") {
+    if (schule != "" && fehlerGeholt == false) {
+      print("fehler holen");
       fehlerlisteProvider.schule = schule;
-      fehlerlisteProvider.holeFehler();
+      // holt die Fehler vom Server
+      // fehlerlisteProvider.holeFehler();
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) =>
+          fehlerlisteProvider
+              .holeFehlerUndEntferneAutomatischGefixteMeldungen());
+      setState(() {
+        fehlerGeholt = true;
+      });
     }
 
     return Scaffold(
@@ -121,11 +164,13 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler> {
         aktuelleSeite: "/",
       ),
       floatingActionButton: FABHome(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Builder(builder: (currentContext) {
         // überprüft, ob die laufende Version der App noch von Serverseite aus unterstützt wird
         WidgetsBinding.instance?.addPostFrameCallback((_) async {
-          if (await benutzerInfoProvider.istUnterstuetzteVersion() == "false") {
+          if (await benutzerInfoProvider.istUnterstuetzteVersion(
+                  currentContext: context) ==
+              false) {
             await showDialog(
               barrierDismissible: false,
               context: currentContext,
@@ -152,9 +197,10 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler> {
               ? Fehlerliste(
                   appBarHoehe: appBar.preferredSize.height,
                   nachrichtVomServer: benutzerInfoProvider.nachrichtVomServer,
+                  fehlerlisteProvider: fehlerlisteProvider,
                   automatischesEntfernenVonGefixtenMeldungen:
                       fehlerlisteProvider
-                          .automatischesEntfernenVonGefixtenMeldungen,
+                          .holeFehlerUndEntferneAutomatischGefixteMeldungen,
                 )
               // Ladedonut in der Mitte der Seite mit Option zum neuladen
               : Builder(builder: (BuildContext currentContext) {

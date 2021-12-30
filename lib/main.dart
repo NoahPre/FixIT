@@ -3,6 +3,11 @@ import "package:fixit/imports.dart";
 import "package:fixit/klassen/thema.dart";
 
 Future<void> main() async {
+  // Lösung für das Problem, dass Android 7 Geräte und älter nicht das ISRG_X1 Zertifikat besitzen
+  // und daher Let's encrypt Zertifikatien nicht mehr vertrauen
+  // Quelle: https://stackoverflow.com/questions/69511057/flutter-on-android-7-certificate-verify-failed-with-letsencrypt-ssl-cert-after-s
+  // MUSS NOCH EINGEBAUT WERDEN
+
   // wichtig für das Kamera Package
   WidgetsFlutterBinding.ensureInitialized();
   cameras = await availableCameras();
@@ -51,7 +56,9 @@ class FixIT extends StatelessWidget {
           initialRoute: "/",
           routes: {
             // Startseite (initialRoute) der App
-            "/": (context) => GemeldeteFehler(),
+            "/": (context) => GemeldeteFehler(
+                  fehlerlisteProvider: fehlerlisteProvider,
+                ),
             // diese beiden Seiten werden nie durch namedRoutes aufgerufen, sind aber der Vollständigkeit halber auch hier
             // "/fehlerDetailansicht": (context) => FehlerDetailansicht(),
             // "/fehlerBehebung": (context) => Fehlerbehebung(),
