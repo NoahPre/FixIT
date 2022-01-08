@@ -1,6 +1,5 @@
 // einstellungen.dart
 import '../imports.dart';
-import "package:flutter/foundation.dart";
 
 class Einstellungen extends StatefulWidget {
   @override

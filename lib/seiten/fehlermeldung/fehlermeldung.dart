@@ -196,9 +196,8 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     // TODO: das hier eleganter lösen
     List<dynamic> praefixeDaten =
         jsonDecode(fehlerlisteProvider.schuldaten["praefixe"] ?? "[]");
-    List<String> praefixe = praefixeDaten
-        .map((dynamic item) => item.toString())
-        .toList() as List<String>;
+    List<String> praefixe =
+        praefixeDaten.map((dynamic item) => item.toString()).toList();
 
     var appBar = AppBar(
       title: Text(

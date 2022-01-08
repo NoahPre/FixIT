@@ -1,6 +1,5 @@
 // fehlerbehebung.dart
-import '../../imports.dart';
-import "package:flutter/material.dart";
+import 'package:fixit/imports.dart';
 
 // TODO: bei Änderungen hier, auch den Code in FehlerDetailansicht aktualisieren
 
