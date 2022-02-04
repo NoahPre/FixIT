@@ -42,15 +42,6 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
     }
   }
 
-  // @override
-  // void initState() {
-  //   widget.fehlerlisteProvider.holeFehler();
-  //   WidgetsBinding.instance?.addPostFrameCallback((timeStamp) => widget
-  //       .fehlerlisteProvider
-  //       .automatischesEntfernenVonGefixtenMeldungen());
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     print("gemeldete fehler");
@@ -75,7 +66,7 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
       centerTitle: true,
       actions: [
         PopupMenuButton<Sortierung>(
-          tooltip: "Filter",
+          tooltip: "Sortieren",
           icon: Icon(Icons.sort),
           color: thema.colorScheme.background,
           itemBuilder: (context) =>

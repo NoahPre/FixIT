@@ -247,7 +247,7 @@ class BenutzerInfoProvider with ChangeNotifier {
         if (responseAsList[1] < versionAsList[1]) {
           return true;
         } else {
-          if (responseAsList[2] < versionAsList[2]) {
+          if (responseAsList[2] <= versionAsList[2]) {
             return true;
           } else {
             return false;
