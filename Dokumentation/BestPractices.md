@@ -4,4 +4,4 @@ siehe Struktur.md
 
 ## Schreibweisen
 * Dateinamen und Ordnernamen werden auf Deutsch und bei mehreren Worten mit einem _ getrennt geschrieben 
-* Kommentare werden auf Deutsch, Variablen und Funktionen in camelCase und auch auf Deutsch geschrieben
+* Kommentare werden auf Deutsch, Variablen und Funktionen in lowerCamelCase und auch auf Deutsch geschrieben
