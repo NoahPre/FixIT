@@ -2,7 +2,7 @@
 import "package:fixit/imports.dart";
 import "package:http/http.dart" as http;
 import 'package:crypto/crypto.dart';
-import "package:package_info/package_info.dart";
+import "package:package_info_plus/package_info_plus.dart";
 
 /// Dieser Provider enthält die Informationen über den Benutzer, so etwa
 /// - ob der Benutzer Fehlermelder oder -beheber ist

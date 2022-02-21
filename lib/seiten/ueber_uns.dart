@@ -1,7 +1,7 @@
 // ueberUns.dart
 import '../imports.dart';
 import "package:url_launcher/url_launcher.dart";
-import "package:package_info/package_info.dart";
+import "package:package_info_plus/package_info_plus.dart";
 
 class UeberUns extends StatelessWidget {
   static const String danksagungText =
@@ -205,7 +205,7 @@ class UeberUns extends StatelessWidget {
                         context: context,
                         applicationName: "FixIT",
                         applicationIcon: Image.asset(
-                          "assets/fixit_icon.png",
+                          "assets/fixit_logo.png",
                           height: 50.0,
                           width: 50.0,
                         ),
