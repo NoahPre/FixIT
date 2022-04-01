@@ -57,12 +57,14 @@ class _FehlerlisteState extends State<Fehlerliste> {
       ));
     }
     if (sonstigeFehlermeldungen.length != 0) {
-      children.add(
-        Text(
-          "Andere Fehlermeldungen:",
-          style: thema.textTheme.headline2,
-        ),
-      );
+      if (eigeneFehlermeldungen.length != 0) {
+        children.add(
+          Text(
+            "Andere Fehlermeldungen:",
+            style: thema.textTheme.headline2,
+          ),
+        );
+      }
       children.addAll(
         sonstigeFehlermeldungen.map<Widget>(
           (Fehler fehler) => FehlerlisteEintrag(fehler: fehler),
@@ -171,7 +173,6 @@ class _FehlerlisteState extends State<Fehlerliste> {
                     currentContext: currentContext,
                   ) ==
                   true) {
-                print("Aktualisieren");
                 aktualisieren();
               } else {}
             },
@@ -236,7 +237,8 @@ class _FehlerlisteState extends State<Fehlerliste> {
             ? screen
             :
             // Widget für den Scrollbalken am Rand
-            Scrollbar(
+            RawScrollbar(
+                thumbColor: Colors.grey,
                 child: screen,
               );
       },

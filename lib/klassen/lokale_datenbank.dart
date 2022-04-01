@@ -32,7 +32,6 @@ class LokaleDatenbank {
         await schreibeFile(fileName: fileName, jsonString: defaultJsonString);
       }
       String inhalt = await file.readAsString();
-      print("inhalt: " + inhalt);
       return inhalt;
     } catch (error) {
       print("Error beim Lesen des Files $fileName: ${error.toString()}");

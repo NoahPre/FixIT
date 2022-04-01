@@ -258,7 +258,6 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                   fehler: neuerFehler, pickedImage: temporaeresBild);
             }
             Navigator.pop(context);
-            print(serverAntwort);
             ueberpruefeServerAntwort(
               antwort: serverAntwort,
               currentContext: currentContext,

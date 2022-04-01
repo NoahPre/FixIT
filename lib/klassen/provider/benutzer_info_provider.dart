@@ -89,7 +89,6 @@ class BenutzerInfoProvider with ChangeNotifier {
     // aktualisiert fehlerlisteProvider
     await fehlerlisteProvider.holeToken();
     await fehlerlisteProvider.holeLokaleDaten();
-    print("snons");
     istAuthentifiziert = true;
     authentifizierungSink.add(true);
     notifyListeners();

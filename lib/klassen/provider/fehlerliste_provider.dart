@@ -92,7 +92,6 @@ class FehlerlisteProvider with ChangeNotifier {
 
   // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
   Future<String> holeFehler() async {
-    print("hole Fehler");
     var url =
         'https://www.icanfixit.eu/gibAlleFehler.php?schule=$schule&token=$token';
     var jsonObjekt = [];
@@ -308,7 +307,6 @@ class FehlerlisteProvider with ChangeNotifier {
   }
 
   void dispose() {
-    print("dispose");
     super.dispose();
     fehlerlisteController.close();
     // entferneZuEntfernendeFehlermeldungen();
@@ -395,11 +393,9 @@ class FehlerlisteProvider with ChangeNotifier {
   Future<void> holeFehlerUndEntferneAutomatischGefixteMeldungen() async {
     await holeFehler();
     List<String> eigeneGefixteFehlermeldungenIDs = [];
-    print(fehlerliste);
     for (Fehler aktuellerFehler in fehlerliste) {
       if (eigeneFehlermeldungenIDs.contains(aktuellerFehler.id) &&
           aktuellerFehler.gefixt == "1") {
-        print("add");
         eigeneGefixteFehlermeldungenIDs.add(aktuellerFehler.id);
       }
     }
@@ -408,11 +404,7 @@ class FehlerlisteProvider with ChangeNotifier {
     List<String> alteEintraege = [];
     List<Map<String, dynamic>> zuEntfernendeEintraege = [];
     for (Map<String, dynamic> eintrag in eigeneGefixteFehlermeldungen) {
-      print("fort");
-      print(eintrag["id"].runtimeType);
-      print(eigeneGefixteFehlermeldungenIDs);
       if (eigeneGefixteFehlermeldungenIDs.contains(eintrag["id"].toString())) {
-        print("alter Eintrag");
         alteEintraege.add(eintrag["id"]);
         // erhöht den Anzahl Wert um 1
         eintrag["anzahl"] = eintrag["anzahl"] + 1;
@@ -432,7 +424,6 @@ class FehlerlisteProvider with ChangeNotifier {
 
     for (String aktuelleID in eigeneGefixteFehlermeldungenIDs) {
       if (alteEintraege.contains(aktuelleID) == false) {
-        print("show");
         eigeneGefixteFehlermeldungen.add({"id": aktuelleID, "anzahl": 0});
         showSimpleNotification(
           Text("Ihre Fehlermeldung wurde gefixt!"),

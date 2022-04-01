@@ -44,7 +44,6 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
 
   @override
   Widget build(BuildContext context) {
-    print("gemeldete fehler");
     ThemeData thema = Theme.of(context);
     final bool? istAuthentifiziert = Provider.of<bool?>(context);
     final String schule = Provider.of<String>(context);
@@ -137,7 +136,6 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
     }
 
     if (schule != "" && fehlerGeholt == false) {
-      print("fehler holen");
       fehlerlisteProvider.schule = schule;
       // holt die Fehler vom Server
       // fehlerlisteProvider.holeFehler();
