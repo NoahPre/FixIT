@@ -1,4 +1,4 @@
-# FixIT
+![FixIT Logo](assets/fixit_logo_banner.png)
 FixIT ist ein Schulprojekt. Die App soll dabei helfen, technische Fehler und andere Defekte zu melden und eine schnelle Beseitigung dieser zu gewährleisten.
 
 ## Zur Orientierung
