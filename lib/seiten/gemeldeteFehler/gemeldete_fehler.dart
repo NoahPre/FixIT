@@ -24,13 +24,13 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -139,7 +139,7 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
       fehlerlisteProvider.schule = schule;
       // holt die Fehler vom Server
       // fehlerlisteProvider.holeFehler();
-      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) =>
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) =>
           fehlerlisteProvider
               .holeFehlerUndEntferneAutomatischGefixteMeldungen());
       setState(() {
@@ -156,7 +156,7 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Builder(builder: (currentContext) {
         // überprüft, ob die laufende Version der App noch von Serverseite aus unterstützt wird
-        WidgetsBinding.instance?.addPostFrameCallback((_) async {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (await benutzerInfoProvider.istUnterstuetzteVersion(
                   currentContext: context) ==
               false) {
@@ -193,7 +193,7 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
                 )
               // Ladedonut in der Mitte der Seite mit Option zum neuladen
               : Builder(builder: (BuildContext currentContext) {
-                  WidgetsBinding.instance?.addPostFrameCallback((_) =>
+                  WidgetsBinding.instance.addPostFrameCallback((_) =>
                       ueberpruefeInternetVerbindung(
                           currentContext: currentContext));
                   return RefreshIndicator(

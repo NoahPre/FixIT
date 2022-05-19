@@ -99,7 +99,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
 
     // schaut, ob auf dem Server irgendwelche neuen Nachrichten sind
     // TODO: das hier auslagern
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       Map<String, dynamic>? nachrichtMap = await widget.nachrichtVomServer();
       // wenn keine Nachricht anzuzeigen ist, dann wird die Funktion hier beendet
       if (nachrichtMap == null) {
