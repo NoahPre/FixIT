@@ -152,7 +152,39 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
       drawer: const Seitenmenue(
         aktuelleSeite: "/",
       ),
-      floatingActionButton: FABHome(),
+      floatingActionButton: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        alignment: Alignment.bottomCenter,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            // nur dafür da, um die Demo verlassen zu können
+            schule == "demo"
+                ? Flexible(
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: FloatingActionButton.extended(
+                        label: Text(
+                          "Demo verlassen",
+                          style: TextStyle(
+                            color: thema.colorScheme.onPrimary,
+                          ),
+                        ),
+                        backgroundColor: thema.colorScheme.primary,
+                        onPressed: () =>
+                            benutzerInfoProvider.benutzerMeldetSichAb(),
+                      ),
+                    ),
+                  )
+                : Container(),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: FABHome(),
+            ),
+          ],
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Builder(builder: (currentContext) {
         // überprüft, ob die laufende Version der App noch von Serverseite aus unterstützt wird

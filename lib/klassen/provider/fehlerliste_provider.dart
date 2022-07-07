@@ -85,6 +85,40 @@ class FehlerlisteProvider with ChangeNotifier {
   /// Liste an Fehlern, die beim Schließen der App entfernt werden
   List<Fehler> zuEntfernendeFehlermeldungen = [];
 
+  final String url = "www.icanfixit.eu";
+
+  /// Map, in dem die Pfade zu den einzelnen Scripts des Backends gespeichert werden
+  static const Map<String, String> serverScripts = {
+    "authentifizierung": "/authentifizierung.php",
+    "behebeFehler": "/behebeFehler.php",
+    "entferneFehler": "/entferneFehler.php",
+    "gibAlleFehler": "/gibAlleFehler.php",
+    "gibBild": "/gibBild.php",
+    "gibInstitutionen": "/gibInstitutionen.php",
+    "gibNachrichtVomServer": "/gibNachrichtVomServer.php",
+    "gibSchuldaten": "/gibSchuldaten.php",
+    "gibUnterstuetzteVersion": "/gibUnterstuetzteVersion.php",
+    "schreibeBild": "/schreibeBild.php",
+    "schreibeFehler": "/schreibeFehler.php",
+  };
+
+  Future kontaktiereServer(
+      {required String pfad, required Map<String, String> parameter}) async {
+    // wenn die Demo genutzt wird, sollen keine Fehler in die Datenbank geschrieben werden
+    //TODO: sehr unprofessionell das ganze hier, am besten irgendwann besser machen
+    if (parameter["schule"] == "demo" && pfad != "/gibAlleFehler.php") {
+      return "1";
+    }
+    final Uri uri = Uri.https(url, pfad, parameter);
+    try {
+      http.Response response = await http.get(uri);
+      return response.body;
+    } catch (error) {
+      print(error);
+      return "";
+    }
+  }
+
   Future<void> holeToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     token = sharedPreferences.getString("token") ?? "";
@@ -92,19 +126,12 @@ class FehlerlisteProvider with ChangeNotifier {
 
   // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
   Future<String> holeFehler() async {
-    var url =
-        'https://www.icanfixit.eu/gibAlleFehler.php?schule=$schule&token=$token';
-    var jsonObjekt = [];
-    String status = "";
-    try {
-      http.Response response = await http.get(Uri.parse(url));
-      jsonObjekt = jsonDecode(response.body) ?? [];
-      status = response.body;
-    } catch (error) {
-      await Future.delayed(const Duration(seconds: 3), () {});
-      holeFehler();
-      return "";
-    }
+    String jsonString = await kontaktiereServer(
+      pfad: serverScripts["gibAlleFehler"] ?? "",
+      parameter: {"schule": schule, "token": token},
+    );
+    var jsonObjekt = jsonDecode(jsonString);
+
     // überschreibt fehlerliste mit den Werten aus der Datenbank
     fehlerliste = List.generate(jsonObjekt.length, (int index) {
       // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
@@ -119,7 +146,7 @@ class FehlerlisteProvider with ChangeNotifier {
     // räumt die lokal gespeicherte Liste der eigenen Fehlermeldungen auf (eigeneFehlermeldungenIDs, gespeichert in SharedPreferences)
     await entferneGeloeschteFehlermeldungenIDs();
     notifyListeners();
-    return status;
+    return jsonString;
   }
 
   /// ruft lokale Daten aus dem Speicher ab, z.B. eigeneFehlermeldungenIDs, die Werte der verschiedenen Zähler und die Schuldaten
@@ -190,14 +217,20 @@ class FehlerlisteProvider with ChangeNotifier {
     await speichereFehlerID(neueID: fehler.id);
     // erhöht den Zähler
     await erhoeheFehlermeldungsZaehler();
-    // sendet den Fehler zum Server
-    String status = await schreibeFehler(
-      id: fehler.id,
-      datum: fehler.datum,
-      raum: fehler.raum,
-      beschreibung: fehler.beschreibung,
-      gefixt: fehler.gefixt,
-      bild: dateiname,
+
+    // sendet den Fehler zum Server mit schreibeFehler(.php)
+    String status = await kontaktiereServer(
+      pfad: serverScripts["schreibeFehler"] ?? "",
+      parameter: {
+        "schule": schule,
+        "token": token,
+        "id": fehler.id,
+        "datum": fehler.datum,
+        "raum": fehler.raum,
+        "beschreibung": fehler.beschreibung,
+        "gefixt": fehler.gefixt,
+        "bild": dateiname,
+      },
     );
 
     fehlerliste.add(fehler);
@@ -217,9 +250,6 @@ class FehlerlisteProvider with ChangeNotifier {
     return upload(
       dateiname: dateiname,
       base64Image: base64EncodedImage,
-      // base64Image: base64Encode(
-      //   await file.readAsBytes(),
-      // ),
     );
   }
 
@@ -239,7 +269,7 @@ class FehlerlisteProvider with ChangeNotifier {
     return "";
   }
 
-  /// Ändert den Status des Fehlers mit der angegebenen ID
+  /// Ändert den Status des Fehlers mit der angegebenen ID (mit behebeFehler(.php))
   /// "0": Fehler nicht behoben
   /// "1": Fehler behoben
   Future<String> fehlerStatusGeaendert({
@@ -250,25 +280,30 @@ class FehlerlisteProvider with ChangeNotifier {
     if (gefixt == "1") {
       await erhoeheFehlerbehebungsZaehler();
     }
-
-    var url =
-        "https://www.icanfixit.eu/behebeFehler.php?id=$id&gefixt=$gefixt&schule=$schule&token=$token";
-    http.Response response = await http.get(Uri.parse(url));
+    String status = await kontaktiereServer(
+      pfad: serverScripts["behebeFehler"] ?? "",
+      parameter: {"schule": schule, "token": token, "id": id, "gefixt": gefixt},
+    );
     holeFehler();
-    return response.body;
-    // notifyListeners();
+
+    return status;
   }
 
-  /// Löscht den übergebenen Fehler
+  /// Löscht den übergebenen Fehler mit entferneFehler(.php)
   Future<String> fehlerGeloescht({
     required Fehler fehler,
     required bool istFehlermelder,
   }) async {
-    String status = await entferneFehler(
-      id: fehler.id,
-      fileName: fehler.bild,
-      istFehlermelder: istFehlermelder,
+    String status = await kontaktiereServer(
+      pfad: serverScripts["entferneFehler"] ?? "",
+      parameter: {
+        "schule": schule,
+        "token": token,
+        "id": fehler.id,
+        "fileName": fehler.bild
+      },
     );
+
     fehlerliste.removeWhere(
         (Fehler aktuellerFehler) => aktuellerFehler.id == fehler.id);
     angezeigteFehlerliste.removeWhere(
@@ -276,34 +311,6 @@ class FehlerlisteProvider with ChangeNotifier {
     fehlerlisteSink.add(angezeigteFehlerliste);
     notifyListeners();
     return status;
-  }
-
-  /// Fügt einen Fehler mit schreibeFehler.php hinzu
-  Future<String> schreibeFehler({
-    required String id,
-    required String datum,
-    required String raum,
-    required String beschreibung,
-    required String gefixt,
-    required String bild,
-  }) async {
-    // die URL, die aufgerufen werden muss (mit den Argumenten implementiert)
-    var url =
-        "https://www.icanfixit.eu/schreibeFehler.php?id=$id&datum=$datum&raum=$raum&beschreibung=$beschreibung&gefixt=$gefixt&bild=$bild&schule=$schule&token=$token";
-    var answer = await http.get(Uri.parse(url));
-    return answer.body;
-  }
-
-  /// Löscht einen Fehler mit entferneFehler.php
-  Future<String> entferneFehler({
-    required String id,
-    required String fileName,
-    required bool istFehlermelder,
-  }) async {
-    var url =
-        "https://www.icanfixit.eu/entferneFehler.php?id=$id&fileName=$fileName&schule=$schule&token=$token";
-    http.Response response = await http.get(Uri.parse(url));
-    return response.body;
   }
 
   void dispose() {

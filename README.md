@@ -1,5 +1,6 @@
 ![FixIT Logo](assets/fixit_logo_banner.png)
 FixIT ist ein Schulprojekt. Die App soll dabei helfen, technische Fehler und andere Defekte zu melden und eine schnelle Beseitigung dieser zu gewährleisten.
+Momentan ist FixIT darauf ausgelegt, die Wartung von IT-Infrastruktur an Schulen zu erleichtern. Gängige Probleme, die mithilfe von FixIT gemeldet werden, sind etwa falsche Verkabelung, Probleme jeglicher Art mit technischen Geräten (Beamer, Dokumentenkamera, Whiteboard, Laptop, PC), etc.
 
 ## Zur Orientierung
 Dieses Projekt ist eine [Flutter App](https://flutter.dev/). Um FixIT auf ihrem Computer zu installieren müssen die folgenden Befehle auf der Kommandozeile ausgeführt werden. Außerdem muss Flutter installiert und die Flutter Befehle auf der Kommandozeile verfügbar sein.

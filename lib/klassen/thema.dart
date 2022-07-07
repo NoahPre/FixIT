@@ -72,11 +72,11 @@ ThemeData thema = ThemeData(
       fontSize: 14.0,
     ),
 
-    /// weißer, normaler Text
-    // bodyText2: TextStyle(
-    //   color: Colors.white,
-    //   fontSize: 14.0,
-    // ),
+    // grauer, kleiner Text
+    bodyText2: TextStyle(
+      color: Colors.grey.shade700,
+      fontSize: 12.0,
+    ),
 
     /// dunkelgrauer, normaler Text
     subtitle1: TextStyle(

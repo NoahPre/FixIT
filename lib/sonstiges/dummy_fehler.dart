@@ -9,7 +9,6 @@ List fehlerliste = [
     fixer: "Martin",
     gefixt: "1",
     gefixtDatum: "2020/01/03",
-    kommentar: "kein Kommentar",
     raum: "K21",
   ),
   Fehler(
@@ -19,7 +18,6 @@ List fehlerliste = [
     fixer: "Noah",
     gefixt: "1",
     gefixtDatum: "2020/01/07",
-    kommentar: "kein Kommentar",
     raum: "N41",
   ),
   Fehler(
@@ -29,7 +27,6 @@ List fehlerliste = [
     fixer: "",
     gefixt: "0",
     gefixtDatum: "",
-    kommentar: "",
     raum: "K21",
   ),
   Fehler(
@@ -39,7 +36,6 @@ List fehlerliste = [
     fixer: "",
     gefixt: "0",
     gefixtDatum: "",
-    kommentar: "",
     raum: "K21",
   ),
 ];

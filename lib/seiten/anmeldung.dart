@@ -243,6 +243,18 @@ class _AnmeldungState extends State<Anmeldung> {
         ),
         backgroundColor: thema.colorScheme.primary,
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text("Demo"),
+        backgroundColor: thema.colorScheme.primary,
+        onPressed: () {
+          benutzerInfoProvider.benutzerMeldetSichAn(
+              istFehlermelderInFunktion: false,
+              schuleInFunktion: "demo",
+              passwortInFunktion:
+                  "b29f63636a8d56a4dbaa9123ff7afe8cb601c1104d40f34c1a3226b572b60341");
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
