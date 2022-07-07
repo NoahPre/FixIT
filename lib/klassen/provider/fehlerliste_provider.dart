@@ -89,17 +89,17 @@ class FehlerlisteProvider with ChangeNotifier {
 
   /// Map, in dem die Pfade zu den einzelnen Scripts des Backends gespeichert werden
   static const Map<String, String> serverScripts = {
-    "authentifizierung": "/authentifizierung.php",
-    "behebeFehler": "/behebeFehler.php",
-    "entferneFehler": "/entferneFehler.php",
-    "gibAlleFehler": "/gibAlleFehler.php",
-    "gibBild": "/gibBild.php",
-    "gibInstitutionen": "/gibInstitutionen.php",
-    "gibNachrichtVomServer": "/gibNachrichtVomServer.php",
-    "gibSchuldaten": "/gibSchuldaten.php",
-    "gibUnterstuetzteVersion": "/gibUnterstuetzteVersion.php",
-    "schreibeBild": "/schreibeBild.php",
-    "schreibeFehler": "/schreibeFehler.php",
+    "authentifizierung": "/v1/authentifizierung.php",
+    "behebeFehler": "/v1/behebeFehler.php",
+    "entferneFehler": "/v1/entferneFehler.php",
+    "gibAlleFehler": "/v1/gibAlleFehler.php",
+    "gibBild": "/v1/gibBild.php",
+    "gibInstitutionen": "/v1/gibInstitutionen.php",
+    "gibNachrichtVomServer": "/v1/gibNachrichtVomServer.php",
+    "gibSchuldaten": "/v1/gibSchuldaten.php",
+    "gibUnterstuetzteVersion": "/v1/gibUnterstuetzteVersion.php",
+    "schreibeBild": "/v1/schreibeBild.php",
+    "schreibeFehler": "/v1/schreibeFehler.php",
   };
 
   Future kontaktiereServer(

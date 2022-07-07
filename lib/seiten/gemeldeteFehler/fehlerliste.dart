@@ -1,6 +1,5 @@
 // fehlerliste.dart
 import "package:fixit/imports.dart";
-import "package:crypto/crypto.dart";
 
 // TODO: beim fixen des Fehlers Kommentar hinterlassen Funktion hinzufügen
 
@@ -100,64 +99,8 @@ class _FehlerlisteState extends State<Fehlerliste> {
     // schaut, ob auf dem Server irgendwelche neuen Nachrichten sind
     // TODO: das hier auslagern
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Map<String, dynamic>? nachrichtMap = await widget.nachrichtVomServer();
-      // wenn keine Nachricht anzuzeigen ist, dann wird die Funktion hier beendet
-      if (nachrichtMap == null) {
-        return;
-      }
-      LokaleDatenbank lokaleDatenbank = LokaleDatenbank();
-      Map<String, dynamic> serverNachrichten =
-          await lokaleDatenbank.holeLokaleServerNachrichtenDaten();
-      String aktuelleNachrichtSHA1 =
-          sha1.convert(utf8.encode(nachrichtMap["text"] ?? "")).toString();
-      // wenn die Nachricht schon einmal angezeigt wurde, dann
-      if (aktuelleNachrichtSHA1 ==
-          (serverNachrichten["letzteNachrichtSHA1"] ?? "")) {
-        return;
-      }
-      // // wird ausgeführt, wenn die Nachricht noch nicht angezeigt wurde (der Hash der Nachricht noch nicht in der Datenbank ist)
-      else {
-        serverNachrichten["letzteNachrichtSHA1"] = aktuelleNachrichtSHA1;
-        lokaleDatenbank.schreibeLokaleServerNachrichtenDaten(serverNachrichten);
-        await showDialog(
-            context: context,
-            builder: (_) {
-              return AlertDialog(
-                title: Center(
-                  child: Text(nachrichtMap["titel"] ?? ""),
-                ),
-                titleTextStyle: thema.textTheme.headline2,
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      child: Scrollbar(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          child: Text(
-                            nachrichtMap["text"] ?? "",
-                            style: thema.textTheme.bodyText1,
-                            maxLines: 1000,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                actions: <Widget>[
-                  Center(
-                    child: TextButton(
-                      child: Text(
-                        "OK",
-                        style: thema.textTheme.bodyText1,
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-                ],
-              );
-            });
-      }
+      await holeServerNachricht(
+          context: context, nachrichtVomServer: widget.nachrichtVomServer);
     });
     return StreamBuilder(
       stream: fehlerlisteProvider.fehlerlisteStream,

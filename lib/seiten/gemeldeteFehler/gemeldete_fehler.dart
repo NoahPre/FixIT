@@ -63,11 +63,19 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
       ),
       backgroundColor: thema.colorScheme.primary,
       centerTitle: true,
+      leading: Builder(builder: (BuildContext currentContext) {
+        return IconButton(
+          icon: Icon(Icons.menu),
+          tooltip: "Menü",
+          color: thema.colorScheme.onPrimary,
+          onPressed: () => Scaffold.of(currentContext).openDrawer(),
+        );
+      }),
       actions: [
         PopupMenuButton<Sortierung>(
           tooltip: "Sortieren",
           icon: Icon(Icons.sort),
-          color: thema.colorScheme.background,
+          color: thema.colorScheme.onPrimary,
           itemBuilder: (context) =>
               sortierungsmoeglichkeiten.map((List eintrag) {
             return PopupMenuItem<Sortierung>(
@@ -79,7 +87,6 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
                       eintrag[1],
                       style: TextStyle(
                         fontSize: 14.0,
-                        // fontWeight: ,
                         color: thema.colorScheme.primary,
                       ),
                     ),
@@ -106,6 +113,9 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
         ),
         Builder(builder: (currentContext) {
           return IconButton(
+            icon: Icon(Icons.refresh),
+            tooltip: "Neu laden",
+            color: thema.colorScheme.onPrimary,
             onPressed: () async {
               if (await ueberpruefeInternetVerbindung(
                       currentContext: currentContext) ==
@@ -116,8 +126,6 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
               await fehlerlisteProvider.holeFehler();
               return null;
             },
-            icon: Icon(Icons.refresh),
-            tooltip: "Neu laden",
           );
         }),
       ],
@@ -239,6 +247,7 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
                     },
                     color: thema.colorScheme.primary,
                     child: ListView(
+                      primary: false,
                       children: <Widget>[
                         Container(
                           height: mediaQueryData.size.height -
