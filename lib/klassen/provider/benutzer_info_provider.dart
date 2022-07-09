@@ -180,7 +180,7 @@ class BenutzerInfoProvider with ChangeNotifier {
     }
   }
 
-  /// authentifiziert den Benutzer mit den gegebenen Werten
+  /// Authentifiziert den Benutzer mit den gegebenen Werten
   // wird in registrierung.dart benutzt, um anfangs das eingegebene Passwort zu überprüfen
   Future<String> authentifizierungMitWerten({
     required bool istFehlermelderInFunktion,
@@ -211,11 +211,15 @@ class BenutzerInfoProvider with ChangeNotifier {
     }
   }
 
+  /// Ruft die Schuldaten einer Schule vom Server ab (z.B. Raumnummern-Bereich)
   Future<Map<String, dynamic>> holeSchuldaten({required String schule}) async {
-    String status =
-        await kontaktiereServer(pfad: serverScripts.gibSchuldaten, parameter: {
-      "schule": schule,
-    });
+    String status = await kontaktiereServer(
+      pfad: serverScripts.gibSchuldaten,
+      parameter: {
+        "schule": schule,
+      },
+      trotzdemErlauben: true,
+    );
     if ((status == "") ||
         (status == "falsche_schule") ||
         (status == "falsches_token")) {
@@ -280,6 +284,7 @@ class BenutzerInfoProvider with ChangeNotifier {
       parameter: {"schule": schule, "token": token},
     );
     if ((antwort == "") ||
+        (antwort == "1") ||
         (antwort == "falsche_schule") ||
         (antwort == "falsches_token")) {
       return null;

@@ -1,5 +1,7 @@
 // gemeldeteFehler.dart
-import '../../imports.dart';
+import 'package:fixit/imports.dart';
+
+final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
 /// Startseite der App
 class GemeldeteFehler extends StatefulWidget {
@@ -156,6 +158,7 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
     }
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: appBar,
       drawer: const Seitenmenue(
         aktuelleSeite: "/",

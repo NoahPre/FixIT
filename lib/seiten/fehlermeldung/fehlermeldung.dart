@@ -236,11 +236,9 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                     false) {
               return;
             }
-            // setState(() {
             neuerFehler.raum =
                 (_dropdownButtonText ?? "") + _raumController.text;
             neuerFehler.beschreibung = _beschreibungController.text;
-            // });
             String serverAntwort = "";
             if (status == "") {
               if (_pfadZumBild == "") {
@@ -258,9 +256,11 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                   fehler: neuerFehler, pickedImage: temporaeresBild);
             }
             Navigator.pop(context);
+
             ueberpruefeServerAntwort(
               antwort: serverAntwort,
               currentContext: currentContext,
+              schule: fehlerlisteProvider.schule,
             );
           },
         );

@@ -65,6 +65,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
               ueberpruefeServerAntwort(
                 antwort: serverAntwort,
                 currentContext: currentContext,
+                schule: fehlerlisteProvider.schule,
               );
               Navigator.pop(context);
             },

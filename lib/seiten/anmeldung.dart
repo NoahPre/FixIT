@@ -242,8 +242,9 @@ class _AnmeldungState extends State<Anmeldung> {
         backgroundColor: thema.colorScheme.primary,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: Text("Demo"),
-        backgroundColor: thema.colorScheme.primary,
+        label: Text("FixIT ausprobieren"),
+        tooltip: "Demo-Modus von FixIT",
+        backgroundColor: thema.colorScheme.secondary,
         onPressed: () {
           benutzerInfoProvider.benutzerMeldetSichAn(
               istFehlermelderInFunktion: false,

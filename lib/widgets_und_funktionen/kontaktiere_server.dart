@@ -25,10 +25,18 @@ final ServerScripts serverScripts = ServerScripts();
 
 /// Kontaktiert das spezifizierte Script auf dem FixIT Server mit den übergebenen Parametern
 Future kontaktiereServer(
-    {required String pfad, required Map<String, String> parameter}) async {
+    {required String pfad,
+    required Map<String, String> parameter,
+    bool trotzdemErlauben = false}) async {
   // wenn die Demo genutzt wird, sollen keine Fehler in die Datenbank geschrieben werden
   //TODO: sehr unprofessionell das ganze hier, am besten irgendwann besser machen
-  if (parameter["schule"] == "demo" && pfad != "/gibAlleFehler.php") {
+  // if (parameter["schule"] == "demo" &&
+  //     pfad.contains("gibAlleFehler.php") == false) {
+  //   return "1";
+  // }
+  // wenn der Benutzer die Demo Version nutzt (schule = "demo"), dann wird die Kommunikation zum Server unterbunden
+  // nur wenn trotzdemErlauben == true gilt, dann wird die Kommunikation erlaubt (so etwa bei holeFehler() und holeSchuldaten())
+  if (parameter["schule"] == "demo" && trotzdemErlauben == false) {
     return "1";
   }
   final Uri uri = Uri.https(adresse, pfad, parameter);

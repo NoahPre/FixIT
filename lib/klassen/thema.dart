@@ -11,91 +11,94 @@ und vieles mehr
 */
 
 ThemeData thema = ThemeData(
-  colorScheme: ColorScheme(
-    primary: Colors.black,
-    onPrimary: Colors.white,
-    primaryVariant: Colors.black,
-    secondary: Colors.indigoAccent.shade700,
-    onSecondary: Colors.white,
-    secondaryVariant: Colors.black,
-    background: Colors.white,
-    onBackground: Colors.black,
-    error: Colors.red.shade700,
-    onError: Colors.white,
-    brightness: Brightness.light,
-    surface: Colors.white,
-    onSurface: Colors.black,
-  ),
-  highlightColor: Colors.indigoAccent.shade400,
-  textTheme: TextTheme(
-    // TextStyle für die Titel von AppBars
-    headline1: TextStyle(
-      color: Colors.white,
-      fontSize: 20,
-      fontWeight: FontWeight.w600,
+    colorScheme: ColorScheme(
+      primary: Colors.black,
+      onPrimary: Colors.white,
+      secondary: Colors.indigoAccent.shade700,
+      onSecondary: Colors.white,
+      background: Colors.white,
+      onBackground: Colors.black,
+      error: Colors.red.shade700,
+      onError: Colors.white,
+      brightness: Brightness.light,
+      surface: Colors.white,
+      onSurface: Colors.black,
     ),
-    // TextStyle für die zwei Überschriften der Startseite ("Eigene Fehlermeldungen" & "Sonstige Fehlermeldungen")
-    headline2: TextStyle(
-      color: Colors.black,
-      fontSize: 18.0,
-      fontWeight: FontWeight.normal,
-    ),
-    // 16, schwarz, fett
-    // TextStyle für kleinere, fett gedruckte Überschriften, etwa die Fehlerbeschreibung in den ListTiles in der Fehlerliste
-    headline3: TextStyle(
-      fontSize: 16,
-      color: Colors.black,
-      fontWeight: FontWeight.bold,
-    ),
-    // 16, weiß, fett
-    headline4: TextStyle(
-      fontSize: 16.0,
-      color: Colors.white,
-      fontWeight: FontWeight.bold,
-    ),
-    // 14, schwarz, fett
-    headline5: TextStyle(
-      fontSize: 14.0,
-      color: Colors.black,
-      fontWeight: FontWeight.bold,
-    ),
-    // 14, weiß, fett
-    // headline6: TextStyle(
-    //   fontSize: 14.0,
-    //   color: Colors.white,
-    //   fontWeight: FontWeight.bold,
-    // ),
+    highlightColor: Colors.indigoAccent.shade400,
+    textTheme: TextTheme(
+      // TextStyle für die Titel von AppBars
+      headline1: TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+      ),
+      // TextStyle für die zwei Überschriften der Startseite ("Eigene Fehlermeldungen" & "Sonstige Fehlermeldungen")
+      headline2: TextStyle(
+        color: Colors.black,
+        fontSize: 18.0,
+        fontWeight: FontWeight.normal,
+      ),
+      // 16, schwarz, fett
+      // TextStyle für kleinere, fett gedruckte Überschriften, etwa die Fehlerbeschreibung in den ListTiles in der Fehlerliste
+      headline3: TextStyle(
+        fontSize: 16,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+      // 16, weiß, fett
+      headline4: TextStyle(
+        fontSize: 16.0,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+      // 14, schwarz, fett
+      headline5: TextStyle(
+        fontSize: 14.0,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+      // 14, weiß, fett
+      // headline6: TextStyle(
+      //   fontSize: 14.0,
+      //   color: Colors.white,
+      //   fontWeight: FontWeight.bold,
+      // ),
 
-    /// schwarzer, normaler Text
-    bodyText1: TextStyle(
-      color: Colors.black,
-      fontSize: 14.0,
-    ),
+      /// schwarzer, normaler Text
+      bodyText1: TextStyle(
+        color: Colors.black,
+        fontSize: 14.0,
+      ),
 
-    // grauer, kleiner Text
-    bodyText2: TextStyle(
-      color: Colors.grey.shade700,
-      fontSize: 12.0,
-    ),
+      // grauer, kleiner Text
+      bodyText2: TextStyle(
+        color: Colors.grey.shade700,
+        fontSize: 12.0,
+      ),
 
-    /// dunkelgrauer, normaler Text
-    subtitle1: TextStyle(
-      color: Colors.grey.shade800,
-      fontSize: 14.0,
-    ),
+      /// dunkelgrauer, normaler Text
+      subtitle1: TextStyle(
+        color: Colors.grey.shade800,
+        fontSize: 14.0,
+      ),
 
-    /// dunkelgrauer, kleiner Text
-    subtitle2: TextStyle(
-      color: Colors.grey.shade800,
-      fontSize: 12.0,
+      /// dunkelgrauer, kleiner Text
+      subtitle2: TextStyle(
+        color: Colors.grey.shade800,
+        fontSize: 12.0,
+      ),
     ),
-  ),
-  dividerTheme: DividerThemeData(
-    color: Colors.grey.shade600,
-    space: 1,
-  ),
-  appBarTheme: AppBarTheme(backgroundColor: Colors.black),
-);
+    dividerTheme: DividerThemeData(
+      color: Colors.grey.shade600,
+      space: 1,
+    ),
+    appBarTheme: AppBarTheme(backgroundColor: Colors.black),
+    snackBarTheme: SnackBarThemeData(
+      contentTextStyle: TextStyle(
+        color: Colors.white,
+      ),
+      backgroundColor: Colors.grey.shade800,
+    ));
 
 ThemeData dunklesThema = ThemeData(
   primaryColor: Colors.blue,

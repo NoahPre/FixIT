@@ -95,6 +95,7 @@ class FehlerlisteProvider with ChangeNotifier {
     String jsonString = await kontaktiereServer(
       pfad: serverScripts.gibAlleFehler,
       parameter: {"schule": schule, "token": token},
+      trotzdemErlauben: true,
     );
     var jsonObjekt = jsonDecode(jsonString);
 

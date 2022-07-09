@@ -109,7 +109,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
         BuildContext context,
         AsyncSnapshot snapshot,
       ) {
-        Widget screen = Builder(
+        Widget seite = Builder(
           builder: (BuildContext currentContext) => RefreshIndicator(
             onRefresh: () async {
               if (await ueberpruefeInternetVerbindung(
@@ -177,12 +177,11 @@ class _FehlerlisteState extends State<Fehlerliste> {
           ),
         );
         return snapshot.data?.length == 0
-            ? screen
+            ? seite
             :
             // Widget für den Scrollbalken am Rand
-            RawScrollbar(
-                thumbColor: Colors.grey,
-                child: screen,
+            Scrollbar(
+                child: seite,
               );
       },
     );

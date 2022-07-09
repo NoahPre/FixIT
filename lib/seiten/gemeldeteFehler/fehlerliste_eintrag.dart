@@ -90,6 +90,7 @@ class FehlerlisteEintrag extends StatelessWidget {
             ueberpruefeServerAntwort(
               antwort: serverAntwort,
               currentContext: context,
+              schule: fehlerlisteProvider.schule,
             );
           },
           child: InkWell(

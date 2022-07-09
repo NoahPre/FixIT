@@ -11,11 +11,11 @@ void zeigeSnackBarNachricht({
   required bool istError,
 }) {
   ThemeData thema = Theme.of(context);
-  //TODO: diese Exception hier beheben: Unhandled Exception: Looking up a deactivated widget's ancestor is unsafe. At this point the state of the widget's element tree is no longer stable.
 
   ScaffoldMessenger.of(context)
       .showSnackBar(
         SnackBar(
+          // animation: ,
           backgroundColor: istError
               ? thema.colorScheme.error
               : thema.snackBarTheme.backgroundColor,

@@ -20,6 +20,7 @@ class Seitenmenue extends StatelessWidget {
 
     return Drawer(
       child: ListView(
+        primary: false,
         children: <Widget>[
           // Abschnitt über der Liste mit den verfügbaren Seiten
           // zeigt Informationen über den Benutzer an
