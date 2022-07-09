@@ -22,8 +22,13 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
     final Size deviceSize = MediaQuery.of(context).size;
     final FehlerlisteProvider fehlerlisteProvider =
         Provider.of<FehlerlisteProvider>(context);
-    final String urlZumBild =
-        "https://www.icanfixit.eu/gibBild.php?schule=${fehlerlisteProvider.schule}&token=${fehlerlisteProvider.token}&bild=${widget.fehler.bild}";
+    // final String urlZumBild =
+    // "https://www.icanfixit.eu/gibBild.php?schule=${fehlerlisteProvider.schule}&token=${fehlerlisteProvider.token}&bild=${widget.fehler.bild}";
+    final String urlZumBild = Uri.https(adresse, serverScripts.gibBild, {
+      "schule": fehlerlisteProvider.schule,
+      "token": fehlerlisteProvider.token,
+      "bild": widget.fehler.bild,
+    }).toString();
 
     var appBar = AppBar(
       title: Text(

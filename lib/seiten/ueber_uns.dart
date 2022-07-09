@@ -110,7 +110,8 @@ class UeberUns extends StatelessWidget {
                       Icons.arrow_forward_ios,
                     ),
                     onTap: () => oeffneURL(
-                        url: "https://www.icanfixit.eu/datenschutz.html"),
+                      url: url + serverScripts.datenschutz,
+                    ),
                   ),
                   // ListTile(
                   //   title: Text(

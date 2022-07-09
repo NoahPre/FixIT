@@ -18,8 +18,7 @@ class _AnmeldungState extends State<Anmeldung> {
   final TextEditingController _passwortController = TextEditingController();
 
   /// TextEditingController für das Schule Textfeld
-  final TextEditingController _schuleController = TextEditingController()
-    ..text = "mtg";
+  final TextEditingController _schuleController = TextEditingController();
 
   /// boolean Wert, der speichert, ob das Passwort sichtbar oder verdeckt ist
   bool _passwortIstVerdeckt = true;
@@ -39,8 +38,7 @@ class _AnmeldungState extends State<Anmeldung> {
   void initState() {
     super.initState();
     _datenschutzErklaerungRecognizer = TapGestureRecognizer()
-      ..onTap = () async =>
-          await oeffneURL(url: "https://www.icanfixit.eu/datenschutz.html");
+      ..onTap = () async => await oeffneURL(url: serverScripts.datenschutz);
   }
 
   @override
@@ -223,7 +221,7 @@ class _AnmeldungState extends State<Anmeldung> {
             await _anmeldungFehlgeschlagen(
                 currentContext: currentContext,
                 anzuzeigenderText:
-                    "Das angegebene Passwort für die ausgewählte Rolle ist falsch.");
+                    "Das Passwort für die angegebene Schule und die ausgewählte Rolle ist falsch.");
             break;
           default:
             await _anmeldungFehlgeschlagen(
@@ -316,7 +314,7 @@ class _AnmeldungState extends State<Anmeldung> {
                             labelStyle: TextStyle(
                               color: thema.colorScheme.primary,
                             ),
-                            hintText: "Der Name Ihrer Schule",
+                            hintText: "Das Kürzel Ihrer Schule",
                             focusedBorder: UnderlineInputBorder(
                               borderSide:
                                   BorderSide(color: thema.colorScheme.primary),

@@ -154,19 +154,19 @@ class BenutzerInfoProvider with ChangeNotifier {
 
   /// authentifiziert den Benutzer mit den in SharedPreferences gespeicherten Werten
   Future<bool> authentifizierung() async {
-    // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    // bool istFehlermelder = sharedPreferences.getBool("istFehlermelder") ?? true;
-    // String schule = sharedPreferences.getString("schule") ?? "";
-    // String tokenInFunktion = sharedPreferences.getString("token") ?? "";
     try {
       // schickt eine Anfrage mit den folgenden Informationen an den Server:
       // - ob der Benutzer Fehlermelder ist
       // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
-      String url =
-          "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=$istFehlermelder&schule=$schule&token=$token";
-      http.Response response = await http.get(Uri.parse(url));
+      String status = await kontaktiereServer(
+          pfad: serverScripts.authentifizierung,
+          parameter: {
+            "istFehlermelder": istFehlermelder.toString(),
+            "schule": schule,
+            "token": token
+          });
       // überprüft die Ausgabe des Scripts
-      if (response.body == "1") {
+      if (status == "1") {
         authentifizierungSink.add(true);
         return true;
       } else {
@@ -191,15 +191,20 @@ class BenutzerInfoProvider with ChangeNotifier {
     // schickt eine Anfrage mit den folgenden Informationen an den Server:
     // - ob der Benutzer Fehlermelder ist
     // - das Passwort, das der Benutzer beim ersten Starten bei der Registrierung eingegeben hat
-    String url =
-        "https://www.icanfixit.eu/authentifizierung.php?istFehlermelder=${istFehlermelderInFunktion.toString()}&schule=${schuleInFunktion.toString()}&token=$token";
-    http.Response response = await http.get(Uri.parse(url));
+
+    String status = await kontaktiereServer(
+        pfad: serverScripts.authentifizierung,
+        parameter: {
+          "istFehlermelder": istFehlermelderInFunktion.toString(),
+          "schule": schuleInFunktion,
+          "token": token.toString(),
+        });
     // überprüft die Ausgabe des Scripts
-    if (response.body == "1") {
+    if (status == "1") {
       return "true";
-    } else if (response.body == "falsche_schule") {
+    } else if (status == "falsche_schule") {
       return "falsche_schule";
-    } else if (response.body == "falsches_token") {
+    } else if (status == "falsches_token") {
       return "falsches_token";
     } else {
       return "false";
@@ -207,15 +212,17 @@ class BenutzerInfoProvider with ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> holeSchuldaten({required String schule}) async {
-    String url = "https://www.icanfixit.eu/gibSchuldaten.php?schule=$schule";
-    http.Response response = await http.get(Uri.parse(url));
-    if ((response.body == "") ||
-        (response.body == "falsche_schule") ||
-        (response.body == "falsches_token")) {
+    String status =
+        await kontaktiereServer(pfad: serverScripts.gibSchuldaten, parameter: {
+      "schule": schule,
+    });
+    if ((status == "") ||
+        (status == "falsche_schule") ||
+        (status == "falsches_token")) {
       return {};
     } else {
       try {
-        return jsonDecode(response.body)[0];
+        return jsonDecode(status)[0];
       } catch (error) {
         print(error.toString());
         return {};
@@ -234,12 +241,14 @@ class BenutzerInfoProvider with ChangeNotifier {
       versionAsList.add(int.parse(version.split(".")[0]));
       versionAsList.add(int.parse(version.split(".")[1]));
       versionAsList.add(int.parse(version.split(".")[2]));
-      String url = "https://www.icanfixit.eu/gibUnterstuetzteVersion.php";
-      http.Response response = await http.get(Uri.parse(url));
+      String antwort = await kontaktiereServer(
+        pfad: serverScripts.gibUnterstuetzteVersion,
+        parameter: {},
+      );
       List<int> responseAsList = [];
-      responseAsList.add(int.parse(response.body.split(".")[0]));
-      responseAsList.add(int.parse(response.body.split(".")[1]));
-      responseAsList.add(int.parse(response.body.split(".")[2]));
+      responseAsList.add(int.parse(antwort.split(".")[0]));
+      responseAsList.add(int.parse(antwort.split(".")[1]));
+      responseAsList.add(int.parse(antwort.split(".")[2]));
       if (responseAsList[0] < versionAsList[0]) {
         return true;
       } else {
@@ -266,16 +275,17 @@ class BenutzerInfoProvider with ChangeNotifier {
 
   // schaut, ob es eine neue Nachricht für die Benutzer auf dem Server gibt
   Future<Map<String, dynamic>?> nachrichtVomServer() async {
-    String url =
-        "https://www.icanfixit.eu/gibNachrichtVomServer.php?schule=$schule&token=$token";
-    http.Response response = await http.get(Uri.parse(url));
-    if ((response.body == "") ||
-        (response.body == "falsche_schule") ||
-        (response.body == "falsches_token")) {
+    String antwort = await kontaktiereServer(
+      pfad: serverScripts.gibNachrichtVomServer,
+      parameter: {"schule": schule, "token": token},
+    );
+    if ((antwort == "") ||
+        (antwort == "falsche_schule") ||
+        (antwort == "falsches_token")) {
       return null;
     } else {
       try {
-        return jsonDecode(response.body);
+        return jsonDecode(antwort);
       } catch (error) {
         print(error.toString());
         return {};

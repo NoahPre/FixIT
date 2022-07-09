@@ -85,40 +85,6 @@ class FehlerlisteProvider with ChangeNotifier {
   /// Liste an Fehlern, die beim Schließen der App entfernt werden
   List<Fehler> zuEntfernendeFehlermeldungen = [];
 
-  final String url = "www.icanfixit.eu";
-
-  /// Map, in dem die Pfade zu den einzelnen Scripts des Backends gespeichert werden
-  static const Map<String, String> serverScripts = {
-    "authentifizierung": "/v1/authentifizierung.php",
-    "behebeFehler": "/v1/behebeFehler.php",
-    "entferneFehler": "/v1/entferneFehler.php",
-    "gibAlleFehler": "/v1/gibAlleFehler.php",
-    "gibBild": "/v1/gibBild.php",
-    "gibInstitutionen": "/v1/gibInstitutionen.php",
-    "gibNachrichtVomServer": "/v1/gibNachrichtVomServer.php",
-    "gibSchuldaten": "/v1/gibSchuldaten.php",
-    "gibUnterstuetzteVersion": "/v1/gibUnterstuetzteVersion.php",
-    "schreibeBild": "/v1/schreibeBild.php",
-    "schreibeFehler": "/v1/schreibeFehler.php",
-  };
-
-  Future kontaktiereServer(
-      {required String pfad, required Map<String, String> parameter}) async {
-    // wenn die Demo genutzt wird, sollen keine Fehler in die Datenbank geschrieben werden
-    //TODO: sehr unprofessionell das ganze hier, am besten irgendwann besser machen
-    if (parameter["schule"] == "demo" && pfad != "/gibAlleFehler.php") {
-      return "1";
-    }
-    final Uri uri = Uri.https(url, pfad, parameter);
-    try {
-      http.Response response = await http.get(uri);
-      return response.body;
-    } catch (error) {
-      print(error);
-      return "";
-    }
-  }
-
   Future<void> holeToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     token = sharedPreferences.getString("token") ?? "";
@@ -127,7 +93,7 @@ class FehlerlisteProvider with ChangeNotifier {
   // wird ganz am Anfang ausgeführt und holt alle Fehler vom Server
   Future<String> holeFehler() async {
     String jsonString = await kontaktiereServer(
-      pfad: serverScripts["gibAlleFehler"] ?? "",
+      pfad: serverScripts.gibAlleFehler,
       parameter: {"schule": schule, "token": token},
     );
     var jsonObjekt = jsonDecode(jsonString);
@@ -220,7 +186,7 @@ class FehlerlisteProvider with ChangeNotifier {
 
     // sendet den Fehler zum Server mit schreibeFehler(.php)
     String status = await kontaktiereServer(
-      pfad: serverScripts["schreibeFehler"] ?? "",
+      pfad: serverScripts.schreibeFehler,
       parameter: {
         "schule": schule,
         "token": token,
@@ -247,26 +213,13 @@ class FehlerlisteProvider with ChangeNotifier {
     required String pfad,
     required String dateiname,
   }) async {
-    return upload(
+    return bildHochladen(
+      pfad: serverScripts.schreibeBild,
+      schule: schule,
+      token: token,
       dateiname: dateiname,
       base64Image: base64EncodedImage,
     );
-  }
-
-  String upload({String? dateiname, String? base64Image}) {
-    http.post(
-        Uri.parse(
-            "https://www.icanfixit.eu/schreibeBild.php?schule=$schule&token=$token"),
-        body: {
-          "image": base64Image,
-          "name": dateiname,
-        }).then((result) {
-      return result.statusCode == 200 ? result.body : "";
-    }).catchError((error) {
-      print(error.toString());
-      return error.toString();
-    });
-    return "";
   }
 
   /// Ändert den Status des Fehlers mit der angegebenen ID (mit behebeFehler(.php))
@@ -281,7 +234,7 @@ class FehlerlisteProvider with ChangeNotifier {
       await erhoeheFehlerbehebungsZaehler();
     }
     String status = await kontaktiereServer(
-      pfad: serverScripts["behebeFehler"] ?? "",
+      pfad: serverScripts.behebeFehler,
       parameter: {"schule": schule, "token": token, "id": id, "gefixt": gefixt},
     );
     holeFehler();
@@ -295,7 +248,7 @@ class FehlerlisteProvider with ChangeNotifier {
     required bool istFehlermelder,
   }) async {
     String status = await kontaktiereServer(
-      pfad: serverScripts["entferneFehler"] ?? "",
+      pfad: serverScripts.entferneFehler,
       parameter: {
         "schule": schule,
         "token": token,

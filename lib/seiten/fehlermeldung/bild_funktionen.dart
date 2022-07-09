@@ -29,20 +29,22 @@ Future<void> zeigeBilderAuswahl({
               Expanded(
                 child: Container(
                   height: 100.0,
-                  child: IconButton(
-                    tooltip: "Kamera",
-                    icon: Icon(
-                      Icons.photo_camera,
-                      color: Colors.black,
+                  child: Tooltip(
+                    message: "Kamera",
+                    child: InkWell(
+                      child: Icon(
+                        Icons.photo_camera,
+                        color: thema.colorScheme.onBackground,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        bildAufnehmen(
+                          context: currentContext,
+                          pfadZumBild: pfadZumBild,
+                          controller: controller,
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      bildAufnehmen(
-                        context: currentContext,
-                        pfadZumBild: pfadZumBild,
-                        controller: controller,
-                      );
-                    },
                   ),
                 ),
               ),
@@ -54,16 +56,18 @@ Future<void> zeigeBilderAuswahl({
               Expanded(
                 child: Container(
                   height: 100.0,
-                  child: IconButton(
-                    tooltip: "Bildergalerie",
-                    icon: Icon(
-                      Icons.collections,
-                      color: Colors.black,
+                  child: Tooltip(
+                    message: "Bildergalerie",
+                    child: InkWell(
+                      child: Icon(
+                        Icons.collections,
+                        color: Colors.black,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        bildAusGallerieAuswaehlen();
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      bildAusGallerieAuswaehlen();
-                    },
                   ),
                 ),
               ),

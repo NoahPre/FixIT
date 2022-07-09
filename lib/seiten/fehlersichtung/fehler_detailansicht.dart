@@ -20,8 +20,11 @@ class FehlerDetailansicht extends StatelessWidget {
         Provider.of<BenutzerInfoProvider>(context, listen: false);
     final FehlerlisteProvider fehlerlisteProvider =
         Provider.of<FehlerlisteProvider>(context);
-    final String urlZumBild =
-        "https://www.icanfixit.eu/gibBild.php?schule=${fehlerlisteProvider.schule}&token=${fehlerlisteProvider.token}&bild=${fehler.bild}";
+    final String urlZumBild = Uri.https(adresse, serverScripts.gibBild, {
+      "schule": fehlerlisteProvider.schule,
+      "token": fehlerlisteProvider.token,
+      "bild": fehler.bild,
+    }).toString();
 
     return Scaffold(
       appBar: AppBar(
