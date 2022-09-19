@@ -50,7 +50,7 @@ class LokaleDatenbank {
     String jsonString = await leseFileAlsString(
       fileName: eigeneFehlermeldungenDatenFilename,
       defaultJsonString:
-          "{'eigene_fehlermeldungen_ids': [], 'eigene_gefixte_fehlermeldungen': [],}",
+          '{"eigene_fehlermeldungen_ids": [], "eigene_gefixte_fehlermeldungen": [],}',
     );
     return jsonDecode(jsonString);
   }

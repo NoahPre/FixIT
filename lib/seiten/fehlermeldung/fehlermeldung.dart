@@ -63,7 +63,11 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   void initState() {
     super.initState();
     try {
-      kameraController = CameraController(cameras[0], ResolutionPreset.high);
+      kameraController = CameraController(
+        cameras[0],
+        ResolutionPreset.high,
+        enableAudio: false,
+      );
       kameraController!.initialize().then((_) {
         if (!mounted) {
           return;

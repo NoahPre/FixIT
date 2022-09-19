@@ -97,23 +97,28 @@ class FehlerlisteProvider with ChangeNotifier {
       parameter: {"schule": schule, "token": token},
       trotzdemErlauben: true,
     );
-    var jsonObjekt = jsonDecode(jsonString);
+    // TODO: Error beim ersten Starten mit "falsches_token" beheben
+    try {
+      var jsonObjekt = jsonDecode(jsonString);
 
-    // überschreibt fehlerliste mit den Werten aus der Datenbank
-    fehlerliste = List.generate(jsonObjekt.length, (int index) {
-      // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
-      return Fehler.from(jsonObjekt[index]);
-    });
-    angezeigteFehlerliste = [];
-    sortiereGefixteFehlerAus();
-    sortiereFehlerliste(
-        sortierung: _sortierung, zuSortierendeListe: angezeigteFehlerliste);
-    // fügt die geholten Fehler dem fehlerlisteController hinzu und aktualisiert damit das Widget Fehlerliste
-    fehlerlisteSink.add(angezeigteFehlerliste);
-    // räumt die lokal gespeicherte Liste der eigenen Fehlermeldungen auf (eigeneFehlermeldungenIDs, gespeichert in SharedPreferences)
-    await entferneGeloeschteFehlermeldungenIDs();
-    notifyListeners();
-    return jsonString;
+      // überschreibt fehlerliste mit den Werten aus der Datenbank
+      fehlerliste = List.generate(jsonObjekt.length, (int index) {
+        // erstellt für jeden in gibAlleFehler.php zurückgegebenen Eintrag einen Fehler in fehlerliste
+        return Fehler.from(jsonObjekt[index]);
+      });
+      angezeigteFehlerliste = [];
+      sortiereGefixteFehlerAus();
+      sortiereFehlerliste(
+          sortierung: _sortierung, zuSortierendeListe: angezeigteFehlerliste);
+      // fügt die geholten Fehler dem fehlerlisteController hinzu und aktualisiert damit das Widget Fehlerliste
+      fehlerlisteSink.add(angezeigteFehlerliste);
+      // räumt die lokal gespeicherte Liste der eigenen Fehlermeldungen auf (eigeneFehlermeldungenIDs, gespeichert in SharedPreferences)
+      await entferneGeloeschteFehlermeldungenIDs();
+      notifyListeners();
+      return jsonString;
+    } catch (e) {
+      return "";
+    }
   }
 
   /// ruft lokale Daten aus dem Speicher ab, z.B. eigeneFehlermeldungenIDs, die Werte der verschiedenen Zähler und die Schuldaten
