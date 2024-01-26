@@ -20,7 +20,10 @@ class _BildDetailansichtState extends State<BildDetailansicht> {
     // evtl ist das mit dem erneut das Bild runterladen gar nicht so schlimm, Flutter ist vielleicht irgendwie schlau genug, das einfach nochmal zu benutzen
     return Scaffold(
       // TODO: AppBar entfernen und nur einen kleinen weißen Button oben links machen, mit dem man die Seite schließen kann (denn mit der AppBar ist das Bild im Portrait Modus nach unten verschoben)
-      appBar: AppBar(),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: thema.colorScheme.onPrimary),
+      ),
+
       backgroundColor: thema.colorScheme.background,
 
       body: Center(

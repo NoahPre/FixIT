@@ -24,7 +24,7 @@ class FertigButton extends StatelessWidget {
             },
             child: Text(
               "Fertig",
-              style: thema.textTheme.headline3,
+              style: thema.textTheme.displaySmall,
             ),
           ),
         ),

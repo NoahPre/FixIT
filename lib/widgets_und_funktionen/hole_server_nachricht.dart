@@ -1,4 +1,5 @@
 // hole_server_nachricht.dart
+import "dart:convert";
 import "package:fixit/imports.dart";
 import "package:crypto/crypto.dart";
 
@@ -33,7 +34,7 @@ Future<void> holeServerNachricht({
             title: Center(
               child: Text(nachrichtMap["titel"] ?? ""),
             ),
-            titleTextStyle: thema.textTheme.headline2,
+            titleTextStyle: thema.textTheme.displayMedium,
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -43,7 +44,7 @@ Future<void> holeServerNachricht({
                       scrollDirection: Axis.vertical,
                       child: Text(
                         nachrichtMap["text"] ?? "",
-                        style: thema.textTheme.bodyText1,
+                        style: thema.textTheme.bodyLarge,
                         maxLines: 1000,
                       ),
                     ),
@@ -56,7 +57,7 @@ Future<void> holeServerNachricht({
                 child: TextButton(
                   child: Text(
                     "OK",
-                    style: thema.textTheme.bodyText1,
+                    style: thema.textTheme.bodyLarge,
                   ),
                   onPressed: () => Navigator.pop(context),
                 ),

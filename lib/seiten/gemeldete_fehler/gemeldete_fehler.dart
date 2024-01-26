@@ -61,7 +61,7 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
     var appBar = AppBar(
       title: Text(
         "FixIT",
-        style: thema.textTheme.headline1,
+        style: thema.textTheme.displayLarge,
       ),
       backgroundColor: thema.colorScheme.primary,
       centerTitle: true,
@@ -76,7 +76,10 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
       actions: [
         PopupMenuButton<Sortierung>(
           tooltip: "Sortieren",
-          icon: Icon(Icons.sort),
+          child: Icon(
+            Icons.sort,
+            color: thema.colorScheme.onPrimary,
+          ),
           color: thema.colorScheme.onPrimary,
           itemBuilder: (context) =>
               sortierungsmoeglichkeiten.map((List eintrag) {
@@ -112,6 +115,9 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
               _popupMenuButtonValue = value;
             });
           },
+        ),
+        Container(
+          width: 10.0,
         ),
         Builder(builder: (currentContext) {
           return IconButton(
@@ -271,7 +277,7 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
                                 ),
                                 Text(
                                   "Authentifizierung",
-                                  style: thema.textTheme.bodyText1,
+                                  style: thema.textTheme.bodyLarge,
                                 ),
                               ],
                             ),

@@ -44,7 +44,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
     if (eigeneFehlermeldungen.length != 0) {
       children.add(Text(
         "Eigene Fehlermeldungen:",
-        style: thema.textTheme.headline2,
+        style: thema.textTheme.displayMedium,
       ));
       children.addAll(
         eigeneFehlermeldungen.map<Widget>(
@@ -60,7 +60,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
         children.add(
           Text(
             "Andere Fehlermeldungen:",
-            style: thema.textTheme.headline2,
+            style: thema.textTheme.displayMedium,
           ),
         );
       }
@@ -166,7 +166,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
                                   ),
                                   Text(
                                     "Download der Fehlermeldungen",
-                                    style: thema.textTheme.bodyText1,
+                                    style: thema.textTheme.bodyLarge,
                                   ),
                                 ],
                               ),

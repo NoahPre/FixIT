@@ -8,11 +8,11 @@ Im Code werden die Farben demnach nicht direkt fest hineingeschrieben, sondern s
 
 ## Text Style
 ### Headlines
-headline1 ist die größte Überschrift in FixIt und wird für den Titel der AppBars verwendet. Mit absteigender Zahl werden die headline Werte immer kleiner. Der kleinste Wert ist headline6. Bei einer ungeraden Zahl ist der Text weiß, bei einer geraden schwarz.
+displayLarge ist die größte Überschrift in FixIt und wird für den Titel der AppBars verwendet. Mit absteigender Zahl werden die headline Werte immer kleiner. Der kleinste Wert ist headline6. Bei einer ungeraden Zahl ist der Text weiß, bei einer geraden schwarz.
 ### Normaler Text
-bodyText1 ist der normal benutzte Text in FixIT (schwarz, 14 pt). bodyText2 ist weiß und wird auf dunklen Oberflächen benutzt.
+bodyLarge ist der normal benutzte Text in FixIT (schwarz, 14 pt). bodyMedium ist weiß und wird auf dunklen Oberflächen benutzt.
 ### Untertitel
-subtitle1 (dunkelgrau, 14 pt) ist der TextStlye, der für die Überschriften auf der Über uns Seite verwendet wird. subtitle2 ist eine kleinere Version davon mit 12 pt
+titleMedium (dunkelgrau, 14 pt) ist der TextStlye, der für die Überschriften auf der Über uns Seite verwendet wird. titleSmall ist eine kleinere Version davon mit 12 pt
 
 ## Divider
 Die Divider (schmale Linien zum Trennen von Listeneinträgen) sind in FixIT dunkelgrau und recht dünn. Diese Eigenschaften können in thema.dart geändert werden.

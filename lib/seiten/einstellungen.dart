@@ -19,8 +19,10 @@ class _EinstellungenState extends State<Einstellungen> {
       appBar: AppBar(
         title: Text(
           "Einstellungen",
-          style: thema.textTheme.headline1,
+          style: thema.textTheme.displayLarge,
         ),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: thema.colorScheme.onPrimary),
         backgroundColor: thema.colorScheme.primary,
       ),
       drawer: Seitenmenue(
@@ -36,7 +38,7 @@ class _EinstellungenState extends State<Einstellungen> {
                 ListTile(
                   title: Text(
                     "Gemeldete Fehler Zähler zurücksetzen",
-                    style: thema.textTheme.bodyText1,
+                    style: thema.textTheme.bodyLarge,
                   ),
                   trailing: Icon(Icons.arrow_forward_ios),
                   onTap: () async {
@@ -51,7 +53,7 @@ class _EinstellungenState extends State<Einstellungen> {
                           ListTile(
                             title: Text(
                               "Gefixte Fehler Zähler zurücksetzen",
-                              style: thema.textTheme.bodyText1,
+                              style: thema.textTheme.bodyLarge,
                             ),
                             trailing: Icon(Icons.arrow_forward_ios),
                             onTap: () async {
@@ -66,7 +68,7 @@ class _EinstellungenState extends State<Einstellungen> {
                 ListTile(
                   title: Text(
                     "Abmelden",
-                    style: thema.textTheme.bodyText1,
+                    style: thema.textTheme.bodyLarge,
                   ),
                   trailing: Icon(Icons.arrow_forward_ios),
                   onTap: () async {

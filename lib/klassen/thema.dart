@@ -27,65 +27,53 @@ ThemeData thema = ThemeData(
     highlightColor: Colors.indigoAccent.shade400,
     textTheme: TextTheme(
       // TextStyle für die Titel von AppBars
-      headline1: TextStyle(
+      displayLarge: TextStyle(
         color: Colors.white,
         fontSize: 20,
         fontWeight: FontWeight.w600,
       ),
       // TextStyle für die zwei Überschriften der Startseite ("Eigene Fehlermeldungen" & "Sonstige Fehlermeldungen")
-      headline2: TextStyle(
+      displayMedium: TextStyle(
         color: Colors.black,
         fontSize: 18.0,
         fontWeight: FontWeight.normal,
       ),
       // 16, schwarz, fett
       // TextStyle für kleinere, fett gedruckte Überschriften, etwa die Fehlerbeschreibung in den ListTiles in der Fehlerliste
-      headline3: TextStyle(
+      displaySmall: TextStyle(
         fontSize: 16,
         color: Colors.black,
         fontWeight: FontWeight.bold,
       ),
-      // 16, weiß, fett
-      headline4: TextStyle(
-        fontSize: 16.0,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
-      // 14, schwarz, fett
-      headline5: TextStyle(
-        fontSize: 14.0,
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-      ),
-      // 14, weiß, fett
-      // headline6: TextStyle(
-      //   fontSize: 14.0,
-      //   color: Colors.white,
-      //   fontWeight: FontWeight.bold,
-      // ),
 
       /// schwarzer, normaler Text
-      bodyText1: TextStyle(
+      bodyLarge: TextStyle(
         color: Colors.black,
         fontSize: 14.0,
       ),
 
       // grauer, kleiner Text
-      bodyText2: TextStyle(
+      bodySmall: TextStyle(
         color: Colors.grey.shade700,
         fontSize: 12.0,
       ),
 
       /// dunkelgrauer, normaler Text
-      subtitle1: TextStyle(
+      titleMedium: TextStyle(
         color: Colors.grey.shade800,
         fontSize: 14.0,
       ),
 
       /// dunkelgrauer, kleiner Text
-      subtitle2: TextStyle(
+      titleSmall: TextStyle(
         color: Colors.grey.shade800,
         fontSize: 12.0,
+      ),
+      // TextStyle für die Raumnummern der Einträge der Fehlerliste
+      headlineMedium: TextStyle(
+        color: Colors.white,
+        fontSize: 16.0,
+        fontWeight: FontWeight.bold,
       ),
     ),
     dividerTheme: DividerThemeData(

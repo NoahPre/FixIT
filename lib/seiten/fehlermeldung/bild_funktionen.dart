@@ -1,7 +1,8 @@
 // bildFunktionen.dart
+import "dart:convert";
+import "dart:io";
 import 'package:fixit/imports.dart';
 // für den Typ PickedFile
-import "package:image_picker/image_picker.dart";
 
 /// In diesem Dokument sind viele Funktionen zum Auswählen, Aufnehmen und Anzeigen von einem Bild
 ///
@@ -101,11 +102,11 @@ void bildAufnehmen({
 
 /// zeigt das ausgewählte Bild
 Widget zeigeAusgewaehltesBild(
-    {required Future<PickedFile?>? ausgewaehltesBild,
+    {required Future<XFile?>? ausgewaehltesBild,
     required Function setzeBildWerte}) {
-  return FutureBuilder<PickedFile?>(
+  return FutureBuilder<XFile?>(
     future: ausgewaehltesBild,
-    builder: (BuildContext context, AsyncSnapshot<PickedFile?> snapshot) {
+    builder: (BuildContext context, AsyncSnapshot<XFile?> snapshot) {
       if (snapshot.connectionState == ConnectionState.done &&
           null != snapshot.data) {
         File bild = File(snapshot.data!.path);

@@ -33,8 +33,10 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
     var appBar = AppBar(
       title: Text(
         "Fehlerbehebung",
-        style: thema.textTheme.headline1,
+        style: thema.textTheme.displayLarge,
       ),
+      centerTitle: true,
+      iconTheme: IconThemeData(color: thema.colorScheme.onPrimary),
       backgroundColor: thema.colorScheme.primary,
       actions: <Widget>[
         Builder(builder: (currentContext) {
@@ -93,7 +95,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                     backgroundColor: thema.colorScheme.primary,
                     child: Text(
                       widget.fehler.raum,
-                      style: thema.textTheme.headline4,
+                      style: thema.textTheme.headlineMedium,
                     ),
                   ),
                 ),
@@ -102,7 +104,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                 ),
                 Text(
                   "gemeldet am: " + datumInSchoen(fehler: widget.fehler),
-                  style: thema.textTheme.bodyText1,
+                  style: thema.textTheme.bodyLarge,
                 ),
               ],
             ),
@@ -111,11 +113,11 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
             ),
             Text(
               "Beschreibung:",
-              style: thema.textTheme.headline5,
+              style: thema.textTheme.headlineSmall,
             ),
             Text(
               widget.fehler.beschreibung,
-              style: thema.textTheme.bodyText1,
+              style: thema.textTheme.bodyLarge,
             ),
             const SizedBox(
               height: 10.0,
@@ -212,15 +214,15 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                         children: <Widget>[
                           Text(
                             "gefixt von: ${widget.fehler.fixer}",
-                            style: thema.textTheme.bodyText1,
+                            style: thema.textTheme.bodyLarge,
                           ),
                           Text(
                             "gefixt am: ${widget.fehler.gefixtDatum}",
-                            style: thema.textTheme.bodyText1,
+                            style: thema.textTheme.bodyLarge,
                           ),
                           Text(
                             "Kommentar: ${widget.fehler.kommentar}",
-                            style: thema.textTheme.bodyText1,
+                            style: thema.textTheme.bodyLarge,
                           ),
                         ],
                       ),

@@ -1,4 +1,5 @@
 // anmeldung.dart
+import "dart:io";
 import "../imports.dart";
 import "package:flutter/gestures.dart";
 
@@ -38,7 +39,10 @@ class _AnmeldungState extends State<Anmeldung> {
   void initState() {
     super.initState();
     _datenschutzErklaerungRecognizer = TapGestureRecognizer()
-      ..onTap = () async => await oeffneURL(url: serverScripts.datenschutz);
+      ..onTap = () async => await oeffneURL(
+            adresse: adresse,
+            pfad: serverScripts.datenschutz,
+          );
   }
 
   @override
@@ -96,14 +100,14 @@ class _AnmeldungState extends State<Anmeldung> {
         content: Text(
           "Geben Sie bitte das Kürzel Ihrer Schule an: \n\n" +
               "Maria Theresia Gymnasium -> mtg",
-          style: Theme.of(currentContext).textTheme.bodyText1,
+          style: Theme.of(currentContext).textTheme.bodyLarge,
         ),
         actions: <Widget>[
           Center(
             child: TextButton(
               child: Text(
                 "OK",
-                style: Theme.of(currentContext).textTheme.bodyText1,
+                style: Theme.of(currentContext).textTheme.bodyLarge,
               ),
               onPressed: () => Navigator.pop(context),
             ),
@@ -127,14 +131,14 @@ class _AnmeldungState extends State<Anmeldung> {
         content: Text(
           anzuzeigenderText + " Bitte versuchen Sie es erneut.",
           textAlign: TextAlign.justify,
-          style: Theme.of(currentContext).textTheme.bodyText1,
+          style: Theme.of(currentContext).textTheme.bodyLarge,
         ),
         actions: <Widget>[
           Center(
             child: TextButton(
               child: Text(
                 "OK",
-                style: Theme.of(currentContext).textTheme.bodyText1,
+                style: Theme.of(currentContext).textTheme.bodyLarge,
               ),
               onPressed: () => Navigator.pop(context),
             ),
@@ -254,6 +258,7 @@ class _AnmeldungState extends State<Anmeldung> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
@@ -269,7 +274,7 @@ class _AnmeldungState extends State<Anmeldung> {
                   ),
                   Text(
                     "Ich bin ",
-                    style: thema.textTheme.bodyText1,
+                    style: thema.textTheme.bodyLarge,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -285,7 +290,7 @@ class _AnmeldungState extends State<Anmeldung> {
                       TextButton(
                         child: Text(
                           "Fehlermelder",
-                          style: thema.textTheme.bodyText1,
+                          style: thema.textTheme.bodyLarge,
                         ),
                         onPressed: () => _radioButtonChanged(0),
                       ),
@@ -300,7 +305,7 @@ class _AnmeldungState extends State<Anmeldung> {
                       TextButton(
                         child: Text(
                           "Fehlerbeheber",
-                          style: thema.textTheme.bodyText1,
+                          style: thema.textTheme.bodyLarge,
                         ),
                         onPressed: () => _radioButtonChanged(1),
                       ),

@@ -1,7 +1,9 @@
 // fehlerliste_provider.dart
+import "dart:convert";
+import "dart:io";
+import "dart:async";
 import "package:fixit/imports.dart";
 import 'package:fixit/klassen/thema.dart';
-import "package:http/http.dart" as http;
 import "package:image_picker/image_picker.dart";
 
 /// Dieser Provider enthält die Fehlerliste, die dem Benutzer angezeigt wird.
@@ -154,10 +156,11 @@ class FehlerlisteProvider with ChangeNotifier {
   ///
   /// Es kann immer nur entweder image oder pickedImage angegeben werden
   Future<String> fehlerGemeldet(
-      {required Fehler fehler, File? image, PickedFile? pickedImage}) async {
+      {required Fehler fehler, File? image, XFile? pickedImage}) async {
     String dateiname = "";
     // TODO: das hier alles ein wenig sicherer und generell besser machen
     // Bild wird hochgeladen, wenn eins aufgenommen wurde
+    // image vs pickedImage: eines ist direkt von der Kamera aufgenommen, das andere aus der Galerie ausgesucht
     if (image != null) {
       // erstellt den Dateinamen des Bildes
       dateiname = fehler.id + "." + image.path.split('/').last.split(".")[1];
@@ -165,7 +168,7 @@ class FehlerlisteProvider with ChangeNotifier {
       await starteUpload(
         fehler: fehler,
         base64EncodedImage: base64Encode(
-          image.readAsBytesSync(),
+          await image.readAsBytes(),
         ),
         pfad: image.path,
         dateiname: dateiname,

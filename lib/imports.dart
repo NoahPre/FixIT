@@ -1,19 +1,15 @@
 // imports.dart
 // Standardmäßige Importe:
-// dart:
-export "dart:async";
-export "dart:convert";
-export "dart:io";
 // Flutter:
 export "package:flutter/material.dart";
 
 // Unsere Widgets:
 // Seiten:
 // Gemeldete Fehler:
-export "package:fixit/seiten/gemeldeteFehler/gemeldete_fehler.dart";
-export "package:fixit/seiten/gemeldeteFehler/fehlerliste.dart";
-export "package:fixit/seiten/gemeldeteFehler/floating_action_button_home.dart";
-export "package:fixit/seiten/gemeldeteFehler/fehlerliste_eintrag.dart";
+export 'package:fixit/seiten/gemeldete_fehler/gemeldete_fehler.dart';
+export 'package:fixit/seiten/gemeldete_fehler/fehlerliste.dart';
+export 'package:fixit/seiten/gemeldete_fehler/floating_action_button_home.dart';
+export 'package:fixit/seiten/gemeldete_fehler/fehlerliste_eintrag.dart';
 // Fehlermeldung:
 export "package:fixit/seiten/fehlermeldung/fehlermeldung.dart";
 export "package:fixit/seiten/fehlermeldung/bild_aufnahme.dart";
@@ -29,9 +25,6 @@ export "package:fixit/seiten/statistiken.dart";
 export "package:fixit/seiten/einstellungen.dart";
 export 'package:fixit/seiten/ueber_uns.dart';
 export 'package:fixit/seiten/anmeldung.dart';
-export "package:fixit/seiten/fehlersichtung/fehlerbehebung.dart";
-export "package:fixit/seiten/fehlersichtung/fehler_detailansicht.dart";
-export "package:fixit/seiten/fehlersichtung/bild_detailansicht.dart";
 
 // Andere Widgets:
 export "package:fixit/widgets_und_funktionen/fertig_button.dart";

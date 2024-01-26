@@ -14,8 +14,10 @@ class Tutorial extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Wie funktioniert's?",
-          style: thema.textTheme.headline1,
+          style: thema.textTheme.displayLarge,
         ),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: thema.colorScheme.onPrimary),
         backgroundColor: thema.colorScheme.primary,
       ),
       drawer: Seitenmenue(
@@ -37,43 +39,43 @@ class Tutorial extends StatelessWidget {
               ListTile(
                 title: Text(
                   "1. Ein Fehlermelder verfasst eine Meldung",
-                  style: thema.textTheme.bodyText1,
+                  style: thema.textTheme.bodyLarge,
                 ),
                 subtitle: Text(
                   "mit Datums- und Raumangabe, einer kurzen Beschreibung und optional mit einem Bild",
-                  style: thema.textTheme.bodyText2,
+                  style: thema.textTheme.bodyMedium,
                 ),
               ),
               ListTile(
                 title: Text(
                   "2. Die Meldung wird an den zentralen Server gesendet",
-                  style: thema.textTheme.bodyText1,
+                  style: thema.textTheme.bodyLarge,
                 ),
               ),
               ListTile(
                 title: Text(
                   "3. Die Fehlerbeheber beheben den Fehler",
-                  style: thema.textTheme.bodyText1,
+                  style: thema.textTheme.bodyLarge,
                 ),
                 subtitle: Text(
                   "Fehlerbehebung nach bestem Wissen und Gewissen",
-                  style: thema.textTheme.bodyText2,
+                  style: thema.textTheme.bodyMedium,
                 ),
               ),
               ListTile(
                 title: Text(
                   "4. Die Fehlermeldung wird als gefixt (= behoben) gekennzeichnet",
-                  style: thema.textTheme.bodyText1,
+                  style: thema.textTheme.bodyLarge,
                 ),
                 subtitle: Text(
                   "mit optionalem Kommentar des Fehlerbehebers (kommt bald)",
-                  style: thema.textTheme.bodyText2,
+                  style: thema.textTheme.bodyMedium,
                 ),
               ),
               ListTile(
                 title: Text(
                   "5. Die Fehlermeldung ist weiterhin für ihren Ersteller zu sehen und wird nach einiger Zeit vollständig gelöscht",
-                  style: thema.textTheme.bodyText1,
+                  style: thema.textTheme.bodyLarge,
                 ),
               ),
             ],

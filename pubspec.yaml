@@ -16,29 +16,29 @@ dependencies:
   flutter:
     sdk: flutter
   # Package für das App Icon
-  flutter_launcher_icons: ^0.9.2
+  flutter_launcher_icons: ^0.13.1
   # Allgemeine Packages
-  path: ^1.8.1
-  path_provider: ^2.0.10
-  http: ^0.13.4
-  url_launcher: ^6.1.2
+  path: ^1.8.2
+  path_provider: ^2.0.15
+  http: ^0.13.6
+  url_launcher: ^6.1.10
   # after_layout: ^1.1.0
   # zum Formatieren von Datumsangaben
-  intl: ^0.17.0
+  intl: ^0.18.1
   # um den Status der Softwaretastatur zu checken
-  flutter_keyboard_visibility: ^5.2.0
+  flutter_keyboard_visibility: ^5.4.1
   # Package fürs Local Persistence und State Management
-  shared_preferences: ^2.0.15
-  provider: ^6.0.2
+  shared_preferences: ^2.1.1
+  provider: ^6.0.5
   # für die IDs der Fehler
-  uuid: ^3.0.6
+  uuid: ^3.0.7
   # fürs Bilder machen, hochladen und anschauen
-  image_picker: ^0.8.5+3
-  camera: ^0.9.6
-  package_info_plus: ^1.4.2
-  photo_view: ^0.13.0
+  image_picker: ^0.8.7+4
+  camera: ^0.10.5
+  package_info_plus: ^3.1.2
+  photo_view: ^0.14.0
   # ermöglicht es Benachrichtigungen in der App anzeigen zu lassen
-  overlay_support: ^2.0.0
+  overlay_support: ^2.1.0
 
 dev_dependencies:
   flutter_test:

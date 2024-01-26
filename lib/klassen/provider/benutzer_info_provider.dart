@@ -1,6 +1,7 @@
 // benutzer_info_provider.dart
+import "dart:convert";
+import "dart:async";
 import "package:fixit/imports.dart";
-import "package:http/http.dart" as http;
 import 'package:crypto/crypto.dart';
 import "package:package_info_plus/package_info_plus.dart";
 

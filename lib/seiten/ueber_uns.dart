@@ -9,12 +9,9 @@ class UeberUns extends StatelessWidget {
 
   /// erstellt eine Feedback E-Mail an info@icanfixit.eu
   Future<void> _erstelleMail() async {
-    const url = "mailto:info@icanfixit.eu?subject=Feedback%20FixIT&body=";
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw "Could not launch: $url";
-    }
+    Uri url = Uri.dataFromString(
+        "mailto:info@icanfixit.eu?subject=Feedback%20FixIT&body=");
+    await launchUrl(url);
   }
 
   @override
@@ -24,8 +21,10 @@ class UeberUns extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Über uns",
-          style: thema.textTheme.headline1,
+          style: thema.textTheme.displayLarge,
         ),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: thema.colorScheme.onPrimary),
         backgroundColor: thema.colorScheme.primary,
       ),
       drawer: Seitenmenue(
@@ -51,7 +50,7 @@ class UeberUns extends StatelessWidget {
                 ),
                 Text(
                   "ALLGEMEIN",
-                  style: thema.textTheme.subtitle1,
+                  style: thema.textTheme.titleMedium,
                 ),
               ],
             ),
@@ -62,11 +61,11 @@ class UeberUns extends StatelessWidget {
                     return ListTile(
                       title: Text(
                         "Feedback und Verbesserungsvorschläge",
-                        style: thema.textTheme.bodyText1,
+                        style: thema.textTheme.bodyLarge,
                       ),
                       subtitle: Text(
                         "via E-Mail oder GitHub",
-                        style: thema.textTheme.subtitle2,
+                        style: thema.textTheme.titleSmall,
                       ),
                       trailing: Icon(
                         Icons.arrow_forward_ios,
@@ -89,8 +88,9 @@ class UeberUns extends StatelessWidget {
                                   TextButton(
                                     child: Text("GitHub"),
                                     onPressed: () => oeffneURL(
-                                        url:
-                                            "https://github.com/NoahPre/FixIT/issues"),
+                                      adresse: "github.com",
+                                      pfad: "/NoahPre/FixIT/issues",
+                                    ),
                                   ),
                                 ],
                               ),
@@ -104,19 +104,20 @@ class UeberUns extends StatelessWidget {
                   ListTile(
                     title: Text(
                       "Datenschutzerklärung",
-                      style: thema.textTheme.bodyText1,
+                      style: thema.textTheme.bodyLarge,
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                     ),
                     onTap: () => oeffneURL(
-                      url: url + serverScripts.datenschutz,
+                      adresse: adresse,
+                      pfad: serverScripts.datenschutz,
                     ),
                   ),
                   // ListTile(
                   //   title: Text(
                   //     "Im Store bewerten",
-                  //     style: thema.textTheme.bodyText1,
+                  //     style: thema.textTheme.bodyLarge,
                   //   ),
                   // ),
                   // Divider(),
@@ -131,7 +132,7 @@ class UeberUns extends StatelessWidget {
                 ),
                 Text(
                   "DANKSAGUNG",
-                  style: thema.textTheme.subtitle1,
+                  style: thema.textTheme.titleMedium,
                 ),
               ],
             ),
@@ -147,7 +148,7 @@ class UeberUns extends StatelessWidget {
                     ),
                     title: Text(
                       danksagungText,
-                      style: thema.textTheme.bodyText1,
+                      style: thema.textTheme.bodyLarge,
                       textAlign: TextAlign.justify,
                     ),
                   ),
@@ -155,14 +156,22 @@ class UeberUns extends StatelessWidget {
                   ListTile(
                     title: Text(
                       "Teile des App Icons sind von Freepik / Flaticon",
-                      style: thema.textTheme.bodyText1,
+                      style: thema.textTheme.bodyLarge,
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                     ),
+                    // URL: "https://flaticon.com/premium-icon/hammer_2817081?term=hammer%20wrench&page=1&position=23&&related_id=2817081&origin=tag"
                     onTap: () => oeffneURL(
-                        url:
-                            "https://www.flaticon.com/premium-icon/hammer_2817081?term=hammer%20wrench&page=1&position=23&page=1&position=23&related_id=2817081&origin=tag"),
+                        adresse: "flaticon.com",
+                        pfad: "/premium-icon/hammer_2817081",
+                        parameter: {
+                          "term": "hammer%20wrench",
+                          "page": "1",
+                          "position": "23",
+                          "related_id": "2817081",
+                          "origin": "tag"
+                        }),
                   ),
                 ],
               ),
@@ -175,7 +184,7 @@ class UeberUns extends StatelessWidget {
                 ),
                 Text(
                   "ÜBER UNS",
-                  style: thema.textTheme.subtitle1,
+                  style: thema.textTheme.titleMedium,
                 ),
               ],
             ),
@@ -185,19 +194,21 @@ class UeberUns extends StatelessWidget {
                   ListTile(
                     title: Text(
                       "Projekt auf GitHub",
-                      style: thema.textTheme.bodyText1,
+                      style: thema.textTheme.bodyLarge,
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                     ),
-                    onTap: () =>
-                        oeffneURL(url: "https://github.com/NoahPre/FixIT"),
+                    onTap: () => oeffneURL(
+                      adresse: "github.com",
+                      pfad: "/NoahPre/FixIT",
+                    ),
                   ),
                   Divider(),
                   ListTile(
                     title: Text(
                       "Lizenzen",
-                      style: thema.textTheme.bodyText1,
+                      style: thema.textTheme.bodyLarge,
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
                     onTap: () async {
@@ -218,7 +229,7 @@ class UeberUns extends StatelessWidget {
                   ListTile(
                     title: Text(
                       "entwickelt von Noah und Martin",
-                      style: thema.textTheme.bodyText1,
+                      style: thema.textTheme.bodyLarge,
                     ),
                   ),
                 ],

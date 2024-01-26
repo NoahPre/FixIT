@@ -10,8 +10,10 @@ class Statistiken extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Statistiken",
-          style: thema.textTheme.headline1,
+          style: thema.textTheme.displayLarge,
         ),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: thema.colorScheme.onPrimary),
       ),
       drawer: Seitenmenue(
         aktuelleSeite: "/statistiken",
@@ -19,7 +21,7 @@ class Statistiken extends StatelessWidget {
       body: Center(
         child: Text(
           "Noch keine Statistiken verfügbar",
-          style: thema.textTheme.bodyText1,
+          style: thema.textTheme.bodyLarge,
         ),
       ),
     );

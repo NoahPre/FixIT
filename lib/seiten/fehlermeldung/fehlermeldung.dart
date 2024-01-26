@@ -1,4 +1,6 @@
 // fehlermeldungVorlage.dart
+import "dart:convert";
+import "dart:io";
 import "../../imports.dart";
 import "../../main.dart";
 import "package:intl/intl.dart";
@@ -44,10 +46,10 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   );
 
   /// Variablen für das Hochladen des aufgenommenen / ausgewählten Bildes via php
-  Future<PickedFile?>? ausgewaehltesBild;
+  Future<XFile?>? ausgewaehltesBild;
   String status = '';
   String? base64Bild;
-  PickedFile? temporaeresBild;
+  XFile? temporaeresBild;
   String bildErrorNachricht = 'Error Uploading Image';
 
   // Controller für die Kamera
@@ -112,7 +114,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   }
 
   void setzeBildWerte({
-    required PickedFile temporaeresBild,
+    required XFile temporaeresBild,
     required String base64Bild,
   }) {
     // TODO: warum muss man hier kein setState() benutzen?
@@ -123,7 +125,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   /// lässt den Benutzer das Bild aus der Gallerie des Geräts auswählen
   void bildAusGallerieAuswaehlen() {
     setState(() {
-      ausgewaehltesBild = ImagePicker().getImage(
+      ausgewaehltesBild = ImagePicker().pickImage(
         source: ImageSource.gallery,
       );
       status = "Bild ausgewählt";
@@ -137,7 +139,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
   /// zeigt den Fertig Button über dem Zahlenfeld an (iOS bietet hier keinen Button, der die Eingabe beendet, Android schon)
   void zeigeFertigButton() {
     if (overlayEntry != null) return;
-    OverlayState overlayState = Overlay.of(context)!;
+    OverlayState overlayState = Overlay.of(context);
     overlayEntry = OverlayEntry(builder: (context) {
       return Positioned(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -206,8 +208,10 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     var appBar = AppBar(
       title: Text(
         _ueberschrift,
-        style: thema.textTheme.headline1,
+        style: thema.textTheme.displayLarge,
       ),
+      centerTitle: true,
+      iconTheme: IconThemeData(color: Colors.white),
       backgroundColor: thema.colorScheme.primary,
     );
     return Scaffold(

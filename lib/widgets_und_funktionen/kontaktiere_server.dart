@@ -2,7 +2,7 @@
 import "package:http/http.dart" as http;
 
 final String url = "https://www.icanfixit.eu";
-final String adresse = "www.icanfixit.eu";
+final String adresse = "icanfixit.eu";
 
 /// Klasse, in der die Pfade zu den einzelnen Scripts des Backends gespeichert werden
 class ServerScripts {
@@ -17,7 +17,7 @@ class ServerScripts {
   String gibUnterstuetzteVersion = "/v1/gibUnterstuetzteVersion.php";
   String schreibeBild = "/v1/schreibeBild.php";
   String schreibeFehler = "/v1/schreibeFehler.php";
-  String datenschutz = url + "/datenschutz.html";
+  String datenschutz = "/datenschutz.html";
 }
 
 /// Instanz der ServerScripts Klasse. Wird genutzt, um die ServerScripts aufzurufen
@@ -56,11 +56,12 @@ String bildHochladen(
     required String token,
     String? dateiname,
     String? base64Image}) {
-  final Uri uri = Uri.https(adresse, pfad, {"schule": schule, "token": token});
-  http.post(uri, body: {
-    "image": base64Image,
-    "name": dateiname,
-  }).then((result) {
+  http.post(Uri.parse(url + pfad + "?schule=" + schule + "&token=" + token),
+      body: {
+        "image": base64Image,
+        "name": dateiname,
+      }).then((result) {
+    print(result.body.toString());
     return result.statusCode == 200 ? result.body : "";
   }).catchError((error) {
     print(error.toString());

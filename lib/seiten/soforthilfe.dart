@@ -11,8 +11,10 @@ class Soforthilfe extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Soforthilfe",
-          style: thema.textTheme.headline1,
+          style: thema.textTheme.displayLarge,
         ),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: thema.colorScheme.onPrimary),
       ),
       drawer: Seitenmenue(
         aktuelleSeite: "/soforthilfe",
@@ -23,7 +25,7 @@ class Soforthilfe extends StatelessWidget {
           child: Center(
             child: Text(
               "Noch keine Soforthilfe verfügbar",
-              style: thema.textTheme.bodyText1,
+              style: thema.textTheme.bodyLarge,
             ),
           ),
         ),

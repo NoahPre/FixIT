@@ -30,8 +30,10 @@ class FehlerDetailansicht extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Fehler Detailansicht",
-          style: thema.textTheme.headline1,
+          style: thema.textTheme.displayLarge,
         ),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: thema.colorScheme.onPrimary),
         backgroundColor: thema.colorScheme.primary,
         actions: <Widget>[
           Builder(builder: (currentContext) {
@@ -126,7 +128,7 @@ class FehlerDetailansicht extends StatelessWidget {
                       radius: deviceSize.width * 0.1,
                       child: Text(
                         fehler.raum,
-                        style: thema.textTheme.headline4,
+                        style: thema.textTheme.headlineMedium,
                       ),
                     ),
                   ),
@@ -135,7 +137,7 @@ class FehlerDetailansicht extends StatelessWidget {
                   ),
                   Text(
                     "gemeldet am: " + datumInSchoen(fehler: fehler),
-                    style: thema.textTheme.bodyText1,
+                    style: thema.textTheme.bodyLarge,
                   ),
                 ],
               ),
@@ -144,12 +146,12 @@ class FehlerDetailansicht extends StatelessWidget {
               ),
               Text(
                 "Beschreibung:",
-                style: thema.textTheme.headline5,
+                style: thema.textTheme.headlineSmall,
               ),
 
               Text(
                 fehler.beschreibung,
-                style: thema.textTheme.bodyText1,
+                style: thema.textTheme.bodyLarge,
               ),
               const SizedBox(
                 height: 10.0,

@@ -139,7 +139,7 @@ class FehlerlisteEintrag extends StatelessWidget {
                     backgroundColor: thema.colorScheme.primary,
                     child: Text(
                       fehler.raum,
-                      style: thema.textTheme.headline4,
+                      style: thema.textTheme.headlineMedium,
                     ),
                   ),
                 ),
@@ -175,14 +175,14 @@ class FehlerlisteEintrag extends StatelessWidget {
                                   fehler.beschreibung,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: thema.textTheme.bodyText1,
+                                  style: thema.textTheme.bodyLarge,
                                 ),
 
                                 // Datumsangabe der Fehlermeldung
                                 Text(
                                   datumInSchoen(fehler: fehler),
                                   maxLines: 1,
-                                  style: thema.textTheme.bodyText1,
+                                  style: thema.textTheme.bodyLarge,
                                 ),
                               ],
                             ),
