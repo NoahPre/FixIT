@@ -4,7 +4,6 @@ import "dart:io";
 import "dart:async";
 import "package:fixit/imports.dart";
 import 'package:fixit/klassen/thema.dart';
-import "package:image_picker/image_picker.dart";
 
 /// Dieser Provider enthält die Fehlerliste, die dem Benutzer angezeigt wird.
 ///
