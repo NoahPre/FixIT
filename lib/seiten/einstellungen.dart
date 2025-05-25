@@ -2,6 +2,8 @@
 import '../imports.dart';
 
 class Einstellungen extends StatefulWidget {
+  const Einstellungen({super.key});
+
   @override
   _EinstellungenState createState() => _EinstellungenState();
 }

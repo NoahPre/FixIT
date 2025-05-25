@@ -61,9 +61,6 @@ class BenutzerInfoProvider with ChangeNotifier {
   Future<void> setzeSchuleGleichMTG() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? schuleInFunktion = sharedPreferences.getString("schule");
-    if (schuleInFunktion == null) {
-      sharedPreferences.setString("schule", "mtg");
-    }
   }
 
   /// wird aufgerufen, wenn der Benutzer sich erfolgreich anmeldet und damit authentifiziert hat &
@@ -300,6 +297,7 @@ class BenutzerInfoProvider with ChangeNotifier {
     }
   }
 
+  @override
   void dispose() {
     super.dispose();
     authentifizierungController.close();

@@ -35,7 +35,7 @@ class LokaleDatenbank {
       return inhalt;
     } catch (error) {
       print("Error beim Lesen des Files $fileName: ${error.toString()}");
-      throw error;
+      rethrow;
     }
   }
 
@@ -43,7 +43,7 @@ class LokaleDatenbank {
   Future<File> schreibeFile(
       {required String fileName, required String jsonString}) async {
     final File file = await _lokalesFile(fileName);
-    return file.writeAsString('$jsonString');
+    return file.writeAsString(jsonString);
   }
 
   Future<Map<String, dynamic>> holeLokaleFehlerdaten() async {

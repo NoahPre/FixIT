@@ -6,6 +6,8 @@ import "package:flutter/cupertino.dart";
 //der "Fertig" Knopf, den man in fehlermeldungVorlage über jeder Tastatur auftauchen lässt
 //schließt die Tastatur
 class FertigButton extends StatelessWidget {
+  const FertigButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     ThemeData thema = Theme.of(context);

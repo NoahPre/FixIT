@@ -13,7 +13,7 @@ String datumInSchoen({required Fehler fehler}) {
         fehler.datum.split("")[1] +
         fehler.datum.split("")[2] +
         fehler.datum.split("")[3];
-    String gesamt = tag + "." + monat + "." + jahr;
+    String gesamt = "$tag.$monat.$jahr";
     return gesamt;
   } catch (error) {
     return "";

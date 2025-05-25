@@ -4,6 +4,8 @@ import "../imports.dart";
 import "package:flutter/gestures.dart";
 
 class Anmeldung extends StatefulWidget {
+  const Anmeldung({super.key});
+
   @override
   _AnmeldungState createState() => _AnmeldungState();
 }
@@ -98,8 +100,8 @@ class _AnmeldungState extends State<Anmeldung> {
       builder: (context) => AlertDialog(
         title: Text("Schulauswahl Hilfe"),
         content: Text(
-          "Geben Sie bitte das Kürzel Ihrer Schule an: \n\n" +
-              "Maria Theresia Gymnasium -> mtg",
+          "Geben Sie bitte das Kürzel Ihrer Schule an: \n\n"
+          "Maria Theresia Gymnasium -> mtg",
           style: Theme.of(currentContext).textTheme.bodyLarge,
         ),
         actions: <Widget>[
@@ -129,7 +131,7 @@ class _AnmeldungState extends State<Anmeldung> {
           textAlign: TextAlign.center,
         ),
         content: Text(
-          anzuzeigenderText + " Bitte versuchen Sie es erneut.",
+          "$anzuzeigenderText Bitte versuchen Sie es erneut.",
           textAlign: TextAlign.justify,
           style: Theme.of(currentContext).textTheme.bodyLarge,
         ),
@@ -157,7 +159,7 @@ class _AnmeldungState extends State<Anmeldung> {
 
     // diese beiden Funktionen müssen in build() stehen, da sie auf benutzerInfoProvider zugreifen
     /// überprüft das gegebene Passwort
-    Future<String> _ueberpruefePasswort({
+    Future<String> ueberpruefePasswort({
       required bool istFehlermelderInFunktion,
       required String schuleInFunktion,
       required String passwortInFunktion,
@@ -185,7 +187,7 @@ class _AnmeldungState extends State<Anmeldung> {
       }
     }
 
-    Future<void> _benutzerMeldetSichAn(
+    Future<void> benutzerMeldetSichAn(
         {required BuildContext currentContext}) async {
       // macht eine Anfangsüberprüfung
       if (_formKey.currentState!.validate()) {
@@ -199,7 +201,7 @@ class _AnmeldungState extends State<Anmeldung> {
           istFehlermelderInFunktion = false;
         }
         // überprüft das eingegebene Passwort
-        switch (await _ueberpruefePasswort(
+        switch (await ueberpruefePasswort(
           istFehlermelderInFunktion: istFehlermelderInFunktion,
           schuleInFunktion: schuleInFunktion,
           passwortInFunktion: passwortInFunktion,
@@ -246,7 +248,7 @@ class _AnmeldungState extends State<Anmeldung> {
         backgroundColor: thema.colorScheme.primary,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: Text("FixIT ausprobieren"),
+        label: Text("FixIT Demo ausprobieren"),
         tooltip: "Demo-Modus von FixIT",
         backgroundColor: thema.colorScheme.secondary,
         onPressed: () {
@@ -432,12 +434,6 @@ class _AnmeldungState extends State<Anmeldung> {
                   ),
                   Builder(
                     builder: (BuildContext currentContext) => ElevatedButton(
-                      child: Text(
-                        "Anmelden",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
                       style: TextButton.styleFrom(
                         backgroundColor: thema.colorScheme.primary,
                         shape: RoundedRectangleBorder(
@@ -447,8 +443,14 @@ class _AnmeldungState extends State<Anmeldung> {
                           borderRadius: BorderRadius.circular(18.0),
                         ),
                       ),
-                      onPressed: () => _benutzerMeldetSichAn(
+                      onPressed: () => benutzerMeldetSichAn(
                         currentContext: currentContext,
+                      ),
+                      child: Text(
+                        "Anmelden",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

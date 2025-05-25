@@ -3,7 +3,7 @@ import "package:fixit/imports.dart";
 
 class FehlerlisteEintrag extends StatelessWidget {
   final Fehler fehler;
-  FehlerlisteEintrag({required this.fehler});
+  const FehlerlisteEintrag({super.key, required this.fehler});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class FehlerlisteEintrag extends StatelessWidget {
       context,
       listen: false,
     );
-    Size _size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
     ThemeData thema = Theme.of(context);
     return Column(
       children: [
@@ -135,7 +135,7 @@ class FehlerlisteEintrag extends StatelessWidget {
                 Hero(
                   tag: "CircleAvatar${fehler.id}",
                   child: CircleAvatar(
-                    radius: _size.width * 0.1,
+                    radius: size.width * 0.1,
                     backgroundColor: thema.colorScheme.primary,
                     child: Text(
                       fehler.raum,
@@ -153,9 +153,9 @@ class FehlerlisteEintrag extends StatelessWidget {
                         Radius.circular(10),
                       ),
                     ),
-                    child: Container(
+                    child: SizedBox(
                       // die gleiche Höhe wie das CircularAvatar
-                      height: _size.width * 0.2,
+                      height: size.width * 0.2,
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.start,

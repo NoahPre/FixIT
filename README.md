@@ -11,7 +11,7 @@ flutter run
 ```
 
 ### FixIT in den Stores
-* Google Play Store: https://play.google.com/store/apps/details?id=de.alpha.fixit
+* Google Play Store: https://play.google.com/store/apps/details?id=de.snons.fixit
 * Apple App Store: https://apps.apple.com/de/app/fixit/id1541362097?l=en
 
 ## Dokumentation

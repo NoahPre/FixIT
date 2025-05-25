@@ -4,7 +4,8 @@ import 'package:fixit/imports.dart';
 // TODO: bei Änderungen hier, auch den Code in FehlerDetailansicht aktualisieren
 
 class Fehlerbehebung extends StatefulWidget {
-  Fehlerbehebung({
+  const Fehlerbehebung({
+    super.key,
     required this.fehler,
   });
 
@@ -103,7 +104,7 @@ class _FehlerbehebungState extends State<Fehlerbehebung> {
                   width: 5.0,
                 ),
                 Text(
-                  "gemeldet am: " + datumInSchoen(fehler: widget.fehler),
+                  "gemeldet am: ${datumInSchoen(fehler: widget.fehler)}",
                   style: thema.textTheme.bodyLarge,
                 ),
               ],

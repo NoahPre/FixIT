@@ -7,6 +7,8 @@ class UeberUns extends StatelessWidget {
   static const String danksagungText =
       "Wir danken unserem Direktorat, Frau Birgit Reiter und Frau Silvia Duschka, sowie den PlusKurs-Koordinatorinnen, Frau Stefanie Lenner und Frau Heike Dabbert, für die Genehmigung und Förderung dieses Projekts. Unser AG- und PlusKurs-Leiter Herr Andreas Waschbüsch brachte uns überhaupt auf die Idee für dieses Projekt, half bei der Projektplanung und gab uns auch immer wieder Ratschläge bei der Entwicklung und Implementierung. Zuletzt danken wir Herrn Martin Waschbüsch, der die Serverkapazitäten bereitstellte, uns die Domain für unseren Server beschaffte und deren Einrichtung unterstützte.";
 
+  const UeberUns({super.key});
+
   /// erstellt eine Feedback E-Mail an info@icanfixit.eu
   Future<void> _erstelleMail() async {
     Uri url = Uri.dataFromString(

@@ -5,6 +5,6 @@ Future<void> oeffneURL(
     {required String adresse,
     required String pfad,
     Map<String, dynamic> parameter = const {}}) async {
-  Uri url = Uri.parse("https://" + adresse + pfad);
+  Uri url = Uri.parse("https://$adresse$pfad");
   await launchUrl(url);
 }

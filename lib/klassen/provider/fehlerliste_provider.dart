@@ -162,7 +162,7 @@ class FehlerlisteProvider with ChangeNotifier {
     // image vs pickedImage: eines ist direkt von der Kamera aufgenommen, das andere aus der Galerie ausgesucht
     if (image != null) {
       // erstellt den Dateinamen des Bildes
-      dateiname = fehler.id + "." + image.path.split('/').last.split(".")[1];
+      dateiname = "${fehler.id}.${image.path.split('/').last.split(".")[1]}";
       fehler.bild = dateiname;
       await starteUpload(
         fehler: fehler,
@@ -175,7 +175,7 @@ class FehlerlisteProvider with ChangeNotifier {
     }
     if (pickedImage != null) {
       dateiname =
-          fehler.id + "." + pickedImage.path.split('/').last.split(".")[1];
+          "${fehler.id}." + pickedImage.path.split('/').last.split(".")[1];
 
       fehler.bild = dateiname;
       await starteUpload(
@@ -274,6 +274,7 @@ class FehlerlisteProvider with ChangeNotifier {
     return status;
   }
 
+  @override
   void dispose() {
     super.dispose();
     fehlerlisteController.close();

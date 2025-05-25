@@ -22,13 +22,13 @@ Future<void> zeigeBilderAuswahl({
     builder: (BuildContext context) => BottomSheet(
       onClosing: () {},
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: 100,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: Container(
+                child: SizedBox(
                   height: 100.0,
                   child: Tooltip(
                     message: "Kamera",
@@ -55,7 +55,7 @@ Future<void> zeigeBilderAuswahl({
                 color: Colors.black,
               ),
               Expanded(
-                child: Container(
+                child: SizedBox(
                   height: 100.0,
                   child: Tooltip(
                     message: "Bildergalerie",

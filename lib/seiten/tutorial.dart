@@ -2,7 +2,7 @@
 import "../imports.dart";
 
 class Tutorial extends StatelessWidget {
-  Tutorial({this.istFehlermelder = false});
+  const Tutorial({super.key, this.istFehlermelder = false});
 
   final bool istFehlermelder;
 

@@ -3,7 +3,7 @@ import '../../imports.dart';
 import "package:photo_view/photo_view.dart";
 
 class BildDetailansicht extends StatefulWidget {
-  BildDetailansicht({required this.urlZumBild});
+  const BildDetailansicht({super.key, required this.urlZumBild});
 
   final String urlZumBild;
 

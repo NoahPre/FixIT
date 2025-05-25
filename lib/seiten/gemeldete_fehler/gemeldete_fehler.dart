@@ -5,7 +5,7 @@ final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
 /// Startseite der App
 class GemeldeteFehler extends StatefulWidget {
-  GemeldeteFehler({required this.fehlerlisteProvider});
+  const GemeldeteFehler({super.key, required this.fehlerlisteProvider});
   final FehlerlisteProvider fehlerlisteProvider;
 
   @override
@@ -76,10 +76,6 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
       actions: [
         PopupMenuButton<Sortierung>(
           tooltip: "Sortieren",
-          child: Icon(
-            Icons.sort,
-            color: thema.colorScheme.onPrimary,
-          ),
           color: thema.colorScheme.onPrimary,
           itemBuilder: (context) =>
               sortierungsmoeglichkeiten.map((List eintrag) {
@@ -115,6 +111,10 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
               _popupMenuButtonValue = value;
             });
           },
+          child: Icon(
+            Icons.sort,
+            color: thema.colorScheme.onPrimary,
+          ),
         ),
         Container(
           width: 10.0,
@@ -132,7 +132,7 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
               }
               fehlerlisteProvider.fehlerliste.clear();
               await fehlerlisteProvider.holeFehler();
-              return null;
+              return;
             },
           );
         }),
@@ -258,7 +258,7 @@ class _GemeldeteFehlerState extends State<GemeldeteFehler>
                     child: ListView(
                       primary: false,
                       children: <Widget>[
-                        Container(
+                        SizedBox(
                           height: mediaQueryData.size.height -
                               appBar.preferredSize.height -
                               mediaQueryData.padding.top -

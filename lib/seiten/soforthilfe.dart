@@ -3,6 +3,8 @@
 import "../imports.dart";
 
 class Soforthilfe extends StatelessWidget {
+  const Soforthilfe({super.key});
+
   @override
   Widget build(BuildContext context) {
     ThemeData thema = Theme.of(context);

@@ -3,15 +3,13 @@ import '../../imports.dart';
 
 /// FloatingActionButton für GemeldeteFehler
 class FABHome extends StatelessWidget {
+  const FABHome({super.key});
+
   @override
   Widget build(BuildContext context) {
     ThemeData thema = Theme.of(context);
     return FloatingActionButton(
       heroTag: "FloatingActionButton",
-      child: Icon(
-        Icons.add,
-        color: thema.colorScheme.onSecondary,
-      ),
       backgroundColor: thema.colorScheme.primary,
       tooltip: "Fehler melden",
       onPressed: () {
@@ -25,6 +23,10 @@ class FABHome extends StatelessWidget {
           ),
         );
       },
+      child: Icon(
+        Icons.add,
+        color: thema.colorScheme.onSecondary,
+      ),
     );
   }
 }

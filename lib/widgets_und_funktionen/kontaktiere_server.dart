@@ -56,11 +56,10 @@ String bildHochladen(
     required String token,
     String? dateiname,
     String? base64Image}) {
-  http.post(Uri.parse(url + pfad + "?schule=" + schule + "&token=" + token),
-      body: {
-        "image": base64Image,
-        "name": dateiname,
-      }).then((result) {
+  http.post(Uri.parse("$url$pfad?schule=$schule&token=$token"), body: {
+    "image": base64Image,
+    "name": dateiname,
+  }).then((result) {
     print(result.body.toString());
     return result.statusCode == 200 ? result.body : "";
   }).catchError((error) {

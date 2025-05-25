@@ -5,7 +5,7 @@ import 'package:fixit/imports.dart';
 class Seitenmenue extends StatelessWidget {
   final String aktuelleSeite;
 
-  const Seitenmenue({required this.aktuelleSeite});
+  const Seitenmenue({super.key, required this.aktuelleSeite});
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +36,10 @@ class Seitenmenue extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     CircleAvatar(
-                      child: Icon(Icons.person),
                       backgroundColor: thema.colorScheme.primary,
                       foregroundColor: Colors.white,
                       minRadius: 30.0,
+                      child: Icon(Icons.person),
                     ),
                     SizedBox(
                       width: deviceSize.width * 0.025,
@@ -56,13 +56,13 @@ class Seitenmenue extends StatelessWidget {
                         const SizedBox(
                           height: 5.0,
                         ),
-                        Text("Schule: " + benutzerInfoProvider.schule),
+                        Text("Schule: ${benutzerInfoProvider.schule}"),
                         const SizedBox(
                           height: 5.0,
                         ),
                         Row(
                           children: [
-                            Container(
+                            SizedBox(
                               width: 180.0,
                               child: Text("Gemeldete Fehler:"),
                             ),
@@ -79,7 +79,7 @@ class Seitenmenue extends StatelessWidget {
                             ? Container()
                             : Row(
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     width: 180.0,
                                     child: Text("Gefixte Fehler:"),
                                   ),
@@ -102,7 +102,7 @@ class Seitenmenue extends StatelessWidget {
           ListTile(
             title: Text("Gemeldete Fehler"),
             onTap: () {
-              if (this.aktuelleSeite == "/") {
+              if (aktuelleSeite == "/") {
                 // lässt das Seitenmenü einklappen
                 Navigator.pop(context);
               } else {
@@ -132,7 +132,7 @@ class Seitenmenue extends StatelessWidget {
             // alternativer Titel: Tutorial
             title: Text("Wie funktioniert's?"),
             onTap: () {
-              if (this.aktuelleSeite == "/tutorial") {
+              if (aktuelleSeite == "/tutorial") {
                 // lässt das Seitenmenü einklappen
                 Navigator.pop(context);
               } else {
@@ -173,7 +173,7 @@ class Seitenmenue extends StatelessWidget {
           ListTile(
             title: Text("Über uns"),
             onTap: () {
-              if (this.aktuelleSeite == "/ueberUns") {
+              if (aktuelleSeite == "/ueberUns") {
                 // lässt das Seitenmenü einklappen
                 Navigator.pop(context);
               } else {

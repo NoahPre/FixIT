@@ -16,8 +16,6 @@ ThemeData thema = ThemeData(
       onPrimary: Colors.white,
       secondary: Colors.indigoAccent.shade700,
       onSecondary: Colors.white,
-      background: Colors.white,
-      onBackground: Colors.black,
       error: Colors.red.shade700,
       onError: Colors.white,
       brightness: Brightness.light,

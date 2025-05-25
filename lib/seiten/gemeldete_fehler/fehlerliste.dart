@@ -4,7 +4,8 @@ import "package:fixit/imports.dart";
 // TODO: beim fixen des Fehlers Kommentar hinterlassen Funktion hinzufügen
 
 class Fehlerliste extends StatefulWidget {
-  Fehlerliste({
+  const Fehlerliste({
+    super.key,
     this.appBarHoehe = 0.0,
     required this.nachrichtVomServer,
     required this.fehlerlisteProvider,
@@ -41,7 +42,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
         height: 4.0,
       ),
     );
-    if (eigeneFehlermeldungen.length != 0) {
+    if (eigeneFehlermeldungen.isNotEmpty) {
       children.add(Text(
         "Eigene Fehlermeldungen:",
         style: thema.textTheme.displayMedium,
@@ -55,8 +56,8 @@ class _FehlerlisteState extends State<Fehlerliste> {
         height: 20.0,
       ));
     }
-    if (sonstigeFehlermeldungen.length != 0) {
-      if (eigeneFehlermeldungen.length != 0) {
+    if (sonstigeFehlermeldungen.isNotEmpty) {
+      if (eigeneFehlermeldungen.isNotEmpty) {
         children.add(
           Text(
             "Andere Fehlermeldungen:",
@@ -93,7 +94,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
       fehlerlisteProvider.fehlerliste.clear();
       fehlerlisteProvider.angezeigteFehlerliste.clear();
       await fehlerlisteProvider.holeFehler();
-      return null;
+      return;
     }
 
     // schaut, ob auf dem Server irgendwelche neuen Nachrichten sind
@@ -127,7 +128,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
                       ? (snapshot.data.length == 0)
                           // wird ausgegeben, wenn die Fehlerliste leer ist
                           ? [
-                              Container(
+                              SizedBox(
                                 height: mediaQueryData.size.height -
                                     widget.appBarHoehe,
                                 child: Center(
@@ -147,7 +148,7 @@ class _FehlerlisteState extends State<Fehlerliste> {
                               thema: thema)
                       // zeigt einen Ladedonut an, während die Fehlerliste fertig heruntergeladen wird
                       : [
-                          Container(
+                          SizedBox(
                             height: mediaQueryData.size.height -
                                 widget.appBarHoehe -
                                 mediaQueryData.padding.top -

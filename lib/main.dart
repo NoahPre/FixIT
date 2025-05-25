@@ -19,6 +19,9 @@ Future<void> main() async {
 List<CameraDescription> cameras = [];
 
 class FixIT extends StatelessWidget {
+  const FixIT({super.key});
+
+  @override
   Widget build(BuildContext context) {
     FehlerlisteProvider fehlerlisteProvider = FehlerlisteProvider();
     BenutzerInfoProvider benutzerInfoProvider =

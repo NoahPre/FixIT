@@ -6,7 +6,8 @@ import "package:path_provider/path_provider.dart";
 class BildAufnahme extends StatelessWidget {
   final Function pfadZumBild;
   final CameraController? controller;
-  BildAufnahme({
+  const BildAufnahme({
+    super.key,
     required this.pfadZumBild,
     required this.controller,
   });

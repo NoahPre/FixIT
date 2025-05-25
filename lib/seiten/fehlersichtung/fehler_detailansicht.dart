@@ -4,7 +4,8 @@ import '../../imports.dart';
 // TODO: bei Änderungen hier, auch den Code in FehlerBehebung aktualisieren
 
 class FehlerDetailansicht extends StatelessWidget {
-  FehlerDetailansicht({
+  const FehlerDetailansicht({
+    super.key,
     required this.fehler,
     this.fehlerliste,
   });
@@ -136,7 +137,7 @@ class FehlerDetailansicht extends StatelessWidget {
                     width: deviceSize.width * 0.025,
                   ),
                   Text(
-                    "gemeldet am: " + datumInSchoen(fehler: fehler),
+                    "gemeldet am: ${datumInSchoen(fehler: fehler)}",
                     style: thema.textTheme.bodyLarge,
                   ),
                 ],

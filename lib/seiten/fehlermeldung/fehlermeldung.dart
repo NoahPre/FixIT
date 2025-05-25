@@ -11,6 +11,8 @@ import "package:uuid/uuid.dart";
 
 // Seite, auf der der Benutzer seine Fehlermeldung abschicken kann
 class Fehlermeldung extends StatefulWidget {
+  const Fehlermeldung({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _FehlermeldungState();
@@ -102,7 +104,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
     String? textInTextfield,
   }) {
     setState(() {
-      _ueberschrift = "Fehler in Raum " + textInTextfield!;
+      _ueberschrift = "Fehler in Raum ${textInTextfield!}";
     });
   }
 
@@ -274,7 +276,7 @@ class _FehlermeldungState extends State<Fehlermeldung> {
         );
       }),
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           //TODO: dieses Problem hier kann glaube ich noch eleganter gelöst werden
           height: mediaQuery.size.height -
               appBar.preferredSize.height -
@@ -307,8 +309,8 @@ class _FehlermeldungState extends State<Fehlermeldung> {
                                     value: _dropdownButtonText,
                                     items: praefixe.map((String value) {
                                       return DropdownMenuItem<String>(
-                                        child: Text(value),
                                         value: value,
+                                        child: Text(value),
                                       );
                                     }).toList(),
                                     onChanged: (String? value) {
